@@ -5,7 +5,8 @@ Essayez de créer des branches précises pour Git et ne pas envoyer vos modifica
 
 **Backlog :**
 
-**Tâches pour les ISR :** (Adaptez si il y a des choses qui vous semblent prioritaires)
+**Tâches pour les ISR :** 
+(Adaptez si il y a des choses qui vous semblent prioritaires)
 -Réfléchir au protocole réseau (protocole binaire ou textuel ?)
 -Fonction pour créer une partie 
 -Fonction pour rejoindre une partie
