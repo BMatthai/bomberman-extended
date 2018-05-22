@@ -6,9 +6,9 @@ Essayez de créer des branches précises pour Git et ne pas envoyer vos modifica
 **Backlog :**
 
 **Tâches pour les ISR :** 
--Réfléchir au protocole réseau (protocole binaire ou textuel ?)
--Fonction pour créer une partie 
--Fonction pour rejoindre une partie
+- Réfléchir au protocole réseau (protocole binaire ou textuel ?)
+- Fonction pour créer une partie 
+- Fonction pour rejoindre une partie
 
 **Tâches pour les IDV :**
 - Réfléchir aux structures de données
