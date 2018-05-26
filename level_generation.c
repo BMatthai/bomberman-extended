@@ -11,57 +11,38 @@
 
 #include <stdio.h>
 
-//Generate a level from a file
-t_level generate_level_from_file(char *file) {
+int get_one_dim(int fd);
+char **get_level_layer(int fd, int lines, int columns);
 
+t_level generate_level_from_file(char *path) {
   int fd;
   t_level level;
 
-  char lines;
-  char columns;
-
-  fd = open("./level/testlevel.lvl", O_RDONLY);
+  fd = open(path, O_RDONLY);
 
   level.lines = get_one_dim(fd);
   level.columns = get_one_dim(fd);
-  level.terrain = get_level_layer(fd, lines, columns);
-
+  level.terrain = get_level_layer(fd, level.lines, level.columns);
+  level.bonus = get_level_layer(fd, level.lines, level.columns);
+  close(fd);
   return level;
 }
 
 int get_one_dim(int fd) {
-  char *str;
+  char str[2];
   read(fd, str, 2);
   lseek(fd, 1, SEEK_CUR);
   return atoi(str);
 }
 
 char **get_level_layer(int fd, int lines, int columns) {
-  char **terrain = null;
+  char **terrain_layer;
 
-  terrain = malloc(lines * sizeof(char*));
-  for (int i = 0; i < level.lines; i++) {
-    level.terrain[i] = malloc(sizeof(char) * level.columns);
-    read(fd, level.terrain[i], level.columns);
+  terrain_layer = malloc(lines * sizeof(char*));
+  for (int i = 0; i < lines; i++) {
+    terrain_layer[i] = malloc(sizeof(char) * columns);
+    read(fd, terrain_layer[i], columns);
     lseek(fd, 1, SEEK_CUR);
   }
-  return terrain;
+  return terrain_layer;
 }
-
-
-
-
-
-
-//Generetate level
-// t_level generate_level_randomly(int width, int height) {
-//
-// }
-//
-// int free_level(t_level *level) {
-//
-// }
-//
-// char *read_file_line(int fd) {
-//   read();
-// }
