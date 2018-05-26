@@ -4,10 +4,7 @@
 #endif
 
 
-//Generetate level
-t_level generate_level_randomly(int width, int height) {
 
-}
 
 //Generate a level from a file
 t_level generate_level_from_file(char *file) {
@@ -32,10 +29,15 @@ t_level generate_level_from_file(char *file) {
   return level;
 }
 
-int free_level(t_level *level) {
-
-}
-
-char *read_file_line(int fd) {
-  read();
-}
+//Generetate level
+// t_level generate_level_randomly(int width, int height) {
+//
+// }
+//
+// int free_level(t_level *level) {
+//
+// }
+//
+// char *read_file_line(int fd) {
+//   read();
+// }
