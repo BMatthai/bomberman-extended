@@ -9,5 +9,6 @@ typedef struct s_level {
     char columns;
     char **terrain; //ou terrain[][] ?;
     char **bonus; //ou bonus[][] ?;
+    int number_characters;
     t_character *characters;
 }   t_level;
