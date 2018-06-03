@@ -16,6 +16,9 @@
 //To read a level layer (wall/bonus)
 //char **get_level_layer_raw(int fd, int lines, int columns);
 
+int isAChar(char tile);
+
+
 t_level generate_level_from_file(char *path) {
   int fd;
   t_level level;
@@ -26,6 +29,7 @@ t_level generate_level_from_file(char *path) {
   level.columns = get_one_dim(fd);
   level.terrain = get_level_layer_raw(fd, level.lines, level.columns);
   level.bonus = get_level_layer_raw(fd, level.lines, level.columns);
+  level.number_characters = count_characters(level);
   level.characters = get_level_characters(level);
   close(fd);
   return level;
@@ -60,7 +64,7 @@ int count_characters(t_level level) {
   number_characters = 0;
   for(i = 0; i < level.lines; i++) {
     for(j = 0; j < level.columns; j++) {
-      if (level.terrain[i][j] == 'A')
+      if (isAChar(level.terrain[i][j]))
         number_characters++;
     }
   }
@@ -77,13 +81,21 @@ t_character *get_level_characters(t_level level) {
 
   number_characters = level.number_characters;
   characters = malloc(sizeof(t_character) * number_characters);
+  k = 0;
   for(i = 0; i < level.lines; i++) {
     for(j = 0; j < level.columns; j++) {
-      if (level.terrain[i][j] == 'A')
-        for(k = 0; k < number_characters; k++)
-          characters[k] = create_character(level.terrain[i][j], i, j);
+      if (isAChar(level.terrain[i][j])) {
+        characters[k] = create_character(level.terrain[i][j], j, i);
         level.terrain[i][j] = ' ';
+        k++;
+      }
     }
   }
   return characters;
+}
+
+int isAChar(char tile) {
+  if (tile == 'A' || tile == 'B' ||  tile == 'C' ||  tile == 'D')
+    return 1;
+  return 0;
 }

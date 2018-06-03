@@ -4,6 +4,6 @@ typedef struct s_character {
   char bomb_range;
   char number_bomb;
   char movement_speed;
-  char position_x;
-  char position_y;
+  int position_x;
+  int position_y;
 }   t_character;
