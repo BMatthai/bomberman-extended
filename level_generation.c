@@ -19,18 +19,19 @@
 int isAChar(char tile);
 
 
-t_level generate_level_from_file(char *path) {
+t_level *generate_level_from_file(char *path) {
   int fd;
-  t_level level;
+  t_level *level;
 
   fd = open(path, O_RDONLY);
 
-  level.lines = get_one_dim(fd);
-  level.columns = get_one_dim(fd);
-  level.terrain = get_level_layer_raw(fd, level.lines, level.columns);
-  level.bonus = get_level_layer_raw(fd, level.lines, level.columns);
-  level.number_characters = count_characters(level);
-  level.characters = get_level_characters(level);
+  level = malloc(sizeof(t_level));
+  level->lines = get_one_dim(fd);
+  level->columns = get_one_dim(fd);
+  level->terrain = get_level_layer_raw(fd, level->lines, level->columns);
+  level->bonus = get_level_layer_raw(fd, level->lines, level->columns);
+  level->number_characters = count_characters(level);
+  level->characters = get_level_characters(level);
   close(fd);
   return level;
 }
@@ -56,37 +57,37 @@ char **get_level_layer_raw(int fd, int lines, int columns) {
 }
 
 //Count the number of characters in the level.
-int count_characters(t_level level) {
+int count_characters(t_level *level) {
   int i;
   int j;
   int number_characters;
 
   number_characters = 0;
-  for(i = 0; i < level.lines; i++) {
-    for(j = 0; j < level.columns; j++) {
-      if (isAChar(level.terrain[i][j]))
+  for(i = 0; i < level->lines; i++) {
+    for(j = 0; j < level->columns; j++) {
+      if (isAChar(level->terrain[i][j]))
         number_characters++;
     }
   }
-  level.number_characters = number_characters;
+  level->number_characters = number_characters;
   return number_characters;
 }
 
-t_character *get_level_characters(t_level level) {
+t_character *get_level_characters(t_level *level) {
   int i;
   int j;
   int k;
   int number_characters;
   t_character *characters;
 
-  number_characters = level.number_characters;
+  number_characters = level->number_characters;
   characters = malloc(sizeof(t_character) * number_characters);
   k = 0;
-  for(i = 0; i < level.lines; i++) {
-    for(j = 0; j < level.columns; j++) {
-      if (isAChar(level.terrain[i][j])) {
-        characters[k] = create_character(level.terrain[i][j], j, i);
-        level.terrain[i][j] = ' ';
+  for(i = 0; i < level->lines; i++) {
+    for(j = 0; j < level->columns; j++) {
+      if (isAChar(level->terrain[i][j])) {
+        characters[k] = create_character(level->terrain[i][j], j, i);
+        level->terrain[i][j] = ' ';
         k++;
       }
     }
