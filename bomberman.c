@@ -27,7 +27,7 @@ int main() {
     while(1) {
       while(!read(0, buf, 1));
       write(1,"\033[2J\n",sizeof("\033[2J\n"));
-      action(charac, buf[0]);
+      action(game_data.level, charac, buf[0]);
       display_level(game_data.level);
     }
 
