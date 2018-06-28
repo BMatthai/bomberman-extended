@@ -1,3 +1,8 @@
+#ifndef T_CHARACTER
+#define T_CHARACTER
+#include "struct_character.h"
+#endif
+
 typedef struct s_character {
   int heal_points;
   char symbol;

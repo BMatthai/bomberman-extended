@@ -1,15 +1,19 @@
-//#include "action.h"
-#include "stdio.h"
-//#include "struct_character.h"
-//#include "action.h"
-#include "struct_bomb.h"
 
-#include <unistd.h>
 #ifndef T_LEVEL
 #define T_LEVEL
 #include "struct_level.h"
 #endif
 
+
+#ifndef T_CHARACTER
+#define T_CHARACTER
+#include "struct_character.h"
+#endif
+
+#include "bomb_manager.h"
+
+
+#include <unistd.h>
 int is_tile_free(t_level *level, int x, int y) {
     int i;
     if(level->terrain[y][x] != ' ')
