@@ -11,4 +11,5 @@ typedef struct s_level {
     char **bonus; //ou bonus[][] ?;
     int number_characters;
     t_character *characters;
+    t_bomb *first_bomb;
 }   t_level;
