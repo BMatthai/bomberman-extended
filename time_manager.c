@@ -8,7 +8,7 @@ int get_time() {
 
   unsigned long long time =
       (unsigned long long)(tv.tv_sec) * 1000 +
-      (unsigned long long)(tv.tv_usec) / 10;
+      (unsigned long long)(tv.tv_usec);
 
   return time;
 }

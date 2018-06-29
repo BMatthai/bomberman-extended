@@ -32,6 +32,7 @@ void check_bombs_timer(t_level *level) {
 }
 
 void put_bomb(t_level *level, t_character *character) {
+
   t_bomb *new_bomb;
 
   new_bomb = NULL;
@@ -42,6 +43,8 @@ void put_bomb(t_level *level, t_character *character) {
 
   position_x = character->position_x;
   position_y = character->position_y;
+
+  level->terrain[position_y][position_x] = '@';
 
   new_bomb->position_x = position_x;
   new_bomb->position_y = position_y;
@@ -57,14 +60,12 @@ void put_bomb(t_level *level, t_character *character) {
   else {
     t_bomb *cur_bomb;
     cur_bomb = level->first_bomb;
-    while (cur_bomb->next_bomb != NULL) {
-      cur_bomb = cur_bomb->next_bomb;
-    }
+    // while (cur_bomb->next_bomb != NULL) {
+    //   cur_bomb = cur_bomb->next_bomb;
+    // }
     new_bomb->prev_bomb = cur_bomb;
     cur_bomb->next_bomb = new_bomb;
   }
-
-  level->terrain[position_y][position_x] = '@';
 }
 
 void explode_bomb(t_level *level, t_bomb *bomb) {
