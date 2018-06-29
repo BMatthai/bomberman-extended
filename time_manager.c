@@ -2,9 +2,13 @@
 #include "time_manager.h"
 
 int get_time() {
-  struct timeval *restrict tp = NULL;
-  void *restrict tzp = NULL;
-  gettimeofday(tp, tzp);
+  struct timeval tv;
 
-  return 1;
+  gettimeofday(&tv, NULL);
+
+  unsigned long long time =
+      (unsigned long long)(tv.tv_sec) * 1000 +
+      (unsigned long long)(tv.tv_usec) / 10;
+
+  return time;
 }

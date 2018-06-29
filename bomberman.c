@@ -8,11 +8,15 @@
 #include <stdio.h>
 #include "action.h"
 #include "game_constants.h"
+#include "bomb_manager.h"
 
 int main() {
 
+
     t_game_data game_data;
+
     game_data.level = generate_level_from_file("./level/testlevel.lvl");
+
 
 
     struct termios termios_p;
@@ -24,10 +28,14 @@ int main() {
     char buf[1];
 
     t_character *charac = &game_data.level->characters[0];
+
     while(1) {
+      printf("Buffered, will be flushed");
+      fflush(stdout);
       while(!read(0, buf, 1));
       write(1,"\033[2J\n",sizeof("\033[2J\n"));
       action(game_data.level, charac, buf[0]);
+      check_bombs_timer(game_data.level);
       display_level(game_data.level);
     }
 
