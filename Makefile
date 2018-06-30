@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-W -Wall -Werror -pedantic
+CFLAGS=-W -Wall -Werror -pedantic -std=c99
 LDFLAGS=
 EXEC=bomberman
 
