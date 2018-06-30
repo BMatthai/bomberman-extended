@@ -11,6 +11,7 @@ typedef struct s_level {
     char columns;
     char **terrain; //ou terrain[][] ?;
     char **bonus; //ou bonus[][] ?;
+    char **bomb;
     int number_characters;
     t_character *characters;
     t_bomb *first_bomb;

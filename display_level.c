@@ -27,11 +27,22 @@ char *level_to_display(t_level *my_level) {
   for (i = 0; i < lines; i++) {
     for (j = 0; j < columns; j++) {
       level_to_display[i * columns + j] = my_level->terrain[i][j];
+      if (my_level->bomb[i][j] == '^'
+      || my_level->bomb[i][j] == 'v'
+      || my_level->bomb[i][j] == '>'
+      ||my_level->bomb[i][j] == '<')
+        level_to_display[i * columns + j] = my_level->bomb[i][j];
     }
   }
+
   for (k = 0; k < my_level->number_characters; k++) {
     level_to_display[my_level->characters[k].position_y * columns + my_level->characters[k].position_x] = my_level->characters[k].symbol;
   }
+
+
+
+
+
 
 
   return level_to_display;

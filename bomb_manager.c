@@ -89,10 +89,10 @@ void explode_bomb(t_level *level, t_bomb *bomb) {
 
   //level->terrain[bomb->position_y][bomb->position_x] = 'O';
   for (int i = 1; i < 3; i++) {
-    level->terrain[bomb->position_y + i][bomb->position_x] = 'v';
-    level->terrain[bomb->position_y - i][bomb->position_x] = '^';
-    level->terrain[bomb->position_y][bomb->position_x + i] = '>';
-    level->terrain[bomb->position_y][bomb->position_x - i] = '<';
+    level->bomb[bomb->position_y + i][bomb->position_x] = 'v';
+    level->bomb[bomb->position_y - i][bomb->position_x] = '^';
+    level->bomb[bomb->position_y][bomb->position_x + i] = '>';
+    level->bomb[bomb->position_y][bomb->position_x - i] = '<';
   }
 
   // int i;
