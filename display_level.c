@@ -29,10 +29,11 @@ char *level_to_display(t_level *my_level) {
       level_to_display[i * columns + j] = my_level->terrain[i][j];
     }
   }
-
   for (k = 0; k < my_level->number_characters; k++) {
     level_to_display[my_level->characters[k].position_y * columns + my_level->characters[k].position_x] = my_level->characters[k].symbol;
   }
+
+
   return level_to_display;
 }
 
