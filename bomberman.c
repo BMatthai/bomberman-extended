@@ -13,10 +13,10 @@
 
 int main() {
 
-
     t_game_data game_data;
 
     game_data.level = generate_level_from_file("./level/testlevel.lvl");
+    t_character *charac = &game_data.level->characters[0];
 
     struct termios termios_p;
     tcgetattr(1, &termios_p);
@@ -28,12 +28,8 @@ int main() {
 
     fds[0].fd = 0;
     fds[0].events = POLLIN;
-    t_character *charac = &game_data.level->characters[0];
 
     while(1) {
-      printf("Buffered, will be flushed");
-      fflush(stdout);
-
       if(poll(fds, 1, 50) > 0) {
         if(fds[0].revents & POLLIN) {
           read(0, buf, 1);

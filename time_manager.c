@@ -1,5 +1,6 @@
 #include <sys/time.h>
 #include "time_manager.h"
+#include <stdlib.h>
 
 int get_time() {
   struct timeval tv;
