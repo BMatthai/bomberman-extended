@@ -18,13 +18,10 @@ int main() {
 
     game_data.level = generate_level_from_file("./level/testlevel.lvl");
 
-
-
     struct termios termios_p;
     tcgetattr(1, &termios_p);
     termios_p.c_lflag &= ~ICANON;
     tcsetattr(1, 0, &termios_p);
-
 
     char buf[1];
     struct pollfd fds[1];

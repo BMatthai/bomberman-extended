@@ -70,6 +70,8 @@ void put_bomb(t_level *level, t_character *character) {
 
 void explode_bomb(t_level *level, t_bomb *bomb) {
 
+
+
   if (bomb->prev_bomb == NULL && bomb->next_bomb == NULL) {
     level->first_bomb = NULL;
   }
@@ -85,7 +87,21 @@ void explode_bomb(t_level *level, t_bomb *bomb) {
     bomb->next_bomb->prev_bomb = bomb->prev_bomb;
   }
 
-  level->terrain[bomb->position_y][bomb->position_x] = ' ';
+  //level->terrain[bomb->position_y][bomb->position_x] = 'O';
+  for (int i = 1; i < 3; i++) {
+    level->terrain[bomb->position_y + i][bomb->position_x] = 'v';
+    level->terrain[bomb->position_y - i][bomb->position_x] = '^';
+    level->terrain[bomb->position_y][bomb->position_x + i] = '>';
+    level->terrain[bomb->position_y][bomb->position_x - i] = '<';
+  }
+
+  // int i;
+  //
+  // i = 0;
+  // while () {
+  //
+  // }
+
 
   //Free bomb
 }
