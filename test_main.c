@@ -1,5 +1,6 @@
 #include <sys/time.h>
 #include "time_manager.h"
+#include <stdio.h>
 
 int get_time() {
   struct timeval tv;
@@ -11,4 +12,10 @@ int get_time() {
       (unsigned long long)(tv.tv_usec) / 1000;
 
   return time;
+}
+
+int main(){
+  while(1){
+    printf("%d\n", get_time());
+  }
 }

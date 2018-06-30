@@ -23,7 +23,7 @@ void check_bombs_timer(t_level *level) {
 
   if((cur_bomb = level->first_bomb) != NULL) {
     while (cur_bomb != NULL) {
-        if ((get_time() - cur_bomb->time_placed) > cur_bomb->time_to_explode) {
+        if ((get_time() - cur_bomb->time_placed) > cur_bomb->time_to_explode_millis) {
           explode_bomb(level, cur_bomb);
         }
         cur_bomb = cur_bomb->next_bomb;
@@ -49,7 +49,7 @@ void put_bomb(t_level *level, t_character *character) {
   new_bomb->position_x = position_x;
   new_bomb->position_y = position_y;
   new_bomb->time_placed = get_time();
-  new_bomb->time_to_explode = character->time_to_bomb_explode;
+  new_bomb->time_to_explode_millis = character->time_to_bomb_explode_millis;
   new_bomb->range = character->bomb_range;
   new_bomb->next_bomb = NULL;
 
@@ -60,9 +60,9 @@ void put_bomb(t_level *level, t_character *character) {
   else {
     t_bomb *cur_bomb;
     cur_bomb = level->first_bomb;
-    // while (cur_bomb->next_bomb != NULL) {
-    //   cur_bomb = cur_bomb->next_bomb;
-    // }
+    while (cur_bomb->next_bomb != NULL) {
+      cur_bomb = cur_bomb->next_bomb;
+    }
     new_bomb->prev_bomb = cur_bomb;
     cur_bomb->next_bomb = new_bomb;
   }

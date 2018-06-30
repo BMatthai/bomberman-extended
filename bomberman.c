@@ -9,6 +9,7 @@
 #include "action.h"
 #include "game_constants.h"
 #include "bomb_manager.h"
+#include <poll.h>
 
 int main() {
 
@@ -26,15 +27,23 @@ int main() {
 
 
     char buf[1];
+    struct pollfd fds[1];
 
+    fds[0].fd = 0;
+    fds[0].events = POLLIN;
     t_character *charac = &game_data.level->characters[0];
 
     while(1) {
       printf("Buffered, will be flushed");
       fflush(stdout);
-      while(!read(0, buf, 1));
+
+      if(poll(fds, 1, 50) > 0) {
+        if(fds[0].revents & POLLIN) {
+          read(0, buf, 1);
+          action(game_data.level, charac, buf[0]);
+        }
+      }
       write(1,"\033[2J\n",sizeof("\033[2J\n"));
-      action(game_data.level, charac, buf[0]);
       check_bombs_timer(game_data.level);
       display_level(game_data.level);
     }
