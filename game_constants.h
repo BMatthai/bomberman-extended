@@ -13,5 +13,6 @@
 #define WALL_INDESTRUCTIBLE 48;
 #define WALL_SQUISHY 49;
 
+#define TILE_FREE 1;
 
 #define PATH_LEVEL = "./level/"
