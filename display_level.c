@@ -30,7 +30,9 @@ char *level_to_display(t_level *my_level) {
       if (my_level->bomb[i][j] == '^'
       || my_level->bomb[i][j] == 'v'
       || my_level->bomb[i][j] == '>'
-      ||my_level->bomb[i][j] == '<')
+      || my_level->bomb[i][j] == '<'
+      || my_level->bomb[i][j] == '@'
+      || my_level->bomb[i][j] == 'O')
         level_to_display[i * columns + j] = my_level->bomb[i][j];
     }
   }
@@ -38,12 +40,6 @@ char *level_to_display(t_level *my_level) {
   for (k = 0; k < my_level->number_characters; k++) {
     level_to_display[my_level->characters[k].position_y * columns + my_level->characters[k].position_x] = my_level->characters[k].symbol;
   }
-
-
-
-
-
-
 
   return level_to_display;
 }
