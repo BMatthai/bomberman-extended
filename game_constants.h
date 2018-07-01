@@ -12,6 +12,7 @@
 
 #define WALL_INDESTRUCTIBLE 48
 #define WALL_SQUISHY 49
+#define WALL_STRONG 57
 
 #define TILE_FREE 1
 #define TILE_WITH_WALL 2

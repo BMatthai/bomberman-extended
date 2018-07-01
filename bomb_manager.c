@@ -18,7 +18,7 @@
 void damage_tile(t_level *level, int position_x, int position_y);
 void explode_bomb(t_level *level, t_bomb *bomb);
 void bomb_has_exploded(t_level *level, t_bomb *bomb);
-
+void remove_bomb_from_list(t_level *level, t_bomb *bomb);
 void check_bombs_timer(t_level *level);
 void put_bomb(t_level *level, t_character *character);
 
@@ -120,14 +120,12 @@ void explode_bomb(t_level *level, t_bomb *bomb) {
 }
 
 void damage_tile(t_level *level, int position_x, int position_y) {
-  if (level->terrain[position_y][position_x] == WALL_SQUISHY) {
+  if (level->terrain[position_y][position_x] > WALL_SQUISHY && level->terrain[position_y][position_x] < WALL_STRONG) {
+    level->terrain[position_y][position_x]--;
+  }
+  else if (level->terrain[position_y][position_x] == WALL_SQUISHY) {
     level->terrain[position_y][position_x]= ' ';
   }
-  level->terrain[position_y][position_x]--;
-}
-else {
-
-
 }
 
 void bomb_has_exploded(t_level *level, t_bomb *bomb) {
@@ -160,8 +158,10 @@ void bomb_has_exploded(t_level *level, t_bomb *bomb) {
     level->bomb[bomb_position_y][bomb_position_x + i] = ' ';
     i++;
   }
-  i = 1;
+  remove_bomb_from_list(level, bomb);
+}
 
+void remove_bomb_from_list(t_level *level, t_bomb *bomb) {
   if (bomb->prev_bomb == NULL && bomb->next_bomb == NULL) {
     level->first_bomb = NULL;
   }
