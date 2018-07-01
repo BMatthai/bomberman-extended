@@ -6,8 +6,12 @@
 
 #define BOMB_IS_NOT_PLACED 0;
 #define BOMB_IS_PLACED_ON_GROUND 1;
-#define BOMB_IS_EXPLODING = 2;
+#define BOMB_IS_EXPLODING 2;
 #define BOMB_HAS_EXPLODED 3;
 #define BOMB_TIME_BLAST_EXPLOSION 1000;
+
+#define WALL_INDESTRUCTIBLE 48;
+#define WALL_SQUISHY 49;
+
 
 #define PATH_LEVEL = "./level/"

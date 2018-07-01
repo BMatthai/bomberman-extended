@@ -14,7 +14,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void explode_bomb();
+void damage_tile(t_level *level, int position_x, int position_y);
+void explode_bomb(t_level *level, t_bomb *bomb);
+void bomb_has_exploded(t_level *level, t_bomb *bomb);
+
 void check_bombs_timer(t_level *level);
 void put_bomb(t_level *level, t_character *character);
 
@@ -24,15 +27,13 @@ void check_bombs_timer(t_level *level) {
 
   if((cur_bomb = level->first_bomb) != NULL) {
     while (cur_bomb != NULL) {
-      if(cur_bomb->state == IS_PLACED_ON_GROUND)
-      {
+      if(cur_bomb->state == 1) {
         if ((get_time() - cur_bomb->time_state_has_changed) > cur_bomb->time_to_explode_millis) {
           explode_bomb(level, cur_bomb);
         }
       }
-      if(cur_bomb->state == IS_PLACED_ON_GROUND)
-      {
-        if ((get_time() - cur_bomb->time_state_has_changed) > BOMB_TIME_BLAST_EXPLOSION){
+      if(cur_bomb->state == 2){
+        if ((get_time() - cur_bomb->time_state_has_changed) > 1000) {
           bomb_has_exploded(level, cur_bomb);
         }
       }
@@ -56,7 +57,7 @@ void put_bomb(t_level *level, t_character *character) {
 
   level->bomb[position_y][position_x] = '@';
 
-  new_bomb->state = IS_PLACED_ON_GROUND;
+  new_bomb->state = 1;
   new_bomb->position_x = position_x;
   new_bomb->position_y = position_y;
   new_bomb->time_state_has_changed = get_time();
@@ -84,25 +85,45 @@ void explode_bomb(t_level *level, t_bomb *bomb) {
   bomb->state = BOMB_IS_EXPLODING;
   bomb->time_state_has_changed = get_time();
 
-  level->bomb[bomb->position_y][bomb->position_x] = 'O';
-  // for (int i = 1; i < 3; i++) {
-  //   level->bomb[bomb->position_y + i][bomb->position_x] = 'v';
-  //   level->bomb[bomb->position_y - i][bomb->position_x] = '^';
-  //   level->bomb[bomb->position_y][bomb->position_x + i] = '>';
-  //   level->bomb[bomb->position_y][bomb->position_x - i] = '<';
-  // }
-
-  int i = 0;
+  int i = 1;
 
   int bomb_position_x = bomb->position_x;
   int bomb_position_y = bomb->position_y;
 
-  while (level->terrain[bomb->position_y - i][bomb_position_x] == ' ') {
-    level->bomb[bomb->position_y - i][bomb->position_x] = '^';
+  level->bomb[bomb_position_y][bomb_position_x] = 'O';
+  while (level->terrain[bomb_position_y - i][bomb_position_x] == ' ' && i != bomb->range) {
+    level->bomb[bomb_position_y - i][bomb_position_x] = '^';
     i++;
   }
-  if (level->terrain[bomb->position_y - i][bomb_position_x] != 0) {
-    level->terrain[bomb->position_y - i][bomb_position_x]--;
+  damage_tile(level, bomb_position_x, bomb_position_y - i);
+  i = 1;
+  while (level->terrain[bomb_position_y + i][bomb_position_x] == ' ' && i != bomb->range) {
+    level->bomb[bomb_position_y + i][bomb_position_x] = 'v';
+    i++;
+  }
+  damage_tile(level, bomb_position_x, bomb_position_y + i);
+  i = 1;
+  while (level->terrain[bomb_position_y][bomb_position_x - i] == ' ' && i != bomb->range) {
+    level->bomb[bomb_position_y][bomb_position_x - i] = '<';
+    i++;
+  }
+  damage_tile(level, bomb_position_x - i, bomb_position_y);
+  i = 1;
+  while (level->terrain[bomb_position_y][bomb_position_x + i] == ' ' && i != bomb->range) {
+    level->bomb[bomb_position_y ][bomb_position_x + i] = '>';
+    i++;
+  }
+  damage_tile(level, bomb_position_x + i, bomb_position_y);
+  i = 1;
+}
+
+void damage_tile(t_level *level, int position_x, int position_y) {
+  char wall = WALL_SQUISHY;
+  if (level->terrain[position_y][position_x] > wall) {
+    level->terrain[position_y][position_x]--;
+  }
+  else {
+    level->terrain[position_y][position_x]= ' ';
   }
 
 
@@ -112,6 +133,34 @@ void bomb_has_exploded(t_level *level, t_bomb *bomb) {
 
   bomb->state = BOMB_HAS_EXPLODED;
   bomb->time_state_has_changed = get_time();
+
+
+  int i = 1;
+
+  int bomb_position_x = bomb->position_x;
+  int bomb_position_y = bomb->position_y;
+
+  level->bomb[bomb_position_y][bomb_position_x] = ' ';
+  while (level->terrain[bomb_position_y - i][bomb_position_x] == ' ' && i != bomb->range) {
+    level->bomb[bomb_position_y - i][bomb_position_x] = ' ';
+    i++;
+  }
+  i = 1;
+  while (level->terrain[bomb_position_y + i][bomb_position_x] == ' ' && i != bomb->range) {
+    level->bomb[bomb_position_y + i][bomb_position_x] = ' ';
+    i++;
+  }
+  i = 1;
+  while (level->terrain[bomb_position_y][bomb_position_x - i] == ' ' && i != bomb->range) {
+    level->bomb[bomb_position_y][bomb_position_x - i] = ' ';
+    i++;
+  }
+  i = 1;
+  while (level->terrain[bomb_position_y][bomb_position_x + i] == ' ' && i != bomb->range) {
+    level->bomb[bomb_position_y][bomb_position_x + i] = ' ';
+    i++;
+  }
+  i = 1;
 
   if (bomb->prev_bomb == NULL && bomb->next_bomb == NULL) {
     level->first_bomb = NULL;
@@ -127,8 +176,4 @@ void bomb_has_exploded(t_level *level, t_bomb *bomb) {
     bomb->prev_bomb->next_bomb = bomb->next_bomb;
     bomb->next_bomb->prev_bomb = bomb->prev_bomb;
   }
-
-
-
-
 }
