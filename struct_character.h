@@ -1,4 +1,5 @@
 typedef struct s_character {
+  //int state;
   int heal_points;
   char symbol;
   char bomb_range;

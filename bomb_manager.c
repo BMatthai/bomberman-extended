@@ -126,6 +126,15 @@ void damage_tile(t_level *level, int position_x, int position_y) {
   else if (level->terrain[position_y][position_x] == WALL_SQUISHY) {
     level->terrain[position_y][position_x]= ' ';
   }
+  // for(int i = 0; i < level->number_characters; i++) {
+  //   if(level->characters[i].position_x == position_x && level->characters[i].position_y == position_y) {
+  //     level->characters[i].heal_points -= CHARACTER_BOMB_DAMAGE;
+  //     if (level->characters[i].heal_points <= 0) {
+  //       level->characters[i].symbol = ' ';
+  //       level->characters[i].state = CHARACTER_DEAD;
+  //     }
+  //   }
+  // }
 }
 
 void bomb_has_exploded(t_level *level, t_bomb *bomb) {
