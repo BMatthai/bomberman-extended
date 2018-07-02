@@ -28,8 +28,7 @@ int main(int argc, char **argv) {
       game_data = malloc(sizeof(t_game_data));
 
       game_data->level = generate_level_from_file("./level/testlevel.lvl");
-      t_character *charac = game_data->playable_character;
-      game_data->playable_character = &game_data->level->characters[0];
+      t_character *charac = game_data->playable_character = &game_data->level->characters[0];
 
       struct termios termios_p;
       tcgetattr(1, &termios_p);

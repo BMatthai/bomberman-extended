@@ -10,7 +10,7 @@
 t_character create_character(char symbol, int x, int y) {
   t_character character;
 
-  //character.state = CHARACTER_ALIVE;
+  character.state = CHARACTER_ALIVE;
   character.heal_points = CHARACTER_HEAL_POINT;
   character.bomb_range = CHARACTER_BOMB_RANGE;
   character.number_bomb = CHARACTER_NUMBER_BOMB;

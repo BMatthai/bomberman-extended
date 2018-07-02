@@ -95,27 +95,27 @@ void explode_bomb(t_level *level, t_bomb *bomb) {
   level->bomb[bomb_position_y][bomb_position_x] = 'O';
   while (tile_content(level, bomb_position_x, bomb_position_y - i) == TILE_FREE && i != bomb->range) {
     level->bomb[bomb_position_y - i][bomb_position_x] = '^';
+    damage_tile(level, bomb_position_x, bomb_position_y - i);
     i++;
   }
-  damage_tile(level, bomb_position_x, bomb_position_y - i);
   i = 1;
   while (tile_content(level, bomb_position_x, bomb_position_y + i) == TILE_FREE && i != bomb->range) {
     level->bomb[bomb_position_y + i][bomb_position_x] = 'v';
+    damage_tile(level, bomb_position_x, bomb_position_y + i);
     i++;
   }
-  damage_tile(level, bomb_position_x, bomb_position_y + i);
   i = 1;
   while (tile_content(level, bomb_position_x - i, bomb_position_y) == TILE_FREE && i != bomb->range) {
     level->bomb[bomb_position_y][bomb_position_x - i] = '<';
+    damage_tile(level, bomb_position_x - i, bomb_position_y);
     i++;
   }
-  damage_tile(level, bomb_position_x - i, bomb_position_y);
   i = 1;
   while (tile_content(level, bomb_position_x + i, bomb_position_y) == TILE_FREE && i != bomb->range) {
     level->bomb[bomb_position_y][bomb_position_x + i] = '>';
+    damage_tile(level, bomb_position_x + i, bomb_position_y);
     i++;
   }
-  damage_tile(level, bomb_position_x + i, bomb_position_y);
 
 }
 
@@ -126,15 +126,15 @@ void damage_tile(t_level *level, int position_x, int position_y) {
   else if (level->terrain[position_y][position_x] == WALL_SQUISHY) {
     level->terrain[position_y][position_x]= ' ';
   }
-  // for(int i = 0; i < level->number_characters; i++) {
-  //   if(level->characters[i].position_x == position_x && level->characters[i].position_y == position_y) {
-  //     level->characters[i].heal_points -= CHARACTER_BOMB_DAMAGE;
-  //     if (level->characters[i].heal_points <= 0) {
-  //       level->characters[i].symbol = ' ';
-  //       level->characters[i].state = CHARACTER_DEAD;
-  //     }
-  //   }
-  // }
+  for(int i = 0; i < level->number_characters; i++) {
+    if(level->characters[i].position_x == position_x && level->characters[i].position_y == position_y) {
+      level->characters[i].heal_points -= CHARACTER_BOMB_DAMAGE;
+      if (level->characters[i].heal_points <= 0) {
+        level->characters[i].symbol = ' ';
+        level->characters[i].state = CHARACTER_DEAD;
+      }
+    }
+  }
 }
 
 void bomb_has_exploded(t_level *level, t_bomb *bomb) {
