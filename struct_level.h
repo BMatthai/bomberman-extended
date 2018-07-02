@@ -3,7 +3,11 @@
 #include "struct_character.h"
 #endif
 
+#ifndef T_BOMB
+#define T_BOMB
 #include "struct_bomb.h"
+#endif
+
 
 typedef struct s_level {
     char *level_name;

@@ -1,9 +1,9 @@
 #ifndef T_CHARACTER
 #define T_CHARACTER
 #include "struct_character.h"
-#include "character_creation.h"
 #endif
 
+#include "character_creation.h"
 #include "stdio.h"
 #include "game_constants.h"
 
