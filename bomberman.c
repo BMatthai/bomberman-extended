@@ -3,7 +3,7 @@
 
 #include <string.h>
 #include <stdio.h>
-#include <SDL2/SDL.h>
+//#include <SDL2/SDL.h>
 
 
 int launch_game_sdl() {

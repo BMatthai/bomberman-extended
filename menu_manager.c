@@ -16,6 +16,7 @@
 #include "string.h"
 #include "menu_manager.h"
 #include "game_manager.h"
+#include "multiplayer_manager.h"
 
 #include <poll.h>
 #include <stdio.h>
@@ -23,6 +24,31 @@
 #include <termios.h>
 #include <stdlib.h>
 
+
+void set_multiplayer_menu() {
+  char buf[1];
+  char buf2[20];
+
+  write(1, "\033[2J\n", sizeof("\033[2J\n"));
+  write(1, "1 - HOST GAME\n", strlen("1 - HOST GAME\n"));
+  write(1, "2 - JOIN GAME\n", strlen("2 - JOIN GAME\n"));
+  while (1) {
+    read(0, buf, 1);
+
+    if (buf[0] == '1') {
+     host_game();
+    }
+    else if(buf[0] == '2') {
+        write(1, "Enter server address\n", strlen("Enter server address\n"));
+      
+        read(0, buf2, 20);
+
+        write(1, "Did entered server address\n", strlen("Did entered server address\n"));
+      
+      join_game("192.168.56.101");
+    }
+  }
+}
 
 void launch_menu() {
   char buf[1];
@@ -35,6 +61,9 @@ void launch_menu() {
 
     if (buf[0] == '1') {
       launch_game();
+    }
+    else if(buf[0] == '2') {
+      set_multiplayer_menu();
     }
   }
 }
