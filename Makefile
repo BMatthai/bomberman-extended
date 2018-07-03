@@ -1,6 +1,5 @@
 CC=gcc
-CFLAGS=-W -Wall -Werror -pedantic -std=c99
-TESTFLAG=-I/usr/local/include/SDL2
+CFLAGS=-W -Wall -Werror -pedantic -std=c99 -I/usr/include -L/usr/local/lib/cmake
 LDFLAGS=
 EXEC=bomberman
 
@@ -21,7 +20,7 @@ character_creation.o: character_creation.c
 	$(CC) -o character_creation.o -c character_creation.c $(CFLAGS)
 
 bomberman.o: bomberman.c
-	$(CC) $(TESTFLAG) -o bomberman.o -c bomberman.c $(CFLAGS)
+	$(CC) -o bomberman.o -c bomberman.c $(CFLAGS)
 
 action.o: action.c
 	$(CC) -o action.o -c action.c $(CFLAGS)
