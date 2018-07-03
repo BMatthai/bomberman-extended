@@ -33,9 +33,10 @@ t_level *generate_level_from_file(char *path) {
   level->columns = get_one_dim(fd);
   level->terrain = get_level_layer_raw(fd, level->lines, level->columns);
   level->bonus = get_level_layer_raw(fd, level->lines, level->columns);
+  level->bomb = get_bomb_layer(level->lines, level->columns);
   level->number_characters = count_characters(level);
   level->characters = get_level_characters(level);
-  
+
   close(fd);
   return level;
 }
@@ -97,6 +98,16 @@ t_character *get_level_characters(t_level *level) {
     }
   }
   return characters;
+}
+
+char **get_bomb_layer(int lines, int columns) {
+  char **bomb_layer;
+
+  bomb_layer = malloc(lines * sizeof(char*));
+  for (int i = 0; i < lines; i++) {
+    bomb_layer[i] = malloc(sizeof(char) * columns);
+  }
+  return bomb_layer;
 }
 
 int isAChar(char tile) {

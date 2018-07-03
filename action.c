@@ -10,22 +10,12 @@
 #include "struct_character.h"
 #endif
 
+#include "game_constants.h"
 #include "bomb_manager.h"
-
+#include "level_manager.h"
 
 #include <unistd.h>
-int is_tile_free(t_level *level, int x, int y) {
-    int i;
-    if(level->terrain[y][x] != ' ')
-      return 0;
 
-    for(i = 0; i < level->number_characters; i++) {
-      if(level->characters[i].position_x == x && level->characters[i].position_y == y) {
-        return 0;
-      }
-    }
-    return 1;
-}
 
 void move(t_level *level, t_character *character, int x, int y) {
   int new_position_x;
@@ -34,7 +24,7 @@ void move(t_level *level, t_character *character, int x, int y) {
   new_position_x = character->position_x + x;
   new_position_y = character->position_y + y;
 
-  if (is_tile_free(level, new_position_x, new_position_y)) {
+  if (tile_content(level, new_position_x, new_position_y) == TILE_FREE) {
     character->position_x = new_position_x;
     character->position_y = new_position_y;
   }

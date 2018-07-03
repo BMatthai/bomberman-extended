@@ -1,17 +1,20 @@
-#include "struct_level.h"
+#ifndef T_GAME_DATA
+#define T_GAME_DATA
+#include "struct_game_data.h"
+#endif
+
+
+
 #include "display_level.h"
+
+
+
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-// int display_level(t_level my_level) {
-//   for(int i = 0; i < my_level.lines; i++) {
-//       write(1, my_level.terrain[i], my_level.columns);
-//       write(1, "\n", strlen("\n"));
-//   }
-// }
 
-char *level_to_display(t_level *my_level) {
+char *level_to_display(t_level *level) {
   int i;
   int j;
   int k;
@@ -19,35 +22,67 @@ char *level_to_display(t_level *my_level) {
   int columns;
   char *level_to_display;
 
-  lines = my_level->lines;
-  columns = my_level->columns;
+  lines = level->lines;
+  columns = level->columns;
 
   level_to_display = malloc(sizeof(char) * lines * columns);
 
   for (i = 0; i < lines; i++) {
     for (j = 0; j < columns; j++) {
-      level_to_display[i * columns + j] = my_level->terrain[i][j];
+      level_to_display[i * columns + j] = level->terrain[i][j];
+      if (level->bomb[i][j] == '^'
+      || level->bomb[i][j] == 'v'
+      || level->bomb[i][j] == '>'
+      || level->bomb[i][j] == '<'
+      || level->bomb[i][j] == '@'
+      || level->bomb[i][j] == 'O')
+        level_to_display[i * columns + j] = level->bomb[i][j];
     }
   }
-  for (k = 0; k < my_level->number_characters; k++) {
-    level_to_display[my_level->characters[k].position_y * columns + my_level->characters[k].position_x] = my_level->characters[k].symbol;
-  }
 
+  for (k = 0; k < level->number_characters; k++) {
+    level_to_display[level->characters[k].position_y * columns + level->characters[k].position_x] = level->characters[k].symbol;
+  }
 
   return level_to_display;
 }
 
+void display_hud(t_game_data *game_data) {
 
-int display_level(t_level *my_level) {
+  t_character *character = game_data->playable_character;
 
-  char *level = level_to_display(my_level);
+  int heal_points = character->heal_points;
+  char bomb_range = character->bomb_range;
+  char number_bomb = character->number_bomb;
+  char movement_speed = character->movement_speed;
+  int time_to_bomb_explode_millis = character->time_to_bomb_explode_millis;
+  
+  printf("Vie : %d\n", heal_points);
+  printf("Porté des bombes : %d\n", bomb_range);
+  printf("Nombre max de bombes : %d\n", number_bomb);
+  printf("Vitesse : %d\n", movement_speed);
+  printf("Délai explosion bombe : %d\n", time_to_bomb_explode_millis);
+  write(1, "--------", strlen("--------"));
+  write(1, "\n", strlen("\n"));
 
-  for(int i = 0; i < my_level->lines; i++) {
-    for(int j = 0; j < my_level->columns; j++) {
+}
+
+void display_level(t_game_data *game_data) {
+
+  t_level *level = game_data->level;
+  char *level_terrain = level_to_display(game_data->level);
+
+
+  for(int i = 0; i < level->lines; i++) {
+    for(int j = 0; j < level->columns; j++) {
         //write(1, &level_to_display[i][j], 1);
-        write(1, &level[i * my_level->columns + j], 1);
+        write(1, &level_terrain[i * level->columns + j], 1);
     }
     write(1, "\n", strlen("\n"));
   }
-  return 0;
+}
+
+void display_screen(t_game_data *game_data) {
+  display_hud(game_data);
+  display_level(game_data);
 }
