@@ -87,40 +87,43 @@ void explode_bomb(t_level *level, t_bomb *bomb) {
   bomb->state = BOMB_IS_EXPLODING;
   bomb->time_state_has_changed = get_time();
 
-  int i = 1;
 
   int bomb_position_x = bomb->position_x;
   int bomb_position_y = bomb->position_y;
 
   level->bomb[bomb_position_y][bomb_position_x] = 'O';
+  damage_tile(level, bomb_position_x, bomb_position_y);
+
+  int i = 1;
   while (tile_content(level, bomb_position_x, bomb_position_y - i) == TILE_FREE && i != bomb->range) {
     level->bomb[bomb_position_y - i][bomb_position_x] = '^';
-    damage_tile(level, bomb_position_x, bomb_position_y - i);
     i++;
   }
+  damage_tile(level, bomb_position_x, bomb_position_y - i);
   i = 1;
   while (tile_content(level, bomb_position_x, bomb_position_y + i) == TILE_FREE && i != bomb->range) {
     level->bomb[bomb_position_y + i][bomb_position_x] = 'v';
-    damage_tile(level, bomb_position_x, bomb_position_y + i);
     i++;
   }
+  damage_tile(level, bomb_position_x, bomb_position_y + i);
   i = 1;
   while (tile_content(level, bomb_position_x - i, bomb_position_y) == TILE_FREE && i != bomb->range) {
     level->bomb[bomb_position_y][bomb_position_x - i] = '<';
-    damage_tile(level, bomb_position_x - i, bomb_position_y);
     i++;
   }
+  damage_tile(level, bomb_position_x - i, bomb_position_y);
   i = 1;
   while (tile_content(level, bomb_position_x + i, bomb_position_y) == TILE_FREE && i != bomb->range) {
     level->bomb[bomb_position_y][bomb_position_x + i] = '>';
-    damage_tile(level, bomb_position_x + i, bomb_position_y);
     i++;
   }
+  damage_tile(level, bomb_position_x + i, bomb_position_y);
+
 
 }
 
 void damage_tile(t_level *level, int position_x, int position_y) {
-  if (level->terrain[position_y][position_x] > WALL_SQUISHY && level->terrain[position_y][position_x] < WALL_STRONG) {
+  if (level->terrain[position_y][position_x] > WALL_SQUISHY && level->terrain[position_y][position_x] <= WALL_STRONG) {
     level->terrain[position_y][position_x]--;
   }
   else if (level->terrain[position_y][position_x] == WALL_SQUISHY) {

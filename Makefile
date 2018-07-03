@@ -5,8 +5,8 @@ EXEC=bomberman
 
 all: $(EXEC)
 
-bomberman: bomberman.o level_generation.o character_creation.o display_level.o action.o bomb_manager.o time_manager.o level_manager.o
-	$(CC) -o bomberman bomberman.o level_generation.o character_creation.o display_level.o action.o bomb_manager.o time_manager.o level_manager.o $(LDFLAGS)
+bomberman: bomberman.o level_generation.o character_creation.o display_level.o action.o bomb_manager.o time_manager.o level_manager.o menu_manager.o game_manager.o
+	$(CC) -o bomberman bomberman.o level_generation.o character_creation.o display_level.o action.o bomb_manager.o time_manager.o level_manager.o menu_manager.o game_manager.o $(LDFLAGS)
 
 display_level.o: display_level.c
 	$(CC) -o display_level.o -c display_level.c $(CFLAGS)
@@ -31,6 +31,12 @@ time_manager.o: time_manager.c
 
 level_manager.o: level_manager.c
 	$(CC) -o level_manager.o -c level_manager.c $(CFLAGS)
+
+menu_manager.o: menu_manager.c
+	$(CC) -o menu_manager.o -c menu_manager.c $(CFLAGS)
+
+game_manager.o: game_manager.c
+	$(CC) -o game_manager.o -c game_manager.c $(CFLAGS)
 
 
 clean:
