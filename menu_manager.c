@@ -17,12 +17,51 @@
 #include "menu_manager.h"
 #include "game_manager.h"
 
+#include "client_manager.h"
+#include "server_manager.h"
+
 #include <poll.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <termios.h>
 #include <stdlib.h>
 
+
+void read_ip(){
+ while(1){
+  char input[32];
+
+  printf("\nInput IP Address : ");
+  scanf("%s", input);
+  join_game(input);
+  printf("\nL'addresse du server est incorrecte");
+      
+ }
+ 
+}
+void set_multiplayer_menu() {
+  char buf[1];
+  
+
+  write(1, "\033[2J\n", sizeof("\033[2J\n"));
+  write(1, "1 - HOST GAME\n", strlen("1 - HOST GAME\n"));
+  write(1, "2 - JOIN GAME\n", strlen("2 - JOIN GAME\n"));
+  while (1) {
+    read(0, buf, 1);
+
+    if (buf[0] == '1') {
+     host_game();
+    }
+    else if(buf[0] == '2') {
+      write(1, "Enter server address\n", strlen("Enter server address\n"));
+      
+      read_ip();
+      write(1, "Did entered server address\n", strlen("Did entered server address\n"));
+      
+        
+    }
+  }
+}
 
 void launch_menu() {
   char buf[1];
@@ -35,6 +74,9 @@ void launch_menu() {
 
     if (buf[0] == '1') {
       launch_game();
+    }
+    else if(buf[0] == '2') {
+      set_multiplayer_menu();
     }
   }
 }

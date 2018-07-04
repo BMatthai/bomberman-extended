@@ -3,7 +3,7 @@
 
 #include <string.h>
 #include <stdio.h>
-#include <SDL2/SDL.h>
+//#include <SDL2/SDL.h>
 
 
 int launch_game_sdl() {
@@ -38,15 +38,16 @@ int launch_game_sdl() {
       return 0;
    }
 
+// int argc, char **argv
+int main() {
 
-int main(int argc, char **argv) {
-
-    if (argc == 2 && strcmp(argv[1], "term") == 0){
-      launch_menu();
-    }
-    else if (argc == 2 && strcmp(argv[1], "sdl") == 0) {
-      launch_game_sdl();
-    }
+ launch_menu();
+    // if (argc == 2 && strcmp(argv[1], "term") == 0){
+     
+    // }
+    // else if (argc == 2 && strcmp(argv[1], "sdl") == 0) {
+    //   launch_game_sdl();
+    // }
     return 0;
 
 }
