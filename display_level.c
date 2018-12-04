@@ -66,14 +66,12 @@ void display_hud(t_game_data *game_data) {
   char movement_speed = character->movement_speed;
   int time_to_bomb_explode_millis = character->time_to_bomb_explode_millis;
 
-  set_color_hud();
-  printf("Vie : %d\n", heal_points);
-  printf("Porté des bombes : %d\n", bomb_range);
-  printf("Nombre max de bombes : %d\n", number_bomb);
-  printf("Vitesse : %d\n", movement_speed);
-  printf("Délai explosion bombe : %d\n", time_to_bomb_explode_millis);
-  write(1, "--------", strlen("--------"));
-  write(1, "\n", strlen("\n"));
+  set_color_light_gray();
+  printf("Vie : %d                    \n", heal_points);
+  printf("Porté des bombes : %d       \n", bomb_range);
+  printf("Nombre max de bombes : %d   \n", number_bomb);
+  printf("Vitesse : %d                \n", movement_speed);
+  printf("Délai explosion bombe : %d  \n", time_to_bomb_explode_millis);
 
 }
 
@@ -84,6 +82,7 @@ void display_level(t_game_data *game_data) {
 
 
   for(int i = 0; i < level->lines; i++) {
+    write(1, "\n", strlen("\n"));
     for(int j = 0; j < level->columns; j++) {
         int cur_tile_content = tile_content(level, j, i);
         if(cur_tile_content == TILE_WITH_PLAYER_A) {
@@ -140,8 +139,6 @@ void display_level(t_game_data *game_data) {
         set_color_normal();
 
     }
-    write(1, "\n", strlen("\n"));
-
   }
 }
 

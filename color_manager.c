@@ -29,7 +29,7 @@ void set_color_blue() {
 }
 
 void set_color_magenta() {
-  set_color("\e[40;35m");
+  set_color("\e[41;31m");
 }
 
 void set_color_cyan() {
@@ -53,5 +53,5 @@ void set_color_dark_gray() {
 }
 
 void set_color_hud() {
-  set_color("\e[30;43m");
+  set_color("\e[30;46m");
 }
