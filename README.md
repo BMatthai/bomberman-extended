@@ -3,7 +3,13 @@
 Backlog : 
 - [x] Base existante
 - [ ] Explosion en chaîne des bombes
-- [ ] Verifier le retours des fonctions (malloc !)...
-- [ ] SDL
-- [ ] Implémenter réseau
+- [ ] Vérifier le retours des mallocs
+- [ ] Vérifier le retours des fonctions en général
 - [ ] Amélioration du Makefile
+- [ ] Améliorer le menu
+- [ ] Ajouter création de map aléatoires
+- [ ] Créer une boucle de jeu qui ne dépend pas du CPU
+- [ ] Améliorer IA
+- [ ] Implémenter réseau
+- [ ] SDL
+
