@@ -3,56 +3,57 @@ CFLAGS=
 CFLAGSE=-W -Wall -Werror -pedantic -std=c99
 LDFLAGS=
 EXEC=bomberman
-
-
+BUILD_DIR=./build
+BIN_DIR=./bin
+SOURCE_DIR=./src
 
 all: $(EXEC)
 
-bomberman: bomberman.o level_generation.o character_creation.o display_level.o action.o bomb_manager.o time_manager.o level_manager.o menu_manager.o game_manager.o client_manager.o server_manager.o ai_manager.o
-	$(CC) -o bomberman bomberman.o level_generation.o character_creation.o display_level.o action.o bomb_manager.o time_manager.o level_manager.o menu_manager.o game_manager.o client_manager.o server_manager.o ai_manager.o $(LDFLAGS)
+bomberman: $(BUILD_DIR)/bomberman.o $(BUILD_DIR)/level_generation.o $(BUILD_DIR)/character_creation.o $(BUILD_DIR)/display_level.o $(BUILD_DIR)/action.o $(BUILD_DIR)/bomb_manager.o $(BUILD_DIR)/time_manager.o $(BUILD_DIR)/level_manager.o $(BUILD_DIR)/menu_manager.o $(BUILD_DIR)/game_manager.o $(BUILD_DIR)/client_manager.o $(BUILD_DIR)/server_manager.o $(BUILD_DIR)/ai_manager.o
+	$(CC) -o bomberman $(BUILD_DIR)/bomberman.o $(BUILD_DIR)/level_generation.o $(BUILD_DIR)/character_creation.o $(BUILD_DIR)/display_level.o $(BUILD_DIR)/action.o $(BUILD_DIR)/bomb_manager.o $(BUILD_DIR)/time_manager.o $(BUILD_DIR)/level_manager.o $(BUILD_DIR)/menu_manager.o $(BUILD_DIR)/game_manager.o $(BUILD_DIR)/client_manager.o $(BUILD_DIR)/server_manager.o $(BUILD_DIR)/ai_manager.o $(LDFLAGS)
 
-display_level.o: display_level.c
-	$(CC) -o display_level.o -c display_level.c $(CFLAGS)
+display_level.o: $(SOURCE_DIR)/display_level.c
+	$(CC) -o $(BUILD_DIR)/display_level.o -c $(SOURCE_DIR)/display_level.c $(CFLAGS)
 
-level_generation.o: level_generation.c
-	$(CC) -o level_generation.o -c level_generation.c $(CFLAGS)
+level_generation.o: $(SOURCE_DIR)/level_generation.c
+	$(CC) -o $(BUILD_DIR)/level_generation.o -c $(SOURCE_DIR)/level_generation.c $(CFLAGS)
 
-character_creation.o: character_creation.c
-	$(CC) -o character_creation.o -c character_creation.c $(CFLAGS)
+character_creation.o: $(SOURCE_DIR)/character_creation.c
+	$(CC) -o $(BUILD_DIR)/character_creation.o -c $(SOURCE_DIR)/character_creation.c $(CFLAGS)
 
-bomberman.o: bomberman.c
-	$(CC) -o bomberman.o -c bomberman.c $(CFLAGS)
+bomberman.o: $(SOURCE_DIR)/bomberman.c
+	$(CC) -o $(BUILD_DIR)/bomberman.o -c $(SOURCE_DIR)/bomberman.c $(CFLAGS)
 
-action.o: action.c
-	$(CC) -o action.o -c action.c $(CFLAGS)
+action.o: $(SOURCE_DIR)/action.c
+	$(CC) -o $(BUILD_DIR)/action.o -c $(SOURCE_DIR)/action.c $(CFLAGS)
 
-bomb_manager.o: bomb_manager.c
-	$(CC) -o bomb_manager.o -c bomb_manager.c $(CFLAGS)
+bomb_manager.o: $(SOURCE_DIR)/bomb_manager.c
+	$(CC) -o $(BUILD_DIR)/bomb_manager.o -c $(SOURCE_DIR)/bomb_manager.c $(CFLAGS)
 
-time_manager.o: time_manager.c
-	$(CC) -o time_manager.o -c time_manager.c $(CFLAGS)
+time_manager.o: $(SOURCE_DIR)/time_manager.c
+	$(CC) -o $(BUILD_DIR)/time_manager.o -c $(SOURCE_DIR)/time_manager.c $(CFLAGS)
 
-level_manager.o: level_manager.c
-	$(CC) -o level_manager.o -c level_manager.c $(CFLAGS)
+level_manager.o: $(SOURCE_DIR)/level_manager.c
+	$(CC) -o $(BUILD_DIR)/level_manager.o -c $(SOURCE_DIR)/level_manager.c $(CFLAGS)
 
-menu_manager.o: menu_manager.c
-	$(CC) -o menu_manager.o -c menu_manager.c $(CFLAGS)
+menu_manager.o: $(SOURCE_DIR)/menu_manager.c
+	$(CC) -o $(BUILD_DIR)/menu_manager.o -c $(SOURCE_DIR)/menu_manager.c $(CFLAGS)
 
-game_manager.o: game_manager.c
-	$(CC) -o game_manager.o -c game_manager.c $(CFLAGS)
+game_manager.o: $(SOURCE_DIR)/game_manager.c
+	$(CC) -o $(BUILD_DIR)/game_manager.o -c $(SOURCE_DIR)/game_manager.c $(CFLAGS)
 
-client_manager.o: client_manager.c
-	$(CC) -o client_manager.o -c client_manager.c $(CFLAGS)
+client_manager.o: $(SOURCE_DIR)/client_manager.c
+	$(CC) -o $(BUILD_DIR)/client_manager.o -c $(SOURCE_DIR)/client_manager.c $(CFLAGS)
 
-server_manager.o: server_manager.c
-	$(CC) -o server_manager.o -c server_manager.c $(CFLAGS)
+server_manager.o: $(SOURCE_DIR)/server_manager.c
+	$(CC) -o $(BUILD_DIR)/server_manager.o -c $(SOURCE_DIR)/server_manager.c $(CFLAGS)
 
-ai_manager.o: ai_manager.c
-	$(CC) -o ai_manager.o -c ai_manager.c $(CFLAGS)
+ai_manager.o: $(SOURCE_DIR)/ai_manager.c
+	$(CC) -o $(BUILD_DIR)/ai_manager.o -c $(SOURCE_DIR)/ai_manager.c $(CFLAGS)
 
 
 clean:
-	rm -rf *.o
+	rm -rf $(BUILD_DIR)/*.o
 
 mrproper: clean
 	rm -rf $(EXEC)
