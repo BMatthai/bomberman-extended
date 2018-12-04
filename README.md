@@ -6,3 +6,4 @@ Backlog :
 - [ ] Verifier le retours des fonctions (malloc !)...
 - [ ] SDL
 - [ ] Implémenter réseau
+- [ ] Amélioration du Makefile
