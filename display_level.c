@@ -86,8 +86,8 @@ void display_level(t_game_data *game_data) {
 
   for(int i = 0; i < level->lines; i++) {
     for(int j = 0; j < level->columns; j++) {
-        int cur_tile_content = level->terrain[y][x];
-        if(cur_tile_content == TILE_WITH_PLAYER_A) {
+        int cur_tile_content = level->terrain[i][j];
+        /*if(cur_tile_content == TILE_WITH_PLAYER_A) {
           if (level->characters[0].state == CHARACTER_HITTED)
             set_color_white();
           else
@@ -117,6 +117,9 @@ void display_level(t_game_data *game_data) {
         else if(cur_tile_content == TILE_WITH_BONUS_2) {
           set_color_cyan();
         }
+        else if(cur_tile_content == TILE_WITH_BONUS_3) {
+          set_color_cyan();
+        }
         else if(cur_tile_content == TILE_WITH_BOMB
           || cur_tile_content == TILE_WITH_BOMB_EXP_DOWN
           || cur_tile_content == TILE_WITH_BOMB_EXP_UP
@@ -124,13 +127,16 @@ void display_level(t_game_data *game_data) {
           || cur_tile_content == TILE_WITH_BOMB_EXP_RIGHT
           || cur_tile_content == TILE_WITH_BOMB_ORIGIN)
             set_color_red();
-         else if(cur_tile_content == ' ') {
+         else if(cur_tile_content == TILE_FREE) {
            set_color_black();
          }
-         else {
+         else if(cur_tile_content == TILE_WITH_WALL_ONE){
            set_color_light_gray();
          }
-        write(1, cur_tile_content, 1);
+         else if (cur_tile_content >= TILE_WITH_WALL_TWO && cur_tile_content <= TILE_WITH_WALL_NINE) {
+           set_color_dark_gray();
+         }*/
+        write(1, &cur_tile_content, 1);
     }
     write(1, "\n", strlen("\n"));
 

@@ -34,18 +34,18 @@ void chase_target(t_level *level, t_character *character, int target_pos_x, int 
 	int character_pos_x = character->position_x;
 	int character_pos_y = character->position_y;
 
-
-	if (tile_content(level, character_pos_x + 1, character_pos_y) == TILE_WITH_DESTRUCTIBLE_WALL
-		|| tile_content(level, character_pos_x - 1, character_pos_y) == TILE_WITH_DESTRUCTIBLE_WALL
-		|| tile_content(level, character_pos_x, character_pos_y - 1) == TILE_WITH_DESTRUCTIBLE_WALL
-		|| tile_content(level, character_pos_x, character_pos_y + 1) == TILE_WITH_DESTRUCTIBLE_WALL)
+	if (tile_is_destructible_wall(level, character_pos_x + 1, character_pos_y)
+		|| tile_is_destructible_wall(level, character_pos_x - 1, character_pos_y)
+		|| tile_is_destructible_wall(level, character_pos_x, character_pos_y - 1)
+		|| tile_is_destructible_wall(level, character_pos_x, character_pos_y + 1))
 		{
 			put_bomb(level, character);
 		}
-	if (tile_content(level, character_pos_x + 1, character_pos_y) == TILE_WITH_CHARACTER
-		|| tile_content(level, character_pos_x - 1, character_pos_y) == TILE_WITH_CHARACTER
-		|| tile_content(level, character_pos_x, character_pos_y - 1) == TILE_WITH_CHARACTER
-		|| tile_content(level, character_pos_x, character_pos_y + 1) == TILE_WITH_CHARACTER)
+
+	if (tile_is_character(level, character_pos_x + 1, character_pos_y)
+		|| tile_is_character(level, character_pos_x - 1, character_pos_y)
+		|| tile_is_character(level, character_pos_x, character_pos_y - 1)
+		|| tile_is_character(level, character_pos_x, character_pos_y + 1))
 		{
 		put_bomb(level, character);
 	}
