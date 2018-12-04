@@ -36,10 +36,14 @@ int game_state(t_game_data *game_data) {
 return GAME_IS_RUNNING;
 }
 
-void launch_game(int ai) {
+int launch_game(int ai) {
   t_game_data *game_data = NULL;
 
   game_data = malloc(sizeof(t_game_data));
+
+  if (game_data == NULL) {
+    return -1;
+  }
 
   game_data->level = generate_level_from_file("./level/testlevel.lvl");
 
@@ -105,4 +109,5 @@ void launch_game(int ai) {
   free(game_data);
   sleep(3);
   launch_menu();
+  return 1;
 }

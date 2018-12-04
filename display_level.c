@@ -26,6 +26,10 @@ char *level_to_display(t_level *level) {
 
   level_to_display = malloc(sizeof(char) * lines * columns);
 
+  if (level_to_display == NULL) {
+    return NULL;
+  }
+
   for (i = 0; i < lines; i++) {
     for (j = 0; j < columns; j++) {
 

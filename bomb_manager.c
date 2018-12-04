@@ -56,6 +56,10 @@ void put_bomb(t_level *level, t_character *character) {
     new_bomb = NULL;
     new_bomb = malloc(sizeof(t_bomb));
 
+    if (new_bomb == NULL) {
+      return;
+    }
+
     level->bomb[position_y][position_x] = '@';
 
     new_bomb->state = 1;
