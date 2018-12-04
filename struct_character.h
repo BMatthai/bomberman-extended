@@ -8,4 +8,5 @@ typedef struct s_character {
   int position_x;
   int position_y;
   int state;
+  int time_state_has_changed;
 }   t_character;

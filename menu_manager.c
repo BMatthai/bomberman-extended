@@ -8,17 +8,15 @@
 #include "struct_level.h"
 #endif
 
-#include "level_generation.h"
-#include "display_level.h"
-#include "action.h"
-#include "game_constants.h"
-#include "bomb_manager.h"
-#include "string.h"
-#include "menu_manager.h"
-#include "game_manager.h"
+#ifndef T_CHARACTER
+#define T_CHARACTER
+#include "struct_character.h"
+#endif
 
 #include "client_manager.h"
 #include "server_manager.h"
+#include "string.h"
+#include "game_manager.h"
 
 #include <poll.h>
 #include <stdio.h>
@@ -35,13 +33,13 @@ void read_ip(){
   scanf("%s", input);
   join_game(input);
   printf("\nL'addresse du server est incorrecte");
-      
+
  }
- 
+
 }
 void set_multiplayer_menu() {
   char buf[1];
-  
+
 
   write(1, "\033[2J\n", sizeof("\033[2J\n"));
   write(1, "1 - HOST GAME\n", strlen("1 - HOST GAME\n"));
@@ -54,11 +52,11 @@ void set_multiplayer_menu() {
     }
     else if(buf[0] == '2') {
       write(1, "Enter server address\n", strlen("Enter server address\n"));
-      
+
       read_ip();
       write(1, "Did entered server address\n", strlen("Did entered server address\n"));
-      
-        
+
+
     }
   }
 }
@@ -68,62 +66,19 @@ void launch_menu() {
 
   write(1, "\033[2J\n", sizeof("\033[2J\n"));
   write(1, "1 - MONOJOUEUR\n", strlen("1 - MONOJOUEUR\n"));
-  write(1, "2 - MULTIJOUEUR\n", strlen("2 - MULTIJOUEUR\n"));
+  write(1, "2 - VERSUS COMPUTER\n", strlen("2 - VERSUS COMPUTER\n"));
+  write(1, "3 - MULTIJOUEUR\n", strlen("3 - MULTIJOUEUR\n"));
   while (1) {
     read(0, buf, 1);
 
     if (buf[0] == '1') {
-      launch_game();
+      launch_game(1);
     }
-    else if(buf[0] == '2') {
+    if (buf[0] == '2') {
+      launch_game(2);
+    }
+    else if(buf[0] == '3') {
       set_multiplayer_menu();
     }
   }
-}
-
-void launch_listmap() {
-  char buf[1];
-
-  write(1, "\033[2J\n", sizeof("\033[2J\n"));
-
-  while (1) {
-    read(0, buf, 1);
-
-    if (buf[0] == '1') {
-      launch_game();
-    }
-  }
-}
-
-void launch_game() {
-  t_game_data *game_data = NULL;
-
-  game_data = malloc(sizeof(t_game_data));
-
-  game_data->level = generate_level_from_file("./level/testlevel2.lvl");
-  t_character *charac = game_data->playable_character = &game_data->level->characters[0];
-
-  struct termios termios_p;
-  tcgetattr(1, &termios_p);
-  termios_p.c_lflag &= ~ICANON;
-  tcsetattr(1, 0, &termios_p);
-
-  char buf[1];
-  struct pollfd fds[1];
-
-  fds[0].fd = 0;
-  fds[0].events = POLLIN;
-
-  while(game_state(game_data) != GAME_PLAYABLE_CHARACTER_IS_DEAD) {
-    if (poll(fds, 1, 50) > 0) {
-      if(fds[0].revents & POLLIN) {
-        read(0, buf, 1);
-        action(game_data->level, charac, buf[0]);
-      }
-    }
-    write(1,"\033[2J\n",sizeof("\033[2J\n"));
-    check_bombs_timer(game_data->level);
-    display_screen(game_data);
-  }
-  launch_menu();
 }

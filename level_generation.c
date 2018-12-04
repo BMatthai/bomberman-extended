@@ -25,9 +25,6 @@ t_level *generate_level_from_file(char *path) {
 
   fd = open(path, O_RDONLY);
 
-
-
-
   level = malloc(sizeof(t_level));
   level->lines = get_one_dim(fd);
   level->columns = get_one_dim(fd);

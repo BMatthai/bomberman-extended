@@ -10,21 +10,21 @@
 #include <netinet/in.h> //contains consta
 #include <netdb.h>
 
-
+// Ne pas prendre ce fichier en compte
 int host_game() {
-  	
+
   	time_t clock;
     char dataSending[1025];
     int clintListn = 0;
     int clintConnt = 0;
 
     struct sockaddr_in ipOfServer;
-    clintListn = socket(AF_INET, SOCK_STREAM, 0); 
+    clintListn = socket(AF_INET, SOCK_STREAM, 0);
     memset(&ipOfServer, '0', sizeof(ipOfServer));
     memset(dataSending, '0', sizeof(dataSending));
     ipOfServer.sin_family = AF_INET;
     ipOfServer.sin_addr.s_addr = htonl(INADDR_ANY);
-    ipOfServer.sin_port = htons(3030);       
+    ipOfServer.sin_port = htons(3030);
     bind(clintListn, (struct sockaddr*)&ipOfServer , sizeof(ipOfServer));
     listen(clintListn , 20);
 
@@ -32,15 +32,15 @@ int host_game() {
     {
         printf("\n\nHi,Iam running server.Some Client hit me\n"); // whenever a request from client came. It will be processed here.
         clintConnt = accept(clintListn, (struct sockaddr*)NULL, NULL);
- 
+
         clock = time(NULL);
         snprintf(dataSending, sizeof(dataSending), "%.24s\r\n", ctime(&clock)); // Printing successful message
         write(clintConnt, dataSending, strlen(dataSending));
- 
+
         close(clintConnt);
         sleep(1);
      }
- 
+
      return 0;
 
 }

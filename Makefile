@@ -1,5 +1,6 @@
 CC=gcc
-CFLAGS=-W -Wall -Werror -pedantic -std=c99 -I/usr/include -L/usr/local/lib/cmake
+CFLAGS=
+CFLAGSE=-W -Wall -Werror -pedantic -std=c99
 LDFLAGS=
 EXEC=bomberman
 
@@ -7,8 +8,8 @@ EXEC=bomberman
 
 all: $(EXEC)
 
-bomberman: bomberman.o level_generation.o character_creation.o display_level.o action.o bomb_manager.o time_manager.o level_manager.o menu_manager.o game_manager.o client_manager.o server_manager.o
-	$(CC) -o bomberman bomberman.o level_generation.o character_creation.o display_level.o action.o bomb_manager.o time_manager.o level_manager.o menu_manager.o game_manager.o client_manager.o server_manager.o $(LDFLAGS)
+bomberman: bomberman.o level_generation.o character_creation.o display_level.o action.o bomb_manager.o time_manager.o level_manager.o menu_manager.o game_manager.o client_manager.o server_manager.o ai_manager.o
+	$(CC) -o bomberman bomberman.o level_generation.o character_creation.o display_level.o action.o bomb_manager.o time_manager.o level_manager.o menu_manager.o game_manager.o client_manager.o server_manager.o ai_manager.o $(LDFLAGS)
 
 display_level.o: display_level.c
 	$(CC) -o display_level.o -c display_level.c $(CFLAGS)
@@ -45,6 +46,9 @@ client_manager.o: client_manager.c
 
 server_manager.o: server_manager.c
 	$(CC) -o server_manager.o -c server_manager.c $(CFLAGS)
+
+ai_manager.o: ai_manager.c
+	$(CC) -o ai_manager.o -c ai_manager.c $(CFLAGS)
 
 
 clean:

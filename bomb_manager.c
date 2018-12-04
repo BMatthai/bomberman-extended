@@ -82,6 +82,59 @@ void put_bomb(t_level *level, t_character *character) {
   }
 }
 
+int is_in_bomb_range(t_level *level, t_bomb *bomb, int position_x, int position_y) {
+
+  int bomb_position_x = bomb->position_x;
+  int bomb_position_y = bomb->position_y;
+
+
+  if(bomb_position_x == position_x && bomb_position_y== position_y)
+      return IS_IN_BOMB_RANGE;
+  int i = 1;
+  while (i != bomb->range) {
+    if(bomb_position_x == position_x && bomb_position_y - i == position_y)
+      return IS_IN_BOMB_RANGE;
+    i++;
+  }
+  i = 1;
+  while (i != bomb->range) {
+    if(bomb_position_x == position_x && bomb_position_y + i == position_y)
+      return IS_IN_BOMB_RANGE;
+    i++;
+  }
+  i = 1;
+  while (i != bomb->range) {
+    if(bomb_position_x -i == position_x && bomb_position_y == position_y)
+      return IS_IN_BOMB_RANGE;
+    i++;
+  }
+  i = 1;
+  while (i != bomb->range) {
+    if(bomb_position_x + i == position_x && bomb_position_y == position_y)
+      return IS_IN_BOMB_RANGE;
+    i++;
+  }
+  return IS_SAFE;
+
+}
+
+int is_position_in_any_bomb_range(t_level *level, int position_x, int position_y) {
+  t_bomb *cur_bomb = NULL;
+
+  if ((cur_bomb = level->first_bomb) == NULL) {
+    return IS_SAFE;
+  }
+
+  while (cur_bomb != NULL) {
+    if (is_in_bomb_range(level, cur_bomb, position_x, position_y) == IS_IN_BOMB_RANGE){
+      if (cur_bomb->state == BOMB_IS_PLACED_ON_GROUND)
+        return IS_IN_BOMB_RANGE;
+    }
+    cur_bomb = cur_bomb->next_bomb;
+  }
+  return IS_SAFE;
+}
+
 void explode_bomb(t_level *level, t_bomb *bomb) {
 
   bomb->state = BOMB_IS_EXPLODING;
@@ -132,6 +185,8 @@ void damage_tile(t_level *level, int position_x, int position_y) {
   for(int i = 0; i < level->number_characters; i++) {
     if(level->characters[i].position_x == position_x && level->characters[i].position_y == position_y) {
       level->characters[i].heal_points -= CHARACTER_BOMB_DAMAGE;
+      level->characters[i].state = CHARACTER_HITTED;
+      level->characters[i].time_state_has_changed = get_time();
       if (level->characters[i].heal_points <= 0) {
         level->characters[i].symbol = ' ';
         level->characters[i].state = CHARACTER_DEAD;
@@ -151,22 +206,22 @@ void bomb_has_exploded(t_level *level, t_bomb *bomb) {
   int bomb_position_y = bomb->position_y;
 
   level->bomb[bomb_position_y][bomb_position_x] = ' ';
-  while (tile_content(level, bomb_position_x, bomb_position_y - i) == TILE_FREE && i != bomb->range) {
+  while (tile_content(level, bomb_position_x, bomb_position_y - i) != TILE_WITH_WALL && i != bomb->range) {
     level->bomb[bomb_position_y - i][bomb_position_x] = ' ';
     i++;
   }
   i = 1;
-  while (tile_content(level, bomb_position_x, bomb_position_y + i) == TILE_FREE && i != bomb->range) {
+  while (tile_content(level, bomb_position_x, bomb_position_y + i) != TILE_WITH_WALL && i != bomb->range) {
     level->bomb[bomb_position_y + i][bomb_position_x] = ' ';
     i++;
   }
   i = 1;
-  while (tile_content(level, bomb_position_x - i, bomb_position_y) == TILE_FREE && i != bomb->range) {
+  while (tile_content(level, bomb_position_x - i, bomb_position_y) != TILE_WITH_WALL && i != bomb->range) {
     level->bomb[bomb_position_y][bomb_position_x - i] = ' ';
     i++;
   }
   i = 1;
-  while (tile_content(level, bomb_position_x + i, bomb_position_y) == TILE_FREE && i != bomb->range) {
+  while (tile_content(level, bomb_position_x + i, bomb_position_y) != TILE_WITH_WALL && i != bomb->range) {
     level->bomb[bomb_position_y][bomb_position_x + i] = ' ';
     i++;
   }
@@ -188,4 +243,5 @@ void remove_bomb_from_list(t_level *level, t_bomb *bomb) {
     bomb->prev_bomb->next_bomb = bomb->next_bomb;
     bomb->next_bomb->prev_bomb = bomb->prev_bomb;
   }
+  free(bomb);
 }
