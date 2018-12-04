@@ -50,6 +50,7 @@ int launch_game(int ai) {
   struct termios termios_p;
   tcgetattr(1, &termios_p);
   termios_p.c_lflag &= ~ICANON;
+  termios_p.c_lflag &= ~ECHO;
   tcsetattr(1, 0, &termios_p);
 
   char buf[1];

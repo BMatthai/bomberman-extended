@@ -45,11 +45,11 @@ void set_color_white() {
 }
 
 void set_color_light_gray() {
-  set_color("\e[37;47m");
+  set_color("\e[30;47;0m");
 }
 
 void set_color_dark_gray() {
-  set_color("\e[38;48m");
+  set_color("\e[37;47;1m");
 }
 
 void set_color_hud() {

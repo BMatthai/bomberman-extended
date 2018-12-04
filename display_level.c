@@ -3,11 +3,10 @@
 #include "struct_game_data.h"
 #endif
 
-
-
 #include "display_level.h"
 #include "game_constants.h"
 #include "color_manager.h"
+#include "level_manager.h"
 
 #include <unistd.h>
 #include <string.h>
@@ -86,8 +85,8 @@ void display_level(t_game_data *game_data) {
 
   for(int i = 0; i < level->lines; i++) {
     for(int j = 0; j < level->columns; j++) {
-        int cur_tile_content = level->terrain[i][j];
-        /*if(cur_tile_content == TILE_WITH_PLAYER_A) {
+        int cur_tile_content = tile_content(level, j, i);
+        if(cur_tile_content == TILE_WITH_PLAYER_A) {
           if (level->characters[0].state == CHARACTER_HITTED)
             set_color_white();
           else
@@ -127,21 +126,23 @@ void display_level(t_game_data *game_data) {
           || cur_tile_content == TILE_WITH_BOMB_EXP_RIGHT
           || cur_tile_content == TILE_WITH_BOMB_ORIGIN)
             set_color_red();
-         else if(cur_tile_content == TILE_FREE) {
-           set_color_black();
+         else if(cur_tile_content == TILE_WITH_WALL_ZERO){
+           set_color_dark_gray();
          }
-         else if(cur_tile_content == TILE_WITH_WALL_ONE){
+
+         else if (cur_tile_content >= TILE_WITH_WALL_ONE && cur_tile_content <= TILE_WITH_WALL_NINE) {
            set_color_light_gray();
          }
-         else if (cur_tile_content >= TILE_WITH_WALL_TWO && cur_tile_content <= TILE_WITH_WALL_NINE) {
-           set_color_dark_gray();
-         }*/
+         else {
+           set_color_black();
+         }
         write(1, &cur_tile_content, 1);
+        set_color_normal();
+
     }
     write(1, "\n", strlen("\n"));
 
   }
-  set_color_normal();
 }
 
 void display_screen(t_game_data *game_data) {

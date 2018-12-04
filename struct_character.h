@@ -1,6 +1,6 @@
 typedef struct s_character {
   int heal_points;
-  char symbol;
+  int symbol;
   char bomb_range;
   char number_bomb;
   char movement_speed;

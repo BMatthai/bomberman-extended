@@ -19,7 +19,7 @@
 #define WALL_SQUISHY 49
 #define WALL_STRONG 57
 
-#define TILE_FREE 1
+#define TILE_FREE 32
 #define TILE_WITH_WALL_ZERO 48
 #define TILE_WITH_WALL_ONE 49
 #define TILE_WITH_WALL_TWO 50
@@ -61,7 +61,7 @@
 #define MOVE_POSSIBLE 1
 #define MOVE_IMPOSSIBLE 0
 
-#define TIME_TO_REPLAY_IA 200
-#define TIME_TO_REDISPLAY 50
+#define TIME_TO_REPLAY_IA 200 //Default 200
+#define TIME_TO_REDISPLAY 40 //Default 50
 
 #define PATH_LEVEL = "./level/"
