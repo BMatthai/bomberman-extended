@@ -4,7 +4,7 @@
 #include "struct_level.h"
 #endif
 
-
+#include "stdio.h"
 #include "game_constants.h"
 
 // int tile_content(t_level *level, int x, int y) {
@@ -35,10 +35,14 @@ int tile_is_character(t_level *level, int x, int y) {
   return NO;
 }
 
-int tile_is_bomb(t_level *level, int x, int y) {
+int tile_is_bomb_planted(t_level *level, int x, int y) {
   if(level->bomb[y][x] == '@') {
-      return YES;
+    return YES;
   }
+  return NO;
+}
+
+int tile_is_bomb_exploding(t_level *level, int x, int y) {
   if(level->bomb[y][x] == 'O') {
       return YES;
   }
@@ -64,7 +68,7 @@ int tile_is_free_character_move(t_level *level, int x, int y) {
   if (tile_is_wall(level, x, y)) {
     return NO;
   }
-  if (tile_is_bomb(level, x, y)) {
+  if (tile_is_bomb_planted(level, x, y)) {
     return NO;
   }
   return YES;
@@ -100,14 +104,14 @@ int tile_is_free_bomb_blast(t_level *level, int x, int y) {
   if (tile_is_wall(level, x, y)) {
     return NO;
   }
-  if (tile_is_bomb(level, x, y)) {
-    return NO;
-  }
   return YES;
 }
 
 int tile_content(t_level *level, int x, int y) {
-  if (tile_is_bomb(level, x, y)){
+  if (tile_is_bomb_planted(level, x, y)){
+    return level->bomb[y][x];
+  }
+  if (tile_is_bomb_exploding(level, x, y)){
     return level->bomb[y][x];
   }
   if (tile_is_wall(level, x, y)) {

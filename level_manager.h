@@ -1,7 +1,8 @@
 int tile_is_wall(t_level *level, int x, int y);
 int tile_is_destructible_wall(t_level *level, int x, int y);
 int tile_is_character(t_level *level, int x, int y);
-int tile_is_bomb(t_level *level, int x, int y);
+int tile_is_bomb_planted(t_level *level, int x, int y);
+int tile_is_bomb_exploding(t_level *level, int x, int y);
 int tile_is_free_character_move(t_level *level, int x, int y);
 int tile_character(t_level *level, int x, int y);
 int tile_is_bonus(t_level *level, int x, int y);

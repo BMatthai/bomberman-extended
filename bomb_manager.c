@@ -9,36 +9,38 @@
 #include "struct_character.h"
 #endif
 
+#ifndef T_BOMB
+#define T_BOMB
+#include "struct_bomb.h"
+#endif
+
 #include "level_manager.h"
 #include "game_constants.h"
 #include "time_manager.h"
+#include "bomb_manager.h"
 #include <stdlib.h>
 #include <stdio.h>
 
-void damage_tile(t_level *level, int position_x, int position_y);
-void explode_bomb(t_level *level, t_bomb *bomb);
-void bomb_has_exploded(t_level *level, t_bomb *bomb);
-void remove_bomb_from_list(t_level *level, t_bomb *bomb);
-void check_bombs_timer(t_level *level);
-void put_bomb(t_level *level, t_character *character);
-
 void check_bombs_timer(t_level *level) {
-
   t_bomb *cur_bomb;
 
-  if((cur_bomb = level->first_bomb) != NULL) {
+  if ((cur_bomb = level->first_bomb) != NULL) {
     while (cur_bomb != NULL) {
-      if(cur_bomb->state == 1) {
-        if ((get_time() - cur_bomb->time_state_has_changed) > cur_bomb->time_to_explode_millis) {
-          explode_bomb(level, cur_bomb);
-        }
-      }
-      if(cur_bomb->state == 2){
-        if ((get_time() - cur_bomb->time_state_has_changed) > 1000) {
-          bomb_has_exploded(level, cur_bomb);
-        }
-      }
+      set_exploding_routine(level, cur_bomb);
       cur_bomb = cur_bomb->next_bomb;
+    }
+  }
+}
+
+void set_exploding_routine(t_level *level, t_bomb *bomb) {
+  if (bomb->state == 1) {
+    if ((get_time() - bomb->time_state_has_changed) > bomb->time_to_explode_millis) {
+      explode_bomb(level, bomb);
+    }
+  }
+  if (bomb->state == 2){
+    if ((get_time() - bomb->time_state_has_changed) > 1000) {
+      bomb_has_exploded(level, bomb);
     }
   }
 }
@@ -176,11 +178,15 @@ void explode_bomb(t_level *level, t_bomb *bomb) {
     i++;
   }
   damage_tile(level, bomb_position_x + i, bomb_position_y);
-
-
 }
 
 void damage_tile(t_level *level, int position_x, int position_y) {
+  if (tile_is_bomb_planted(level, position_x, position_y)) {
+    t_bomb *bomb = bomb_at_pos(level, position_x, position_y);
+    if (bomb != NULL) {
+      set_exploding_routine(level, bomb);
+    }
+  }
   if (level->terrain[position_y][position_x] > WALL_SQUISHY && level->terrain[position_y][position_x] <= WALL_STRONG) {
     level->terrain[position_y][position_x]--;
   }
@@ -198,6 +204,7 @@ void damage_tile(t_level *level, int position_x, int position_y) {
       }
     }
   }
+
 }
 
 void bomb_has_exploded(t_level *level, t_bomb *bomb) {
@@ -250,4 +257,18 @@ void remove_bomb_from_list(t_level *level, t_bomb *bomb) {
     bomb->next_bomb->prev_bomb = bomb->prev_bomb;
   }
   free(bomb);
+}
+
+t_bomb *bomb_at_pos(t_level *level, int x, int y) {
+  t_bomb *cur_bomb = NULL;
+
+  if((cur_bomb = level->first_bomb) != NULL) {
+    while (cur_bomb != NULL) {
+      if(cur_bomb->position_x == x && cur_bomb->position_y == y) {
+        return cur_bomb;
+      }
+      cur_bomb = cur_bomb->next_bomb;
+    }
+  }
+  return NULL;
 }

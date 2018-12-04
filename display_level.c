@@ -89,7 +89,7 @@ void display_level(t_game_data *game_data) {
           if (level->characters[0].state == CHARACTER_HITTED)
             set_color_white();
           else
-            set_color_red();
+            set_color_cyan();
         }
         else if(cur_tile_content == TILE_WITH_PLAYER_B) {
           if (level->characters[1].state == CHARACTER_HITTED)
@@ -110,13 +110,13 @@ void display_level(t_game_data *game_data) {
             set_color_green();
         }
         else if(cur_tile_content == TILE_WITH_BONUS_1) {
-          set_color_cyan();
+          set_color_magenta();
         }
         else if(cur_tile_content == TILE_WITH_BONUS_2) {
-          set_color_cyan();
+          set_color_magenta();
         }
         else if(cur_tile_content == TILE_WITH_BONUS_3) {
-          set_color_cyan();
+          set_color_magenta();
         }
         else if(cur_tile_content == TILE_WITH_BOMB
           || cur_tile_content == TILE_WITH_BOMB_EXP_DOWN
