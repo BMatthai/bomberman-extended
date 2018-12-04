@@ -4,8 +4,6 @@ CFLAGSE=-W -Wall -Werror -pedantic -std=c99
 LDFLAGS=
 EXEC=bomberman
 
-
-
 all: $(EXEC)
 
 bomberman: bomberman.o level_generation.o character_creation.o display_level.o action.o bomb_manager.o time_manager.o level_manager.o menu_manager.o game_manager.o client_manager.o server_manager.o ai_manager.o
