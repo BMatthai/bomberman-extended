@@ -3,9 +3,9 @@ CFLAGS=
 CFLAGSE=-W -Wall -Werror -pedantic -std=c99
 LDFLAGS=
 EXEC=bomberman
-BUILD_DIR=./build
-BIN_DIR=./bin
-SOURCE_DIR=./src
+BUILD_DIR=.
+BIN_DIR=.
+SOURCE_DIR=.
 
 all: $(EXEC)
 
