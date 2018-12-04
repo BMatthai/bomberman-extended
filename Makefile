@@ -9,8 +9,8 @@ SOURCE_DIR=./src
 
 all: $(EXEC)
 
-bomberman: $(BUILD_DIR)/bomberman.o $(BUILD_DIR)/level_generation.o $(BUILD_DIR)/character_creation.o $(BUILD_DIR)/display_level.o $(BUILD_DIR)/action.o $(BUILD_DIR)/bomb_manager.o $(BUILD_DIR)/time_manager.o $(BUILD_DIR)/level_manager.o $(BUILD_DIR)/menu_manager.o $(BUILD_DIR)/game_manager.o $(BUILD_DIR)/client_manager.o $(BUILD_DIR)/server_manager.o $(BUILD_DIR)/ai_manager.o
-	$(CC) -o bomberman $(BUILD_DIR)/bomberman.o $(BUILD_DIR)/level_generation.o $(BUILD_DIR)/character_creation.o $(BUILD_DIR)/display_level.o $(BUILD_DIR)/action.o $(BUILD_DIR)/bomb_manager.o $(BUILD_DIR)/time_manager.o $(BUILD_DIR)/level_manager.o $(BUILD_DIR)/menu_manager.o $(BUILD_DIR)/game_manager.o $(BUILD_DIR)/client_manager.o $(BUILD_DIR)/server_manager.o $(BUILD_DIR)/ai_manager.o $(LDFLAGS)
+bomberman: bomberman.o level_generation.o character_creation.o display_level.o action.o bomb_manager.o time_manager.o level_manager.o menu_manager.o game_manager.o client_manager.o server_manager.o ai_manager.o color_manager.o
+	$(CC) -o bomberman bomberman.o level_generation.o character_creation.o display_level.o action.o bomb_manager.o time_manager.o level_manager.o menu_manager.o game_manager.o client_manager.o server_manager.o ai_manager.o color_manager.o $(LDFLAGS)
 
 display_level.o: $(SOURCE_DIR)/display_level.c
 	$(CC) -o $(BUILD_DIR)/display_level.o -c $(SOURCE_DIR)/display_level.c $(CFLAGS)
@@ -50,6 +50,9 @@ server_manager.o: $(SOURCE_DIR)/server_manager.c
 
 ai_manager.o: $(SOURCE_DIR)/ai_manager.c
 	$(CC) -o $(BUILD_DIR)/ai_manager.o -c $(SOURCE_DIR)/ai_manager.c $(CFLAGS)
+
+color_manager.o: color_manager.c
+	$(CC) -o color_manager.o -c color_manager.c $(CFLAGS)
 
 
 clean:

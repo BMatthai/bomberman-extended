@@ -1,0 +1,13 @@
+void set_color();
+void set_color_normal();
+void set_color_red();
+void set_color_green();
+void set_color_yellow();
+void set_color_blue();
+void set_color_magenta();
+void set_color_cyan();
+void set_color_white();
+void set_color_black();
+void set_color_hud();
+void set_color_light_gray();
+void set_color_dark_gray();

@@ -7,22 +7,120 @@
 
 #include "game_constants.h"
 
-int tile_content(t_level *level, int x, int y) {
-    int i;
+// int tile_content(t_level *level, int x, int y) {
+//     return level->terrain[y][x];
+// }
 
-    if(level->terrain[y][x] > WALL_INDESTRUCTIBLE && level->terrain[y][x] <= WALL_STRONG) {
-      return TILE_WITH_DESTRUCTIBLE_WALL;
+int tile_is_wall(t_level *level, int x, int y) {
+  if (level->terrain[y][x] >= TILE_WITH_WALL_ZERO && level->terrain[y][x] <= TILE_WITH_WALL_NINE) {
+      return YES;
+  }
+  return NO;
+}
+
+int tile_is_destructible_wall(t_level *level, int x, int y) {
+  if (level->terrain[y][x] > TILE_WITH_WALL_ZERO && level->terrain[y][x] <= TILE_WITH_WALL_NINE) {
+      return YES;
+  }
+  return NO;
+}
+
+int tile_is_character(t_level *level, int x, int y) {
+  int i;
+  for(i = 0; i < level->number_characters; i++) {
+    if(level->characters[i].position_x == x && level->characters[i].position_y == y && level->characters[i].state != CHARACTER_DEAD) {
+      return YES;
     }
-    else if(level->terrain[y][x] != ' ') {
-      return TILE_WITH_WALL;
+  }
+  return NO;
+}
+
+int tile_is_bomb(t_level *level, int x, int y) {
+  if(level->bomb[y][x] == '@') {
+      return YES;
+  }
+  if(level->bomb[y][x] == 'O') {
+      return YES;
+  }
+  if(level->bomb[y][x] == '^') {
+      return YES;
+  }
+  if(level->bomb[y][x] == 'v') {
+      return YES;
+  }
+  if(level->bomb[y][x] == '<') {
+      return YES;
+  }
+  if(level->bomb[y][x] == '>') {
+      return YES;
+  }
+  return NO;
+}
+
+int tile_is_free_character_move(t_level *level, int x, int y) {
+  if (tile_is_character(level, x, y)) {
+    return NO;
+  }
+  if (tile_is_wall(level, x, y)) {
+    return NO;
+  }
+  if (tile_is_bomb(level, x, y)) {
+    return NO;
+  }
+  return YES;
+}
+
+int tile_character(t_level *level, int x, int y) {
+  int i;
+  for(i = 0; i < level->number_characters; i++) {
+    if(level->characters[i].position_x == x && level->characters[i].position_y == y && level->characters[i].state != CHARACTER_DEAD) {
+      return TILE_WITH_PLAYER_A + i;
     }
-    else if(level->bomb[y][x] == '@') {
-        return TILE_WITH_BOMB;
+  }
+  return NO;
+}
+
+int tile_is_bonus(t_level *level, int x, int y) {
+  if (level->bonus[y][x] == TILE_WITH_BONUS_1) {
+    return YES;
+  }
+  if (level->bonus[y][x] == TILE_WITH_BONUS_2) {
+    return YES;
+  }
+  if (level->bonus[y][x] == TILE_WITH_BONUS_3) {
+    return YES;
+  }
+  return NO;
+}
+
+int tile_is_free_bomb_blast(t_level *level, int x, int y) {
+  if (tile_is_character(level, x, y)) {
+    return NO;
+  }
+  if (tile_is_wall(level, x, y)) {
+    return NO;
+  }
+  if (tile_is_bomb(level, x, y)) {
+    return NO;
+  }
+  return YES;
+}
+
+int tile_content(t_level *level, int x, int y) {
+  if (tile_is_bomb(level, x, y)){
+    return level->bomb[y][x];
+  }
+  if (tile_is_wall(level, x, y)) {
+    return level->terrain[y][x];
+  }
+  if (tile_is_bonus(level, x, y)) {
+    return level->bonus[y][x];
+  }
+  int i;
+  for(i = 0; i < level->number_characters; i++) {
+    if(level->characters[i].position_x == x && level->characters[i].position_y == y && level->characters[i].state != CHARACTER_DEAD) {
+      return TILE_WITH_PLAYER_A + i;
     }
-    for(i = 0; i < level->number_characters; i++) {
-      if(level->characters[i].position_x == x && level->characters[i].position_y == y && level->characters[i].state != CHARACTER_DEAD) {
-        return TILE_WITH_CHARACTER;
-      }
-    }
-    return TILE_FREE;
+  }
+  return level->terrain[y][x];
 }

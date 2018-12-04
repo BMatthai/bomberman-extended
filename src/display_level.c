@@ -3,10 +3,10 @@
 #include "struct_game_data.h"
 #endif
 
-
-
 #include "display_level.h"
 #include "game_constants.h"
+#include "color_manager.h"
+#include "level_manager.h"
 
 #include <unistd.h>
 #include <string.h>
@@ -66,13 +66,12 @@ void display_hud(t_game_data *game_data) {
   char movement_speed = character->movement_speed;
   int time_to_bomb_explode_millis = character->time_to_bomb_explode_millis;
 
-  printf("Vie : %d\n", heal_points);
-  printf("Porté des bombes : %d\n", bomb_range);
-  printf("Nombre max de bombes : %d\n", number_bomb);
-  printf("Vitesse : %d\n", movement_speed);
-  printf("Délai explosion bombe : %d\n", time_to_bomb_explode_millis);
-  write(1, "--------", strlen("--------"));
-  write(1, "\n", strlen("\n"));
+  set_color_light_gray();
+  printf("Vie : %d                    \n", heal_points);
+  printf("Porté des bombes : %d       \n", bomb_range);
+  printf("Nombre max de bombes : %d   \n", number_bomb);
+  printf("Vitesse : %d                \n", movement_speed);
+  printf("Délai explosion bombe : %d  \n", time_to_bomb_explode_millis);
 
 }
 
@@ -83,54 +82,63 @@ void display_level(t_game_data *game_data) {
 
 
   for(int i = 0; i < level->lines; i++) {
-    for(int j = 0; j < level->columns; j++) {
-        //write(1, &level_to_display[i][j], 1);
-        if(level_terrain[i * level->columns + j] == 'A') {
-          if (level->characters[0].state == CHARACTER_HITTED)
-            write(1, "\e[0;37m", strlen("\e[0;37m"));
-          else
-            write(1, "\e[0;36m", strlen("\e[0;36m"));
-        }
-        else if(level_terrain[i * level->columns + j] == 'B') {
-          if (level->characters[1].state == CHARACTER_HITTED)
-            write(1, "\e[0;37m", strlen("\e[0;37m"));
-          else
-            write(1, "\e[0;36m", strlen("\e[0;36m"));
-        }
-        else if(level_terrain[i * level->columns + j] == 'C') {
-          if (level->characters[2].state == CHARACTER_HITTED)
-            write(1, "\e[0;37m", strlen("\e[0;37m"));
-          else
-            write(1, "\e[0;36m", strlen("\e[0;36m"));
-        }
-        else if(level_terrain[i * level->columns + j] == 'D') {
-          if (level->characters[3].state == CHARACTER_HITTED)
-            write(1, "\e[0;37m", strlen("\e[0;37m"));
-          else
-            write(1, "\e[0;36m", strlen("\e[0;36m"));
-        }
-        else if(level_terrain[i * level->columns + j] == '+') {
-            write(1, "\e[0;39m", strlen("\e[0;39m"));
-        }
-        else if(level_terrain[i * level->columns + j] == '#') {
-            write(1, "\e[0;39m", strlen("\e[0;39m"));
-        }
-        else if(level_terrain[i * level->columns + j] == '0') {
-            write(1, "\e[0;33m", strlen("\e[0;33m"));
-        }
-        else if(level_terrain[i * level->columns + j] == '@'
-          || level_terrain[i * level->columns + j] == 'v'
-          || level_terrain[i * level->columns + j] == '^'
-          || level_terrain[i * level->columns + j] == '<'
-          || level_terrain[i * level->columns + j] == '>'
-          || level_terrain[i * level->columns + j] == 'O')
-            write(1, "\e[1;31m", strlen("\e[1;31m"));
-         else
-          write(1, "\e[0;34m", strlen("\e[0;34m"));
-
-        write(1, &level_terrain[i * level->columns + j], 1);
-    }
     write(1, "\n", strlen("\n"));
+    for(int j = 0; j < level->columns; j++) {
+        int cur_tile_content = tile_content(level, j, i);
+        if(cur_tile_content == TILE_WITH_PLAYER_A) {
+          if (level->characters[0].state == CHARACTER_HITTED)
+            set_color_white();
+          else
+            set_color_red();
+        }
+        else if(cur_tile_content == TILE_WITH_PLAYER_B) {
+          if (level->characters[1].state == CHARACTER_HITTED)
+            set_color_white();
+          else
+            set_color_red();
+        }
+        else if(cur_tile_content == TILE_WITH_PLAYER_C) {
+          if (level->characters[2].state == CHARACTER_HITTED)
+            set_color_white();
+          else
+          set_color_yellow();
+        }
+        else if(cur_tile_content == TILE_WITH_PLAYER_D) {
+          if (level->characters[3].state == CHARACTER_HITTED)
+            set_color_white();
+          else
+            set_color_green();
+        }
+        else if(cur_tile_content == TILE_WITH_BONUS_1) {
+          set_color_cyan();
+        }
+        else if(cur_tile_content == TILE_WITH_BONUS_2) {
+          set_color_cyan();
+        }
+        else if(cur_tile_content == TILE_WITH_BONUS_3) {
+          set_color_cyan();
+        }
+        else if(cur_tile_content == TILE_WITH_BOMB
+          || cur_tile_content == TILE_WITH_BOMB_EXP_DOWN
+          || cur_tile_content == TILE_WITH_BOMB_EXP_UP
+          || cur_tile_content == TILE_WITH_BOMB_EXP_LEFT
+          || cur_tile_content == TILE_WITH_BOMB_EXP_RIGHT
+          || cur_tile_content == TILE_WITH_BOMB_ORIGIN)
+            set_color_red();
+         else if(cur_tile_content == TILE_WITH_WALL_ZERO){
+           set_color_dark_gray();
+         }
+
+         else if (cur_tile_content >= TILE_WITH_WALL_ONE && cur_tile_content <= TILE_WITH_WALL_NINE) {
+           set_color_light_gray();
+         }
+         else {
+           set_color_black();
+         }
+        write(1, &cur_tile_content, 1);
+        set_color_normal();
+
+    }
   }
 }
 

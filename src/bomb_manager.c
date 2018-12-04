@@ -50,7 +50,8 @@ void put_bomb(t_level *level, t_character *character) {
   position_x = character->position_x;
   position_y = character->position_y;
 
-  if (tile_content(level, position_x, position_y) != TILE_WITH_BOMB) {
+
+  if (level->terrain[position_y][position_x] != TILE_WITH_BOMB) {
     t_bomb *new_bomb;
 
     new_bomb = NULL;
@@ -152,25 +153,25 @@ void explode_bomb(t_level *level, t_bomb *bomb) {
   damage_tile(level, bomb_position_x, bomb_position_y);
 
   int i = 1;
-  while (tile_content(level, bomb_position_x, bomb_position_y - i) == TILE_FREE && i != bomb->range) {
+  while (tile_is_free_bomb_blast(level, bomb_position_x, bomb_position_y - i) && i != bomb->range) {
     level->bomb[bomb_position_y - i][bomb_position_x] = '^';
     i++;
   }
   damage_tile(level, bomb_position_x, bomb_position_y - i);
   i = 1;
-  while (tile_content(level, bomb_position_x, bomb_position_y + i) == TILE_FREE && i != bomb->range) {
+  while (tile_is_free_bomb_blast(level, bomb_position_x, bomb_position_y + i) && i != bomb->range) {
     level->bomb[bomb_position_y + i][bomb_position_x] = 'v';
     i++;
   }
   damage_tile(level, bomb_position_x, bomb_position_y + i);
   i = 1;
-  while (tile_content(level, bomb_position_x - i, bomb_position_y) == TILE_FREE && i != bomb->range) {
+  while (tile_is_free_bomb_blast(level, bomb_position_x - 1, bomb_position_y) && i != bomb->range) {
     level->bomb[bomb_position_y][bomb_position_x - i] = '<';
     i++;
   }
   damage_tile(level, bomb_position_x - i, bomb_position_y);
   i = 1;
-  while (tile_content(level, bomb_position_x + i, bomb_position_y) == TILE_FREE && i != bomb->range) {
+  while (tile_is_free_bomb_blast(level, bomb_position_x + 1, bomb_position_y) && i != bomb->range) {
     level->bomb[bomb_position_y][bomb_position_x + i] = '>';
     i++;
   }
@@ -210,22 +211,23 @@ void bomb_has_exploded(t_level *level, t_bomb *bomb) {
   int bomb_position_y = bomb->position_y;
 
   level->bomb[bomb_position_y][bomb_position_x] = ' ';
-  while (tile_content(level, bomb_position_x, bomb_position_y - i) != TILE_WITH_WALL && i != bomb->range) {
+
+  while (tile_is_wall(level, bomb_position_x, bomb_position_y - i) == NO  && i != bomb->range) {
     level->bomb[bomb_position_y - i][bomb_position_x] = ' ';
     i++;
   }
   i = 1;
-  while (tile_content(level, bomb_position_x, bomb_position_y + i) != TILE_WITH_WALL && i != bomb->range) {
+  while (tile_is_wall(level, bomb_position_x, bomb_position_y + i) == NO && i != bomb->range) {
     level->bomb[bomb_position_y + i][bomb_position_x] = ' ';
     i++;
   }
   i = 1;
-  while (tile_content(level, bomb_position_x - i, bomb_position_y) != TILE_WITH_WALL && i != bomb->range) {
+  while (tile_is_wall(level, bomb_position_x - 1, bomb_position_y) == NO && i != bomb->range) {
     level->bomb[bomb_position_y][bomb_position_x - i] = ' ';
     i++;
   }
   i = 1;
-  while (tile_content(level, bomb_position_x + i, bomb_position_y) != TILE_WITH_WALL && i != bomb->range) {
+  while (tile_is_wall(level, bomb_position_x + 1, bomb_position_y) == NO && i != bomb->range) {
     level->bomb[bomb_position_y][bomb_position_x + i] = ' ';
     i++;
   }
