@@ -32,13 +32,23 @@ void check_bombs_timer(t_level *level) {
   }
 }
 
+int bomb_should_explode(t_bomb *bomb) {
+  if (bomb->state == BOMB_IS_UNSTABLE) {
+    return YES;
+  }
+  if ((get_time() - bomb->time_state_has_changed) > bomb->time_to_explode_millis) {
+    return YES;
+  }
+  return NO;
+}
+
 void set_exploding_routine(t_level *level, t_bomb *bomb) {
-  if (bomb->state == 1) {
-    if ((get_time() - bomb->time_state_has_changed) > bomb->time_to_explode_millis) {
+  if (bomb->state == BOMB_IS_PLACED_ON_GROUND) {
+    if (bomb_should_explode(bomb)) {
       explode_bomb(level, bomb);
     }
   }
-  if (bomb->state == 2){
+  if (bomb->state == BOMB_IS_EXPLODING){
     if ((get_time() - bomb->time_state_has_changed) > 1000) {
       bomb_has_exploded(level, bomb);
     }
@@ -147,7 +157,6 @@ void explode_bomb(t_level *level, t_bomb *bomb) {
   bomb->state = BOMB_IS_EXPLODING;
   bomb->time_state_has_changed = get_time();
 
-
   int bomb_position_x = bomb->position_x;
   int bomb_position_y = bomb->position_y;
 
@@ -184,7 +193,7 @@ void damage_tile(t_level *level, int position_x, int position_y) {
   if (tile_is_bomb_planted(level, position_x, position_y)) {
     t_bomb *bomb = bomb_at_pos(level, position_x, position_y);
     if (bomb != NULL) {
-      set_exploding_routine(level, bomb);
+      bomb->state = BOMB_IS_UNSTABLE;
     }
   }
   if (level->terrain[position_y][position_x] > WALL_SQUISHY && level->terrain[position_y][position_x] <= WALL_STRONG) {
