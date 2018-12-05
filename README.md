@@ -5,9 +5,9 @@
 
 **Backlog :**
 - [x] Jeu de base existant
-- [ ] Explosion en chaîne des bombes (Work In Progress B)
-- [x] Vérifier le retours des mallocs
-- [ ] Vérifier le retours des fonctions en général
+- [ ] Explosion en chaîne des bombes (WIP Bastien)
+- [ ] Vérifier le retours des mallocs et gérer les erreurs
+- [ ] Tester le retours des fonctions en général et gérer les erreurs
 - [ ] Amélioration du Makefile : factoriser le fichier. Séparer les fichiers .o .h et .c.
 - [ ] Refaire le menu de jeu
 - [ ] Ajouter création de map aléatoires
