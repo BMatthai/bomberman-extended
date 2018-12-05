@@ -8,9 +8,9 @@ Projet de bomberman en ASCII !!! C'était plutôt stylé même si l'interface pa
 
 
 **Backlog :**
-- [x] Je de base existant
-- [ ] Explosion en chaîne des bombes
-- [ ] Vérifier le retours des mallocs
+- [x] Jeu de base existant
+- [ ] Explosion en chaîne des bombes (Work In Progress B)
+- [x] Vérifier le retours des mallocs
 - [ ] Vérifier le retours des fonctions en général
 - [ ] Amélioration du Makefile : factoriser le fichier. Séparer les fichiers .o .h et .c.
 - [ ] Améliorer le menu
