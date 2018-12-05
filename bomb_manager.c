@@ -36,17 +36,15 @@ int bomb_should_explode(t_bomb *bomb) {
   if (bomb->state == BOMB_IS_UNSTABLE) {
     return YES;
   }
-  if ((get_time() - bomb->time_state_has_changed) > bomb->time_to_explode_millis) {
+  if ((bomb->state == BOMB_IS_PLACED_ON_GROUND) && (get_time() - bomb->time_state_has_changed) > bomb->time_to_explode_millis) {
     return YES;
   }
   return NO;
 }
 
 void set_exploding_routine(t_level *level, t_bomb *bomb) {
-  if (bomb->state == BOMB_IS_PLACED_ON_GROUND) {
-    if (bomb_should_explode(bomb)) {
-      explode_bomb(level, bomb);
-    }
+  if (bomb_should_explode(bomb)) {
+    explode_bomb(level, bomb);
   }
   if (bomb->state == BOMB_IS_EXPLODING){
     if ((get_time() - bomb->time_state_has_changed) > 1000) {
@@ -75,7 +73,7 @@ void put_bomb(t_level *level, t_character *character) {
 
     level->bomb[position_y][position_x] = '@';
 
-    new_bomb->state = 1;
+    new_bomb->state = BOMB_IS_PLACED_ON_GROUND;
     new_bomb->position_x = position_x;
     new_bomb->position_y = position_y;
     new_bomb->time_state_has_changed = get_time();
@@ -100,10 +98,8 @@ void put_bomb(t_level *level, t_character *character) {
 }
 
 int is_in_bomb_range(t_level *level, t_bomb *bomb, int position_x, int position_y) {
-
   int bomb_position_x = bomb->position_x;
   int bomb_position_y = bomb->position_y;
-
 
   if(bomb_position_x == position_x && bomb_position_y== position_y)
       return IS_IN_BOMB_RANGE;
@@ -121,7 +117,7 @@ int is_in_bomb_range(t_level *level, t_bomb *bomb, int position_x, int position_
   }
   i = 1;
   while (i != bomb->range) {
-    if(bomb_position_x -i == position_x && bomb_position_y == position_y)
+    if(bomb_position_x - i == position_x && bomb_position_y == position_y)
       return IS_IN_BOMB_RANGE;
     i++;
   }
@@ -164,25 +160,25 @@ void explode_bomb(t_level *level, t_bomb *bomb) {
   damage_tile(level, bomb_position_x, bomb_position_y);
 
   int i = 1;
-  while (tile_is_free_bomb_blast(level, bomb_position_x, bomb_position_y - i) && i != bomb->range) {
+  while (tile_is_free(level, bomb_position_x, bomb_position_y - i) && i != bomb->range) {
     level->bomb[bomb_position_y - i][bomb_position_x] = '^';
     i++;
   }
   damage_tile(level, bomb_position_x, bomb_position_y - i);
   i = 1;
-  while (tile_is_free_bomb_blast(level, bomb_position_x, bomb_position_y + i) && i != bomb->range) {
+  while (tile_is_free(level, bomb_position_x, bomb_position_y + i) && i != bomb->range) {
     level->bomb[bomb_position_y + i][bomb_position_x] = 'v';
     i++;
   }
   damage_tile(level, bomb_position_x, bomb_position_y + i);
   i = 1;
-  while (tile_is_free_bomb_blast(level, bomb_position_x - 1, bomb_position_y) && i != bomb->range) {
+  while (tile_is_free(level, bomb_position_x - i, bomb_position_y) && i != bomb->range) {
     level->bomb[bomb_position_y][bomb_position_x - i] = '<';
     i++;
   }
   damage_tile(level, bomb_position_x - i, bomb_position_y);
   i = 1;
-  while (tile_is_free_bomb_blast(level, bomb_position_x + 1, bomb_position_y) && i != bomb->range) {
+  while (tile_is_free(level, bomb_position_x + i, bomb_position_y) && i != bomb->range) {
     level->bomb[bomb_position_y][bomb_position_x + i] = '>';
     i++;
   }

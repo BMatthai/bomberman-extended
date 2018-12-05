@@ -61,7 +61,7 @@ int tile_is_bomb_exploding(t_level *level, int x, int y) {
   return NO;
 }
 
-int tile_is_free_character_move(t_level *level, int x, int y) {
+int tile_is_free(t_level *level, int x, int y) {
   if (tile_is_character(level, x, y)) {
     return NO;
   }

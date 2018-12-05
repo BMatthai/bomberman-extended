@@ -25,7 +25,7 @@ int move(t_level *level, t_character *character, int x, int y) {
     new_position_x = character->position_x + x;
     new_position_y = character->position_y + y;
 
-  if (tile_is_free_character_move(level, new_position_x, new_position_y) == YES) {
+  if (tile_is_free(level, new_position_x, new_position_y) == YES) {
     character->position_x = new_position_x;
     character->position_y = new_position_y;
     pick_item(level, character);
@@ -41,7 +41,7 @@ int is_move_possible(t_level *level, t_character *character, int x, int y) {
   new_position_x = character->position_x + x;
   new_position_y = character->position_y + y;
 
-  if (tile_is_free_character_move(level, new_position_x, new_position_y) == YES) {
+  if (tile_is_free(level, new_position_x, new_position_y) == YES) {
     return YES;
   }
   return NO;
