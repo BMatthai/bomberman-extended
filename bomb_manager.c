@@ -167,39 +167,39 @@ void explode_bomb(t_level *level, t_bomb *bomb) {
   int i;
 
   i = 0;
-  while (tile_is_free_for_bomb(level, bomb_position_x, bomb_position_y - i) && i < bomb->range) {
+  while (tile_is_free_bomb_blast(level, bomb_position_x, bomb_position_y - i) && i < bomb->range) {
     i++;
     level->bomb[bomb_position_y - i][bomb_position_x] = '^';
   }
   damage_tile(level, bomb_position_x, bomb_position_y - i);
   i = 0;
-  while (tile_is_free_for_bomb(level, bomb_position_x, bomb_position_y + i) && i < bomb->range) {
+  while (tile_is_free_bomb_blast(level, bomb_position_x, bomb_position_y + i) && i < bomb->range) {
     i++;
     level->bomb[bomb_position_y + i][bomb_position_x] = 'v';
   }
-  damage_tile(level, bomb_position_x, bomb_position_y + i);
+  //damage_tile(level, bomb_position_x, bomb_position_y + i);
   i = 0;
-  while (tile_is_free_for_bomb(level, bomb_position_x - i, bomb_position_y) && i < bomb->range) {
+  while (tile_is_free_bomb_blast(level, bomb_position_x - i, bomb_position_y) && i < bomb->range) {
     i++;
     level->bomb[bomb_position_y][bomb_position_x - i] = '<';
   }
-  damage_tile(level, bomb_position_x - i, bomb_position_y);
+  //damage_tile(level, bomb_position_x - i, bomb_position_y);
   i = 0;
-  while (tile_is_free_for_bomb(level, bomb_position_x + i, bomb_position_y) && i < bomb->range) {
+  while (tile_is_free_bomb_blast(level, bomb_position_x + i, bomb_position_y) && i < bomb->range) {
     i++;
     level->bomb[bomb_position_y][bomb_position_x + i] = '>';
   }
-  damage_tile(level, bomb_position_x + i, bomb_position_y);
+  //damage_tile(level, bomb_position_x + i, bomb_position_y);
 }
 
 void damage_tile(t_level *level, int position_x, int position_y) {
-  if (tile_is_bomb_planted(level, position_x, position_y)) {
+  if (tile_content(level, position_x, position_y) == BOMB_IS_PLACED_ON_GROUND) {
     t_bomb *bomb = bomb_at_pos(level, position_x, position_y);
     if (bomb != NULL) {
       set_bomb_unstable(level, bomb);
     }
   }
-  if (level->terrain[position_y][position_x] > WALL_SQUISHY && level->terrain[position_y][position_x] <= WALL_STRONG) {
+  /*if (level->terrain[position_y][position_x] > WALL_SQUISHY && level->terrain[position_y][position_x] <= WALL_STRONG) {
     level->terrain[position_y][position_x]--;
   }
   else if (level->terrain[position_y][position_x] == WALL_SQUISHY) {
@@ -215,7 +215,7 @@ void damage_tile(t_level *level, int position_x, int position_y) {
         level->characters[i].state = CHARACTER_DEAD;
       }
     }
-  }
+  }*/
 
 }
 

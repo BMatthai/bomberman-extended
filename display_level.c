@@ -140,8 +140,11 @@ void display_level(t_game_data *game_data) {
          else if (cur_tile_content >= TILE_WITH_WALL_ONE && cur_tile_content <= TILE_WITH_WALL_NINE) {
            set_color_light_gray();
          }
-         else {
+         else if (cur_tile_content == TILE_FREE) {
            set_color_black();
+         }
+         else {
+           set_color_white();
          }
         write(1, &cur_tile_content, 1);
         set_color_normal();
