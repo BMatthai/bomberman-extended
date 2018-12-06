@@ -1,6 +1,8 @@
-**Repo de notre projet Bomberman.**
+**Bomberman 1**
+- Note : 12/20
 
-
+- Commentaire du prof :
+Projet de bomberman en ASCII !!! C'était plutôt stylé même si l'interface paraît simpliste au premier abord. Le jeu en lui même est plutôt complet, il y a pas mal de fonctionnalités de gameplay implémentées. La seule qui manque est l'explosion en chaîne. Point le plus dommage, pas de réseau implémenté. Malus appliqué pour les retours de fonctions non vérifiées comme malloc, par exemple. Dans l'ensemble, c'était plutôt bien. Dommage que vous n'ayez pas pu voir les problématiques liées au développement en réseau.
 
 
 **Backlog :**
@@ -17,8 +19,3 @@
 - [ ] Implémenter réseau
 - [ ] Implémenter un nouvel affichage complet via SDL
 
-**Bomberman 1**
-- Note : 12/20
-
-- Commentaire du prof :
-Projet de bomberman en ASCII !!! C'était plutôt stylé même si l'interface paraît simpliste au premier abord. Le jeu en lui même est plutôt complet, il y a pas mal de fonctionnalités de gameplay implémentées. La seule qui manque est l'explosion en chaîne. Point le plus dommage, pas de réseau implémenté. Malus appliqué pour les retours de fonctions non vérifiées comme malloc, par exemple. Dans l'ensemble, c'était plutôt bien. Dommage que vous n'ayez pas pu voir les problématiques liées au développement en réseau.
