@@ -5,12 +5,12 @@
 
 **Backlog :**
 - [x] Jeu de base existant
-- [ ] Explosion en chaîne des bombes (WIP Bastien)
-- [ ] Améliorer l'affichage du jeu en ASCII
-- [ ] Vérifier le retours des mallocs et gérer les erreurs
+- [x] Explosion en chaîne des bombes
+- [ ] Améliorer l'affichage du jeu en ASCII (WIP Bastien)
+- [ ] Vérifier le retours des mallocs et gérer les erreurs (WIP Bastien)
 - [ ] Tester le retours des fonctions en général et gérer les erreurs
 - [ ] Amélioration du Makefile : factoriser le fichier. Séparer les fichiers .o .h et .c dans des dossiers build, inc et src.
-- [ ] Refaire le menu de jeu (complêtement)
+- [ ] Refaire entièrement le menu de jeu
 - [ ] Ajouter création de map aléatoires, cohérentes et qui ont un interêt d'un point de vue Gameplay
 - [ ] Créer une boucle de jeu qui ne dépend pas du CPU
 - [ ] Améliorer IA / Refactoriser complêtement (?)
