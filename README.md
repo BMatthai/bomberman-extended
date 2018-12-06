@@ -6,7 +6,6 @@
 **Backlog :**
 - [x] Jeu de base existant
 - [x] Explosion en chaîne des bombes
-        - J'ai ajouté un état "Unstable" pour les bombes. Cet état apparait soit quand la bombe est restée trop longtemps au sol, soit quand une autre bombe a explosé a côté. Une bombe dans l'état Unstable déclenche un timer court au délà duquel la bombe en état Unstable explose.
 - [ ] Améliorer l'affichage du jeu en ASCII (WIP Bastien)
 - [ ] Vérifier le retours des mallocs et gérer les erreurs (WIP Bastien)
 - [ ] Tester le retours des fonctions en général et gérer les erreurs
