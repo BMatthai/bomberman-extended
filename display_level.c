@@ -119,7 +119,13 @@ void display_level(t_game_data *game_data) {
           set_color_magenta();
         }
         else if (cur_tile_content == TILE_WITH_BOMB) {
-          set_color_red();
+          t_bomb *bomb = bomb_at_pos(level, j, i);
+          if (bomb->state == BOMB_IS_PLACED_ON_GROUND) {
+            set_color_red();
+          }
+          else if (bomb->state == BOMB_IS_UNSTABLE) {
+            set_color_white();
+          }
         }
         else if (cur_tile_content == TILE_WITH_BOMB_EXP_DOWN
           || cur_tile_content == TILE_WITH_BOMB_EXP_UP
