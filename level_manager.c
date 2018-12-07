@@ -7,7 +7,7 @@
 #include "stdio.h"
 #include "game_constants.h"
 #include "level_manager.h"
-
+#include "bomb_manager.h"
 // int tile_content(t_level *level, int x, int y) {
 //     return level->terrain[y][x];
 // }
@@ -38,9 +38,17 @@ int tile_is_character(t_level *level, int x, int y) {
 
 
 int tile_is_bomb_planted(t_level *level, int x, int y) {
-  if (level->bomb[y][x] == '@') {
+  if (bomb_at_pos(level, x, y) != NULL) {
     return YES;
   }
+  // if (level->bomb[y][x] == '@') {
+  //   return YES;
+  // }
+  // else {
+  //   if (bomb_at_pos(level, x, y) != NULL) {
+  //     return YES;
+  //   }
+  // }
   return NO;
 }
 

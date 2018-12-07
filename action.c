@@ -91,8 +91,6 @@ int number_of_direction_possible(t_level *level, t_character *character) {
   return number_of_direction_possible;
 }
 
-
-
 void action(t_level *level, t_character *character, char touch_action) {
   if(touch_action == 'z')
     move(level, character, 0,-1);
