@@ -8,14 +8,14 @@ Projet de bomberman en ASCII !!! C'était plutôt stylé même si l'interface pa
 **Backlog :**
 - [x] Jeu de base existant
 - [x] Explosion en chaîne des bombes
-- [ ] Améliorer l'affichage du jeu en ASCII (WIP Bastien)
-- [ ] Vérifier le retours des mallocs et gérer les erreurs (WIP Bastien)
+- [ ] Implémenter un nouvel affichage complet via SDL (WIP Bastien)
+- [ ] ~~Améliorer l'affichage du jeu en ASCII~~ (Pas prio)
+- [ ] Vérifier le retours des mallocs et gérer les erreurs
 - [ ] Tester le retours des fonctions en général et gérer les erreurs
 - [ ] Amélioration du Makefile : factoriser le fichier. Séparer les fichiers .o .h et .c dans des dossiers build, inc et src.
 - [ ] Refaire entièrement le menu de jeu
-- [ ] Ajouter création de map aléatoires, cohérentes et qui ont un interêt d'un point de vue Gameplay
+- [ ] Ajouter création de map aléatoires, cohérentes et qui ont un interêt d'un point de vue Gameplay (WIP Bastien)
 - [ ] Créer une boucle de jeu qui ne dépend pas du CPU
-- [ ] Améliorer IA / Refactoriser complêtement (?)
+- [ ] ~~Améliorer IA / Refactoriser complêtement~~ (Pas prio)
 - [ ] Implémenter réseau
-- [ ] Implémenter un nouvel affichage complet via SDL
 
