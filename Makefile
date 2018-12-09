@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=
-CFLAGSE=-W -Wall -Werror -pedantic -std=c99
-LDFLAGS=
+#CFLAGSE=-W -Wall -Werror -pedantic -std=c99
+LDFLAGS=-I./include -L./bin -lSDL2
 EXEC=bomberman
 BUILD_DIR=.
 BIN_DIR=.
