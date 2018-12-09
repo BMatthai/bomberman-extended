@@ -10,3 +10,4 @@ int tile_is_bomb_blast(t_level *level, int x, int y);
 int tile_content(t_level *level, int x, int y);
 int tile_is_free_for_bomb(t_level *level, int x, int y);
 int tile_is_free_bomb_blast(t_level *level, int x, int y);
+int tile_exists(t_level *level, int x, int y);

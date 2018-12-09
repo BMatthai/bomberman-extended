@@ -153,3 +153,15 @@ int tile_content(t_level *level, int x, int y) {
   }
   return level->terrain[y][x];
 }
+
+int tile_exists(t_level *level, int x, int y) {
+  if (x < 0)
+    return NO;
+  if (y < 0)
+    return NO;
+  if (x >= level->columns)
+    return NO;
+  if (y >= level->lines)
+    return NO;
+  return YES;
+}

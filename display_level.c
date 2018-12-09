@@ -144,7 +144,7 @@ void display_level(t_game_data *game_data) {
            set_color_black();
          }
          else {
-           set_color_white();
+           set_color_green();
          }
         write(1, &cur_tile_content, 1);
         set_color_normal();
