@@ -6,7 +6,7 @@ Projet de bomberman en ASCII !!! C'était plutôt stylé même si l'interface pa
 
 
 **Backlog :**
-- [x] Jeu de base existant
+- [x] Rendre le jeu existant plus stable
 - [x] Explosion en chaîne des bombes
 - [ ] Implémenter un nouvel affichage complet via SDL (WIP Bastien)
 - [ ] ~~Améliorer l'affichage du jeu en ASCII~~ (Pas prio)
