@@ -7,6 +7,7 @@
 #include "game_constants.h"
 #include "color_manager.h"
 #include "level_manager.h"
+#include "bomb_manager.h"
 
 #include <unistd.h>
 #include <string.h>
@@ -72,7 +73,6 @@ void display_hud(t_game_data *game_data) {
   printf("Nombre max de bombes : %d   \n", number_bomb);
   printf("Vitesse : %d                \n", movement_speed);
   printf("Délai explosion bombe : %d  \n", time_to_bomb_explode_millis);
-
 }
 
 void display_level(t_game_data *game_data) {
@@ -81,59 +81,70 @@ void display_level(t_game_data *game_data) {
   char *level_terrain = level_to_display(game_data->level);
 
 
-  for(int i = 0; i < level->lines; i++) {
+  for (int i = 0; i < level->lines; i++) {
     write(1, "\n", strlen("\n"));
-    for(int j = 0; j < level->columns; j++) {
+    for (int j = 0; j < level->columns; j++) {
         int cur_tile_content = tile_content(level, j, i);
-        if(cur_tile_content == TILE_WITH_PLAYER_A) {
+        if (cur_tile_content == TILE_WITH_PLAYER_A) {
           if (level->characters[0].state == CHARACTER_HITTED)
             set_color_white();
           else
-            set_color_red();
+            set_color_cyan();
         }
-        else if(cur_tile_content == TILE_WITH_PLAYER_B) {
+        else if (cur_tile_content == TILE_WITH_PLAYER_B) {
           if (level->characters[1].state == CHARACTER_HITTED)
             set_color_white();
           else
             set_color_red();
         }
-        else if(cur_tile_content == TILE_WITH_PLAYER_C) {
+        else if (cur_tile_content == TILE_WITH_PLAYER_C) {
           if (level->characters[2].state == CHARACTER_HITTED)
             set_color_white();
           else
           set_color_yellow();
         }
-        else if(cur_tile_content == TILE_WITH_PLAYER_D) {
+        else if (cur_tile_content == TILE_WITH_PLAYER_D) {
           if (level->characters[3].state == CHARACTER_HITTED)
             set_color_white();
           else
             set_color_green();
         }
-        else if(cur_tile_content == TILE_WITH_BONUS_1) {
-          set_color_cyan();
+        else if (cur_tile_content == TILE_WITH_BONUS_1) {
+          set_color_magenta();
         }
-        else if(cur_tile_content == TILE_WITH_BONUS_2) {
-          set_color_cyan();
+        else if (cur_tile_content == TILE_WITH_BONUS_2) {
+          set_color_magenta();
         }
-        else if(cur_tile_content == TILE_WITH_BONUS_3) {
-          set_color_cyan();
+        else if (cur_tile_content == TILE_WITH_BONUS_3) {
+          set_color_magenta();
         }
-        else if(cur_tile_content == TILE_WITH_BOMB
-          || cur_tile_content == TILE_WITH_BOMB_EXP_DOWN
+        else if (cur_tile_content == TILE_WITH_BOMB) {
+          t_bomb *bomb = bomb_at_pos(level, j, i);
+          if (bomb->state == BOMB_IS_PLACED_ON_GROUND) {
+            set_color_red();
+          }
+          else if (bomb->state == BOMB_IS_UNSTABLE) {
+            set_color_white();
+          }
+        }
+        else if (cur_tile_content == TILE_WITH_BOMB_EXP_DOWN
           || cur_tile_content == TILE_WITH_BOMB_EXP_UP
           || cur_tile_content == TILE_WITH_BOMB_EXP_LEFT
           || cur_tile_content == TILE_WITH_BOMB_EXP_RIGHT
-          || cur_tile_content == TILE_WITH_BOMB_ORIGIN)
+          || cur_tile_content == TILE_WITH_BOMB_ORIGIN) {
             set_color_red();
+          }
          else if(cur_tile_content == TILE_WITH_WALL_ZERO){
            set_color_dark_gray();
          }
-
          else if (cur_tile_content >= TILE_WITH_WALL_ONE && cur_tile_content <= TILE_WITH_WALL_NINE) {
            set_color_light_gray();
          }
-         else {
+         else if (cur_tile_content == TILE_FREE) {
            set_color_black();
+         }
+         else {
+           set_color_green();
          }
         write(1, &cur_tile_content, 1);
         set_color_normal();

@@ -19,5 +19,4 @@ int main(int argc, char **argv) {
   launch_menu();
 
     return 0;
-
 }
