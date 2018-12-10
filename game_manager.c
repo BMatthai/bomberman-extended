@@ -46,7 +46,7 @@ int launch_game_SDL() {
   SDL_Init(SDL_INIT_VIDEO);
 
   SDL_Window *window = SDL_CreateWindow("Bomberman",
-      SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, 0);
+      SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, STANDARD_WIN_WIDTH, STANDARD_WIN_HEIGHT, 0);
 
  Uint32 render_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 
@@ -55,13 +55,25 @@ int launch_game_SDL() {
  SDL_Surface *image_free = SDL_LoadBMP("resources/free.bmp");
  SDL_Surface *image_wall = SDL_LoadBMP("resources/wall.bmp");
 
- // if(!image) {
- //     printf("Erreur de chargement de l'image : %s",SDL_GetError());
- //     return -1;
- // }
+ SDL_Surface *image_char1 = SDL_LoadBMP("resources/char1.bmp");
+ SDL_Surface *image_char2 = SDL_LoadBMP("resources/char2.bmp");
+ SDL_Surface *image_char3 = SDL_LoadBMP("resources/char3.bmp");
+ SDL_Surface *image_char4 = SDL_LoadBMP("resources/char4.bmp");
+
+ if(!image_free) {
+     printf("Erreur de chargement de l'image : %s",SDL_GetError());
+     return -1;
+ }
 
  SDL_Texture *texture_free = SDL_CreateTextureFromSurface(renderer, image_free);
  SDL_Texture *texture_wall = SDL_CreateTextureFromSurface(renderer, image_wall);
+
+ SDL_Texture *texture_char1 = SDL_CreateTextureFromSurface(renderer, image_char1);
+ SDL_Texture *texture_char2 = SDL_CreateTextureFromSurface(renderer, image_char2);
+ SDL_Texture *texture_char3 = SDL_CreateTextureFromSurface(renderer, image_char3);
+ SDL_Texture *texture_char4 = SDL_CreateTextureFromSurface(renderer, image_char4);
+
+ SDL_Texture *texture_chars[4] = {texture_char1, texture_char2, texture_char3, texture_char4};
 
  t_game_data *game_data = NULL;
  game_data = malloc(sizeof(t_game_data));
@@ -71,13 +83,25 @@ int launch_game_SDL() {
  game_data->level = generate_level_from_file("./level/testlevel.lvl");
  game_data->playable_character = &game_data->level->characters[0];
  t_character *playable_character = game_data->playable_character;
+ t_character *character_2 = &game_data->level->characters[1];
+ t_character *character_3 = &game_data->level->characters[2];
+ t_character *character_4 = &game_data->level->characters[3];
+
+ t_level *level = game_data->level;
+ int lines = level->lines;
+ int columns = level->columns;
 
   int is_running = YES;
+  int offset_x = ((STANDARD_WIN_WIDTH / 2) - ((columns * STANDARD_TILE_WIDTH) / 2));
+  int offset_y = STANDARD_WIN_HEIGHT - (lines * STANDARD_TILE_HEIGHT);
+
+  int time_to_reload = get_time();
+
   while (is_running)
   {
 
-    SDL_RenderPresent(renderer);
-    SDL_WaitEvent(&event);
+    SDL_PollEvent(&event);
+    SDL_RenderClear(renderer);
 
     switch (event.type)
     {
@@ -87,31 +111,52 @@ int launch_game_SDL() {
     }
     SDL_Rect location;
 
-    t_level *level = game_data->level;
-    int lines = level->lines;
-    int columns = level->columns;
+
     SDL_Rect dstrect;
-    for (int i = 0; i < lines ; i++) {
-      for (int j = 0; j < columns ; j++) {
+    for (int i = 0; i < lines; i++) {
+      for (int j = 0; j < columns; j++) {
         location.h = STANDARD_TILE_HEIGHT;
         location.w = STANDARD_TILE_WIDTH;
-        location.x = STANDARD_TILE_WIDTH * j;
-        location.y = STANDARD_TILE_HEIGHT * i;
+        location.x = STANDARD_TILE_WIDTH * j + offset_x;
+        location.y = STANDARD_TILE_HEIGHT * i + offset_y;
         // //dstrect = { j * STANDARD_TILE_WIDTH, i * STANDARD_TILE_HEIGHT, STANDARD_TILE_WIDTH, STANDARD_TILE_HEIGHT };
         // //SDL_Rect dstrect = { 5, 5, 320, 240 };
         //SDL_RenderCopy(renderer, texture_free, NULL, &location);
 
-        printf("%d et %d\n",i, j);
-
-        // if (tile_is_free(level, j, i) == YES) {
-        //   SDL_RenderCopy(renderer, texture_free, NULL, &location);
-        // }
-        // else {
-        //   printf("%d et %d\n",i, j);
-        //   SDL_RenderCopy(renderer, texture_wall, NULL, &location);
-        // }
+        if (tile_is_wall(level, j, i) == YES) {
+          SDL_RenderCopy(renderer, texture_wall, NULL, &location);
+        }
+        else {
+          SDL_RenderCopy(renderer, texture_free, NULL, &location);
+        }
       }
+
+
+      for (int k = 0; k < level->number_characters; k++) {
+        location.h = STANDARD_TILE_HEIGHT;
+        location.w = STANDARD_TILE_WIDTH;
+        location.x = STANDARD_TILE_WIDTH * level->characters[k].position_x + offset_x;
+        location.y = STANDARD_TILE_HEIGHT * level->characters[k].position_y + offset_y;
+
+        SDL_RenderCopy(renderer, texture_chars[k], NULL, &location);
+      }
+
+
+
+      // if (get_time() - time_to_reload > TIME_TO_REPLAY_IA) {
+      //       //ai_play(level, character_2);
+      //       ai_play(level, character_3);
+      //       // ai_play(level, character_4);
+      //       time_to_reload = get_time();
+      // }
+
+
+
+
     }
+
+    SDL_RenderPresent(renderer);
+
   }
 
   SDL_DestroyTexture(texture_free);
