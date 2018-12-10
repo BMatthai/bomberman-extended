@@ -16,6 +16,7 @@
 #include "menu_manager.h"
 #include "game_manager.h"
 #include "character_creation.h"
+#include "level_manager.h"
 
 #include "time_manager.h"
 #include "ai_manager.h"
@@ -51,23 +52,29 @@ int launch_game_SDL() {
 
  SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, render_flags);
 
- SDL_Rect dstrect = { 5, 5, 320, 240 };
+ SDL_Surface *image_free = SDL_LoadBMP("resources/free.bmp");
+ SDL_Surface *image_wall = SDL_LoadBMP("resources/wall.bmp");
 
+ // if(!image) {
+ //     printf("Erreur de chargement de l'image : %s",SDL_GetError());
+ //     return -1;
+ // }
 
+ SDL_Texture *texture_free = SDL_CreateTextureFromSurface(renderer, image_free);
+ SDL_Texture *texture_wall = SDL_CreateTextureFromSurface(renderer, image_wall);
 
-
- SDL_Surface * image = SDL_LoadBMP("resources/free.bmp");
- if(!image) {
-     printf("Erreur de chargement de l'image : %s",SDL_GetError());
-     return -1;
+ t_game_data *game_data = NULL;
+ game_data = malloc(sizeof(t_game_data));
+ if (game_data == NULL) {
+   return -1;
  }
-
- SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, image);
+ game_data->level = generate_level_from_file("./level/testlevel.lvl");
+ game_data->playable_character = &game_data->level->characters[0];
+ t_character *playable_character = game_data->playable_character;
 
   int is_running = YES;
   while (is_running)
   {
-    SDL_RenderCopy(renderer, texture, NULL, NULL);
 
     SDL_RenderPresent(renderer);
     SDL_WaitEvent(&event);
@@ -78,11 +85,41 @@ int launch_game_SDL() {
         is_running = NO;
         break;
     }
-    //display_screen_SDL(renderer);
+    SDL_Rect location;
+
+    t_level *level = game_data->level;
+    int lines = level->lines;
+    int columns = level->columns;
+    SDL_Rect dstrect;
+    for (int i = 0; i < lines ; i++) {
+      for (int j = 0; j < columns ; j++) {
+        location.h = STANDARD_TILE_HEIGHT;
+        location.w = STANDARD_TILE_WIDTH;
+        location.x = STANDARD_TILE_WIDTH * j;
+        location.y = STANDARD_TILE_HEIGHT * i;
+        // //dstrect = { j * STANDARD_TILE_WIDTH, i * STANDARD_TILE_HEIGHT, STANDARD_TILE_WIDTH, STANDARD_TILE_HEIGHT };
+        // //SDL_Rect dstrect = { 5, 5, 320, 240 };
+        //SDL_RenderCopy(renderer, texture_free, NULL, &location);
+
+        printf("%d et %d\n",i, j);
+
+        // if (tile_is_free(level, j, i) == YES) {
+        //   SDL_RenderCopy(renderer, texture_free, NULL, &location);
+        // }
+        // else {
+        //   printf("%d et %d\n",i, j);
+        //   SDL_RenderCopy(renderer, texture_wall, NULL, &location);
+        // }
+      }
+    }
   }
 
-  SDL_DestroyTexture(texture);
-  SDL_FreeSurface(image);
+  SDL_DestroyTexture(texture_free);
+  SDL_DestroyTexture(texture_wall);
+
+  SDL_FreeSurface(image_free);
+  SDL_FreeSurface(image_wall);
+
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
 
