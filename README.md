@@ -12,10 +12,11 @@ Projet de bomberman en ASCII !!! C'était plutôt stylé même si l'interface pa
 - [ ] ~~Améliorer l'affichage du jeu en ASCII~~ (Pas prio)
 - [ ] Vérifier le retours des mallocs et gérer les erreurs
 - [ ] Tester le retours des fonctions en général et gérer les erreurs
+- [ ] Gérer les fuites de mémoires.
 - [ ] Amélioration du Makefile : factoriser le fichier. Séparer les fichiers .o .h et .c dans des dossiers build, inc et src.
-- [ ] Refaire entièrement le menu de jeu
+- [ ] ~~Refaire entièrement le menu de jeu (en SDL)~~
 - [ ] Ajouter création de map aléatoires, cohérentes et qui ont un interêt d'un point de vue Gameplay (WIP Bastien)
-- [ ] Créer une boucle de jeu qui ne dépend pas du CPU
+- [ ] Créer une boucle de jeu qui ne dépend pas du CPU (WIP Bastien)
 - [ ] ~~Améliorer IA / Refactoriser complêtement~~ (Pas prio)
 - [ ] Implémenter réseau
 
