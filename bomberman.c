@@ -1,11 +1,13 @@
 
 #include "menu_manager.h"
 #include "game_constants.h"
+#include "game_manager.h"
 
 #include <string.h>
 #include <stdio.h>
 #include <signal.h>
 #include <SDL2/SDL.h>
+
 
 int launch_game_sdl() {
       return 0;
@@ -17,55 +19,8 @@ void handler(int sig) {
 
 int main(int argc, char **argv) {
 
-     SDL_Event event;
 
-     SDL_Init(SDL_INIT_VIDEO);
-
-     SDL_Window *window = SDL_CreateWindow("Bomberman",
-         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, 0);
-
-    Uint32 render_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
-
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, render_flags);
-
-    SDL_Rect dstrect = { 5, 5, 320, 240 };
-
-
-
-
-    SDL_Surface * image = SDL_LoadBMP("resources/free.bmp");
-    if(!image) {
-        printf("Erreur de chargement de l'image : %s",SDL_GetError());
-        return -1;
-    }
-
-    SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, image);
-
-    int is_running = YES;
-     while (is_running)
-     {
-       SDL_RenderCopy(renderer, texture, NULL, NULL);
-
-       SDL_RenderPresent(renderer);
-       SDL_WaitEvent(&event);
-
-       switch (event.type)
-       {
-       case SDL_QUIT:
-           is_running = NO;
-           break;
-       }
-     }
-
-     SDL_DestroyTexture(texture);
-     SDL_FreeSurface(image);
-     SDL_DestroyRenderer(renderer);
-     SDL_DestroyWindow(window);
-
-     SDL_Quit();
-
-     return 0;
-
+launch_game_SDL();
 
   //
   // SDL_Window *window;                    // Declare a pointer
