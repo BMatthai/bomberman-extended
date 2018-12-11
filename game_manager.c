@@ -105,8 +105,21 @@ int launch_game_SDL() {
 
     switch (event.type)
     {
-    case SDL_QUIT:
+      case SDL_QUIT:
         is_running = NO;
+        break;
+      case SDL_KEYDOWN:
+          switch (event.key.keysym.sym)
+          {
+              case SDLK_LEFT:  action(level, playable_character, ACTION_LEFT); break;
+              case SDLK_RIGHT: action(level, playable_character, ACTION_RIGHT); break;
+              case SDLK_UP:    action(level, playable_character, ACTION_UP); break;
+              case SDLK_DOWN:  action(level, playable_character, ACTION_DOWN); break;
+          }
+        break;
+
+      case SDL_KEYUP:
+        action(level, playable_character, ACTION_RIGHT);
         break;
     }
     SDL_Rect location;
@@ -131,15 +144,17 @@ int launch_game_SDL() {
         }
       }
 
+      location.h = STANDARD_TILE_HEIGHT;
+      location.w = STANDARD_TILE_WIDTH;
+      location.x = STANDARD_TILE_WIDTH * level->characters[0].position_x + offset_x;
+      location.y = STANDARD_TILE_HEIGHT * level->characters[0].position_y + offset_y;
 
-      for (int k = 0; k < level->number_characters; k++) {
-        location.h = STANDARD_TILE_HEIGHT;
-        location.w = STANDARD_TILE_WIDTH;
-        location.x = STANDARD_TILE_WIDTH * level->characters[k].position_x + offset_x;
-        location.y = STANDARD_TILE_HEIGHT * level->characters[k].position_y + offset_y;
+      SDL_RenderCopy(renderer, texture_char1, NULL, &location);
 
-        SDL_RenderCopy(renderer, texture_chars[k], NULL, &location);
-      }
+
+      // for (int k = 0; k < level->number_characters; k++) {
+      //
+      // }
 
 
 

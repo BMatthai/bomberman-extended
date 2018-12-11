@@ -8,4 +8,4 @@ int number_of_direction_possible(t_level *level, t_character *character);
 void put_bomb();
 int move_to_dir(t_level *level, t_character *character, int dir);
 int move(t_level *level, t_character *character, int x, int y);
-void action(t_level *level, t_character *character, char touch_action);
+void action(t_level *level, t_character *character, int touch_action);

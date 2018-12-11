@@ -91,15 +91,15 @@ int number_of_direction_possible(t_level *level, t_character *character) {
   return number_of_direction_possible;
 }
 
-void action(t_level *level, t_character *character, char touch_action) {
-  if(touch_action == 'z')
+void action(t_level *level, t_character *character, int touch_action) {
+  if(touch_action == ACTION_UP)
     move(level, character, 0,-1);
-  if(touch_action == 's')
+  if(touch_action == ACTION_DOWN)
     move(level, character, 0,1);
-  if(touch_action == 'q')
+  if(touch_action == ACTION_LEFT)
     move(level, character, -1,0);
-  if(touch_action == 'd')
+  if(touch_action == ACTION_RIGHT)
     move(level, character, 1,0);
-  if(touch_action == 'c')
+  if(touch_action == ACTION_BOMB)
     put_bomb(level, character);
 }
