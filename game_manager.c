@@ -117,6 +117,7 @@ int launch_game_SDL() {
               case SDLK_DOWN:  action(level, playable_character, ACTION_DOWN); break;
           }
         break;
+      case SDL_KEYUP: adjust_char(level, playable_character); break;
       //
       // case SDL_KEYUP:
       //   action(level, playable_character, ACTION_RIGHT);

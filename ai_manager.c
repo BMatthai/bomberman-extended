@@ -51,34 +51,29 @@ void chase_target(t_level *level, t_character *character, int target_pos_x, int 
 	}
 	else {
 		int did_moved;
-		int dir;
 		r = rand() % 7;
 		if (r < 3) {
 			if (character_pos_x > target_pos_x && is_position_in_any_bomb_range(level, character_pos_x - 1, character_pos_y) == IS_SAFE) {
-				dir = 2;
-				did_moved = move_to_dir(level, character, 2);
+				move(level, character, ACTION_LEFT);
 			}
 			else if (character_pos_x < target_pos_x && is_position_in_any_bomb_range(level, character_pos_x + 1, character_pos_y) == IS_SAFE) {
-				dir = 3;
-				did_moved = move_to_dir(level, character, 3);
+				move(level, character, ACTION_RIGHT);
 			}
 		}
 		else if (r < 6) {
 			if (character_pos_y > target_pos_y && is_position_in_any_bomb_range(level, character_pos_x, character_pos_y - 1) == IS_SAFE) {
-				dir = 0;
-				did_moved = move_to_dir(level, character, 0);
+				move(level, character, ACTION_UP);
 			}
 			else if (character_pos_y < target_pos_y  && is_position_in_any_bomb_range(level, character_pos_x, character_pos_y + 1) == IS_SAFE) {
-				dir = 1;
-				did_moved = move_to_dir(level, character, 1);
+				move(level, character, ACTION_DOWN);
 			}
 		}
-		if (did_moved == MOVE_IMPOSSIBLE) {
-			if (dir == 2 || dir == 0)
-				did_moved = move_to_dir(level, character, (dir + 2 + (rand() % 2)) % 4);
-			else if (dir == 1 || dir == 3)
-					did_moved = move_to_dir(level, character, (dir + 1 + (rand() % 2)) % 4);
-		}
+		// if (did_moved == MOVE_IMPOSSIBLE) {
+		// 	if (dir == 2 || dir == 0)
+		// 		move(level, character, (dir + 2 + (rand() % 2)) % 4);
+		// 	else if (dir == 1 || dir == 3)
+		// 		move(level, character, (dir + 1 + (rand() % 2)) % 4);
+		// }
 	}
 }
 
@@ -98,7 +93,7 @@ void ai_play(t_level *level, t_character *character) {
 	if (is_character_in_bomb_range(level, character) == IS_IN_BOMB_RANGE) {
 
 			r = rand() % 4;
-			move_to_dir(level, character, r);
+			move(level, character, r);
 	}
 	else {
 		if (rand() % 20 == 0) {

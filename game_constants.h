@@ -3,6 +3,9 @@
 #define STANDARD_WIN_WIDTH 1024
 #define STANDARD_WIN_HEIGHT 768
 
+#define MOVE_DISTANCE 0.01
+
+
 #define ACTION_UP 1
 #define ACTION_DOWN 2
 #define ACTION_LEFT 3
