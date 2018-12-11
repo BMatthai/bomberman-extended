@@ -51,7 +51,7 @@ char *level_to_display(t_level *level) {
 
   for (k = 0; k < level->number_characters; k++) {
     if (level->characters[k].state != CHARACTER_DEAD) {
-      level_to_display[level->characters[k].position_y * columns + level->characters[k].position_x] = level->characters[k].symbol;
+      //level_to_display[level->characters[k].position_y * columns + level->characters[k].position_x] = level->characters[k].symbol;
     }
   }
 

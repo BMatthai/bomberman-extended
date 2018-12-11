@@ -18,9 +18,9 @@
 #include <unistd.h>
 
 
-int move(t_level *level, t_character *character, int x, int y) {
-    int new_position_x;
-    int new_position_y;
+int move(t_level *level, t_character *character, float x, float y) {
+    float new_position_x;
+    float new_position_y;
 
     new_position_x = character->position_x + x;
     new_position_y = character->position_y + y;
@@ -93,13 +93,13 @@ int number_of_direction_possible(t_level *level, t_character *character) {
 
 void action(t_level *level, t_character *character, int touch_action) {
   if(touch_action == ACTION_UP)
-    move(level, character, 0,-1);
+    move(level, character, 0, -0.01);
   if(touch_action == ACTION_DOWN)
-    move(level, character, 0,1);
+    move(level, character, 0, 0.01);
   if(touch_action == ACTION_LEFT)
-    move(level, character, -1,0);
+    move(level, character, -0.01,0);
   if(touch_action == ACTION_RIGHT)
-    move(level, character, 1,0);
+    move(level, character, 0.01,0);
   if(touch_action == ACTION_BOMB)
     put_bomb(level, character);
 }
