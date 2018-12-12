@@ -76,18 +76,6 @@ int is_move_possible(t_level *level, t_character *character, int x, int y) {
   return NO;
 }
 
-// int move_to_dir(t_level *level, t_character *character, int dir) {
-//   if (dir == ACTION_UP)
-//     return move(level, character, ACTION_UP);
-//   if (dir == ACTION_DOWN)
-//     return move(level, character, ACTION_DOWN);
-//   if (dir == ACTION_LEFT)
-//     return move(level, character, ACTION_LEFT);
-//   if (dir == ACTION_RIGHT)
-//     return move(level, character, ACTION_RIGHT);
-//   return MOVE_IMPOSSIBLE;
-// }
-
 int is_move_to_top_possible(t_level *level, t_character *character) {
   return is_move_possible(level, character, 0, -1);
 }
@@ -137,25 +125,17 @@ void adjust_char(t_level *level, t_character *character) {
   float position_x = character->position_x;
   float position_y = character->position_y;
 
-  if (position_x - (int)position_x < 0.5) {
+  if (position_x - (int)position_x < 0.33) {
     character->position_x = (int) position_x;
   }
   else {
     character->position_x = (int) position_x + 1;
   }
 
-  if (position_y - (int)position_y < 0.5) {
+  if (position_y - (int)position_y < 0.33) {
     character->position_y = (int) position_y;
   }
   else {
     character->position_y = (int) position_y + 1;
   }
-
-  // while(position_x - (int)position_x != 0) {
-  //   move(level, character, 0.01,0);
-  // }
-  //
-  // while(position_y - (int)position_y != 0) {
-  //   move(level, character, 0, 0.01);
-  // }
 }
