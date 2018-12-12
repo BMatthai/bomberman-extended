@@ -1,2 +1,2 @@
-void launch_menu();
-int launch_game();
+// void launch_menu();
+// int launch_game();
