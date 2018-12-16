@@ -14,7 +14,7 @@ Projet de bomberman en ASCII !!! C'était plutôt stylé même si l'interface pa
 - [ ] Gérer les fuites de mémoires.
 - [ ] Amélioration du Makefile : factoriser le fichier. Séparer les fichiers .o .h et .c dans des dossiers build, inc et src.
 - [ ] Refaire entièrement le menu de jeu (en SDL)
-- [ ] Ajouter création de map aléatoires, cohérentes et qui ont un interêt d'un point de vue Gameplay
+- [ ] Ajouter création de map aléatoires en se basant sur l'algorithme de Kruskal.
 - [ ] Créer une boucle de jeu qui ne dépend pas du CPU
 - [ ] ~~Améliorer IA / Refactoriser complêtement~~ __(Pas prio)__
 - [ ] Implémenter réseau
