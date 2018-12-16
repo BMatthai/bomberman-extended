@@ -5,6 +5,9 @@
 #include "level_generation.h"
 #endif
 
+
+#include "tile_manager.h"
+
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -13,10 +16,30 @@
 
 #include <stdio.h>
 
-//To read a level layer (wall/bonus)
-//char **get_level_layer_raw(int fd, int lines, int columns);
 
 int isAChar(char tile);
+
+t_level *generate_level_random() {
+  t_level *level;
+
+  level = malloc(sizeof(t_level));
+
+  if (level == NULL) {
+    return NULL;
+  }
+
+  level->lines = 40;
+  level->columns = 64;
+  level->terrain = ;
+
+  // level->bonus = get_level_layer_raw(fd, level->lines, level->columns);
+  level->bomb = get_bomb_layer(level->lines, level->columns);
+  level->number_characters = count_characters(level);
+  level->characters = get_level_characters(level);
+
+  close(fd);
+  return level;
+}
 
 
 t_level *generate_level_from_file(char *path) {
@@ -30,7 +53,7 @@ t_level *generate_level_from_file(char *path) {
   if (level == NULL) {
     return NULL;
   }
-  
+
   level->lines = get_one_dim(fd);
   level->columns = get_one_dim(fd);
   level->terrain = get_level_layer_raw(fd, level->lines, level->columns);

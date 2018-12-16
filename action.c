@@ -19,7 +19,6 @@
 #include "time_manager.h"
 
 #include <stdlib.h>
-
 #include <unistd.h>
 
 

@@ -51,7 +51,7 @@ t_display *init_display(t_level *level) {
   SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, render_flags);
 
   SDL_Texture **text_terrain = malloc(2 * sizeof(SDL_Texture *));
-  SDL_Texture **text_bomb = malloc(4 * sizeof(SDL_Texture *));
+  SDL_Texture **text_bomb = malloc(2 * sizeof(SDL_Texture *));
   SDL_Texture **text_character = malloc(1 * sizeof(SDL_Texture *));
 
   SDL_Surface *image_wall = SDL_LoadBMP("resources/wall.bmp");
@@ -81,9 +81,9 @@ t_display *init_display(t_level *level) {
   display->renderer = renderer;
   display->offset_x = offset_x;
   display->offset_y = offset_y;
+  display->text_bomb = text_bomb;
   display->text_terrain = text_terrain;
   display->text_character = text_character;
-  display->text_bomb = text_bomb;
 
   return display;
 }
@@ -135,23 +135,23 @@ void display_bombs(t_level *level, t_display *display) {
       location.x = STANDARD_TILE_WIDTH * j + display->offset_x;
       location.y = STANDARD_TILE_HEIGHT * i + display->offset_y;
 
-      if (is_tile_bomb_exploding(level, j, i) == YES) {
-        SDL_RenderCopy(display->renderer, display->text_bomb[1], NULL, &location);
-      }
-      else if (is_tile_bomb_planted(level, j, i) == YES){
+      if (is_tile_bomb_planted(level, j, i) == YES){
         SDL_RenderCopy(display->renderer, display->text_bomb[0], NULL, &location);
+      }
+      else if (is_tile_bomb_exploding(level, j, i) == YES) {
+        SDL_RenderCopy(display->renderer, display->text_bomb[1], NULL, &location);
       }
     }
   }
 }
 
 int game_state(t_game_data *game_data) {
-  if(game_data->playable_character->heal_points < CHARACTER_ALIVE) {
+  if (game_data->playable_character->heal_points < CHARACTER_ALIVE)
       return GAME_PLAYABLE_CHARACTER_IS_DEAD;
-  }
-  else if (game_data->level->characters[1].state == CHARACTER_DEAD && game_data->level->characters[2].state == CHARACTER_DEAD && game_data->level->characters[3].state == CHARACTER_DEAD) {
+  else if (game_data->level->characters[1].state == CHARACTER_DEAD &&
+    game_data->level->characters[2].state == CHARACTER_DEAD &&
+    game_data->level->characters[3].state == CHARACTER_DEAD)
     return GAME_IS_WON;
-  }
 return GAME_IS_RUNNING;
 }
 
@@ -208,6 +208,8 @@ int launch_game_SDL() {
     display_characters(level, display);
     display_bombs(level, display);
     SDL_RenderPresent(display->renderer);
+
+    check_bombs_timer(level);
 
   }
 

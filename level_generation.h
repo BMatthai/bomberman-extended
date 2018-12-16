@@ -1,4 +1,5 @@
 t_level *generate_level_from_file(char *file);
+t_level *generate_level_random();
 int get_one_dim(int fd);
 char **get_level_layer_raw(int fd, int lines, int columns);
 char **get_bomb_layer(int lines, int columns);
