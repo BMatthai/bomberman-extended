@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=
-CFLAGSE=-W -Wall -Werror -pedantic -std=c99
-LDFLAGS=
+#CFLAGSE=-W -Wall -Werror -pedantic -std=c99
+LDFLAGS=-I./include -L./bin -lSDL2
 EXEC=bomberman
 BUILD_DIR=.
 BIN_DIR=.
@@ -9,8 +9,8 @@ SOURCE_DIR=.
 
 all: $(EXEC)
 
-bomberman: bomberman.o level_generation.o character_creation.o display_level.o action.o bomb_manager.o time_manager.o level_manager.o menu_manager.o game_manager.o client_manager.o server_manager.o ai_manager.o color_manager.o
-	$(CC) -o bomberman bomberman.o level_generation.o character_creation.o display_level.o action.o bomb_manager.o time_manager.o level_manager.o menu_manager.o game_manager.o client_manager.o server_manager.o ai_manager.o color_manager.o $(LDFLAGS)
+bomberman: bomberman.o level_generation.o character_creation.o display_level.o action.o bomb_manager.o time_manager.o level_manager.o menu_manager.o game_manager.o client_manager.o server_manager.o ai_manager.o color_manager.o log_manager.o
+	$(CC) -o bomberman bomberman.o level_generation.o character_creation.o display_level.o action.o bomb_manager.o time_manager.o level_manager.o menu_manager.o game_manager.o client_manager.o server_manager.o ai_manager.o color_manager.o log_manager.o $(LDFLAGS)
 
 display_level.o: $(SOURCE_DIR)/display_level.c
 	$(CC) -o $(BUILD_DIR)/display_level.o -c $(SOURCE_DIR)/display_level.c $(CFLAGS)
@@ -50,6 +50,9 @@ server_manager.o: $(SOURCE_DIR)/server_manager.c
 
 ai_manager.o: $(SOURCE_DIR)/ai_manager.c
 	$(CC) -o $(BUILD_DIR)/ai_manager.o -c $(SOURCE_DIR)/ai_manager.c $(CFLAGS)
+
+log_manager.o: $(SOURCE_DIR)/log_manager.c
+	$(CC) -o $(BUILD_DIR)/log_manager.o -c $(SOURCE_DIR)/log_manager.c $(CFLAGS)
 
 color_manager.o: color_manager.c
 	$(CC) -o color_manager.o -c color_manager.c $(CFLAGS)

@@ -13,6 +13,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <SDL2/SDL.h>
 
 char *level_to_display(t_level *level) {
   int i;
@@ -50,14 +51,36 @@ char *level_to_display(t_level *level) {
 
   for (k = 0; k < level->number_characters; k++) {
     if (level->characters[k].state != CHARACTER_DEAD) {
-      level_to_display[level->characters[k].position_y * columns + level->characters[k].position_x] = level->characters[k].symbol;
+      //level_to_display[level->characters[k].position_y * columns + level->characters[k].position_x] = level->characters[k].symbol;
     }
   }
 
   return level_to_display;
 }
 
-void display_hud(t_game_data *game_data) {
+
+void display_screen_sdl(t_game_data *game_data) {
+  display_hud_sdl(game_data);
+  display_level_sdl(game_data);
+}
+
+
+void display_hud_sdl(t_game_data *game_data) {
+
+}
+
+
+void display_level_sdl(t_game_data *game_data) {
+
+}
+
+
+
+
+
+
+
+void display_hud_ascii(t_game_data *game_data) {
 
   t_character *character = game_data->playable_character;
 
@@ -75,11 +98,10 @@ void display_hud(t_game_data *game_data) {
   printf("Délai explosion bombe : %d  \n", time_to_bomb_explode_millis);
 }
 
-void display_level(t_game_data *game_data) {
+void display_level_ascii(t_game_data *game_data) {
 
   t_level *level = game_data->level;
   char *level_terrain = level_to_display(game_data->level);
-
 
   for (int i = 0; i < level->lines; i++) {
     write(1, "\n", strlen("\n"));
@@ -153,7 +175,7 @@ void display_level(t_game_data *game_data) {
   }
 }
 
-void display_screen(t_game_data *game_data) {
-  display_hud(game_data);
-  display_level(game_data);
+void display_screen_ascii(t_game_data *game_data) {
+  display_hud_ascii(game_data);
+  display_level_ascii(game_data);
 }

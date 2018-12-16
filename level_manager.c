@@ -16,6 +16,7 @@ int tile_is_wall(t_level *level, int x, int y) {
   if (level->terrain[y][x] >= TILE_WITH_WALL_ZERO && level->terrain[y][x] <= TILE_WITH_WALL_NINE) {
       return YES;
   }
+
   return NO;
 }
 
@@ -38,17 +39,9 @@ int tile_is_character(t_level *level, int x, int y) {
 
 
 int tile_is_bomb_planted(t_level *level, int x, int y) {
-  if (bomb_at_pos(level, x, y) != NULL) {
+  if (level->bomb[y][x] == '@') {
     return YES;
   }
-  // if (level->bomb[y][x] == '@') {
-  //   return YES;
-  // }
-  // else {
-  //   if (bomb_at_pos(level, x, y) != NULL) {
-  //     return YES;
-  //   }
-  // }
   return NO;
 }
 
@@ -71,16 +64,17 @@ int tile_is_bomb_exploding(t_level *level, int x, int y) {
   return NO;
 }
 
-int tile_is_free(t_level *level, int x, int y) {
-  if (tile_is_character(level, x, y)) {
+int tile_is_free(t_level *level, float x, float y) {
+  if (tile_is_wall(level, (int)x, (int)y)) {
     return NO;
   }
-  if (tile_is_wall(level, x, y)) {
-    return NO;
-  }
-  if (tile_is_bomb_planted(level, x, y)) {
-    return NO;
-  }
+
+  // if (tile_is_character(level, x, y)) {
+  //   return NO;
+  // }
+  // if (tile_is_bomb_planted(level, x, y)) {
+  //   return NO;
+  // }
   return YES;
 }
 
