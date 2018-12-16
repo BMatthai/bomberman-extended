@@ -18,16 +18,16 @@ int is_character_in_bomb_range(t_level *level, t_character *character) {
   t_bomb *cur_bomb = NULL;
 
   if ((cur_bomb = level->first_bomb) == NULL) {
-    return IS_SAFE;
+    return NO;
   }
 
   while(cur_bomb != NULL) {
     if (is_in_bomb_range(level, cur_bomb, character->position_x, character->position_y) == IS_IN_BOMB_RANGE){
-      return IS_IN_BOMB_RANGE;
+      return NO;
     }
     cur_bomb = cur_bomb->next_bomb;
   }
-  return IS_SAFE;
+  return YES;
 }
 
 t_character create_character(char symbol, int x, int y) {

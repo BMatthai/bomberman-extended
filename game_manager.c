@@ -19,17 +19,13 @@
 #include "time_manager.h"
 #include "action.h"
 #include "level_generation.h"
-#include "display_level.h"
 #include "action.h"
 #include "game_constants.h"
 #include "bomb_manager.h"
-#include "menu_manager.h"
 #include "game_manager.h"
 #include "character_creation.h"
-#include "level_manager.h"
-
+#include "tile_manager.h"
 #include "time_manager.h"
-#include "ai_manager.h"
 
 #include <poll.h>
 #include <stdio.h>
@@ -102,7 +98,7 @@ void display_map(t_level *level, t_display *display) {
       location.x = STANDARD_TILE_WIDTH * j + display->offset_x;
       location.y = STANDARD_TILE_HEIGHT * i + display->offset_y;
 
-      if (tile_is_wall(level, j, i) == YES) {
+      if (is_tile_wall(level, j, i) == YES) {
         SDL_RenderCopy(display->renderer, display->text_terrain[0], NULL, &location);
       }
       else {
@@ -139,10 +135,10 @@ void display_bombs(t_level *level, t_display *display) {
       location.x = STANDARD_TILE_WIDTH * j + display->offset_x;
       location.y = STANDARD_TILE_HEIGHT * i + display->offset_y;
 
-      if (tile_is_bomb_exploding(level, j, i) == YES) {
+      if (is_tile_bomb_exploding(level, j, i) == YES) {
         SDL_RenderCopy(display->renderer, display->text_bomb[1], NULL, &location);
       }
-      else if (tile_is_bomb_planted(level, j, i) == YES){
+      else if (is_tile_bomb_planted(level, j, i) == YES){
         SDL_RenderCopy(display->renderer, display->text_bomb[0], NULL, &location);
       }
     }
