@@ -7,6 +7,7 @@
 
 
 #include "tile_manager.h"
+#include "log_manager.h"
 
 #include <stdlib.h>
 #include <sys/types.h>
@@ -16,8 +17,47 @@
 
 #include <stdio.h>
 
+#include <time.h>
+
 
 int isAChar(char tile);
+
+void CarveMaze(char **maze, int width, int height, int x, int y) {
+
+   int x1, y1;
+   int x2, y2;
+   int dx, dy;
+   int dir, count;
+
+   dir = rand() % 4;
+   count = 0;
+   while(count < 4) {
+      dx = 0; dy = 0;
+      switch(dir) {
+      case 0:  dx = 1;  break;
+      case 1:  dy = 1;  break;
+      case 2:  dx = -1; break;
+      default: dy = -1; break;
+      }
+      x1 = x + dx;
+      y1 = y + dy;
+      x2 = x1 + dx;
+      y2 = y1 + dy;
+      if(   x2 > 0 && x2 < width && y2 > 0 && y2 < height
+         && maze[x1][y1] != ' ' && maze[x2][y2] != ' ') {
+         maze[x1][y1] = ' ';
+         maze[x2][y2] = ' ';
+         x = x2; y = y2;
+         dir = rand() % 4;
+         count = 0;
+      } else {
+         dir = (dir + 1) % 4;
+         count += 1;
+      }
+   }
+
+}
+
 
 t_level *generate_level_random() {
   t_level *level;
@@ -28,16 +68,42 @@ t_level *generate_level_random() {
     return NULL;
   }
 
-  level->lines = 40;
-  level->columns = 64;
-  level->terrain = ;
 
-  // level->bonus = get_level_layer_raw(fd, level->lines, level->columns);
-  level->bomb = get_bomb_layer(level->lines, level->columns);
-  level->number_characters = count_characters(level);
-  level->characters = get_level_characters(level);
+  int lines = 10;
+  int columns = 10;
+  level->lines = lines;
+  level->columns = columns;
 
-  close(fd);
+   char **empty_level = generate_empty_layer(lines, columns);
+   for(int i = 0; i < lines; i++) {
+      for(int j = 0; j < columns; j++) {
+        empty_level[j][i] = '0';
+      }
+   }
+
+   // srand(time(0));
+   // for(int i = 0; i < lines; i++) {
+   //    for(int j = 0; j < columns; j++) {
+   //      //CarveMaze(empty_level, columns, lines, j, i);
+   //    }
+   // }
+
+   empty_level[10][10] = 'A';
+   empty_level[11][11] = 'B';
+
+   level->terrain = empty_level;
+   level->bonus = generate_empty_layer(level->lines, level->columns);
+   level->bomb = generate_empty_layer(level->lines, level->columns);
+   // level->number_characters = count_characters(level);
+   // level->characters = get_level_characters(level);
+
+  // level->bonus = generate_empty_layer(40, 64);
+  //
+  //
+  // level->bomb = generate_empty_layer(level->lines, level->columns);
+  // level->number_characters = 4;
+  //level->characters = get_level_characters(level);
+
   return level;
 }
 
@@ -58,7 +124,7 @@ t_level *generate_level_from_file(char *path) {
   level->columns = get_one_dim(fd);
   level->terrain = get_level_layer_raw(fd, level->lines, level->columns);
   level->bonus = get_level_layer_raw(fd, level->lines, level->columns);
-  level->bomb = get_bomb_layer(level->lines, level->columns);
+  level->bomb = generate_empty_layer(level->lines, level->columns);
   level->number_characters = count_characters(level);
   level->characters = get_level_characters(level);
 
@@ -125,7 +191,7 @@ t_character *get_level_characters(t_level *level) {
   return characters;
 }
 
-char **get_bomb_layer(int lines, int columns) {
+char **generate_empty_layer(int lines, int columns) {
   char **bomb_layer;
 
   bomb_layer = malloc(lines * sizeof(char*));

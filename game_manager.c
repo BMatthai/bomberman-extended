@@ -26,6 +26,7 @@
 #include "character_creation.h"
 #include "tile_manager.h"
 #include "time_manager.h"
+#include "log_manager.h"
 
 #include <poll.h>
 #include <stdio.h>
@@ -164,7 +165,11 @@ int launch_game_SDL() {
   if (game_data == NULL) {
    return -1;
   }
-  game_data->level = generate_level_from_file("./level/testlevel.lvl");
+
+  //game_data->level = generate_level_from_file("./level/testlevel.lvl");
+
+  game_data->level = generate_level_random();
+
   game_data->playable_character = &game_data->level->characters[0];
   t_character *playable_character = game_data->playable_character;
 
