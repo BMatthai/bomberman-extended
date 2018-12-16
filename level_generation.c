@@ -31,7 +31,7 @@ void CarveMaze(char **maze, int width, int height, int x, int y) {
 
    dir = rand() % 4;
    count = 0;
-   while(count < 4) {
+   while(count < 10) {
       dx = 0; dy = 0;
       switch(dir) {
       case 0:  dx = 1;  break;
@@ -44,7 +44,7 @@ void CarveMaze(char **maze, int width, int height, int x, int y) {
       x2 = x1 + dx;
       y2 = y1 + dy;
       if(   x2 > 0 && x2 < width && y2 > 0 && y2 < height
-         && maze[x1][y1] != ' ' && maze[x2][y2] != ' ') {
+         && maze[x1][y1] == '0' && maze[x2][y2] == '0') {
          maze[x1][y1] = ' ';
          maze[x2][y2] = ' ';
          x = x2; y = y2;
@@ -69,8 +69,8 @@ t_level *generate_level_random() {
   }
 
 
-  int lines = 10;
-  int columns = 10;
+  int lines = 21;
+  int columns = 21;
   level->lines = lines;
   level->columns = columns;
 
@@ -81,21 +81,35 @@ t_level *generate_level_random() {
       }
    }
 
-   // srand(time(0));
-   // for(int i = 0; i < lines; i++) {
-   //    for(int j = 0; j < columns; j++) {
-   //      //CarveMaze(empty_level, columns, lines, j, i);
-   //    }
-   // }
+   srand(time(0));
+   for(int i = 0; i < lines; i++) {
+      for(int j = 0; j < columns; j++) {
+        CarveMaze(empty_level, columns, lines, j, i);
+      }
 
-   empty_level[10][10] = 'A';
-   empty_level[11][11] = 'B';
+   }
+
+    for(int i = 0; i < lines; i++) {
+     empty_level[0][i] = '0';
+     empty_level[columns - 1][i] = '0';
+    }
+
+    for(int i = 0; i < columns; i++) {
+     empty_level[i][0] = '0';
+     empty_level[i][lines - 1] = '0';
+    }
+
+   empty_level[4][4] = 'A';
+   empty_level[5][5] = 'B';
 
    level->terrain = empty_level;
+
    level->bonus = generate_empty_layer(level->lines, level->columns);
+
    level->bomb = generate_empty_layer(level->lines, level->columns);
-   // level->number_characters = count_characters(level);
-   // level->characters = get_level_characters(level);
+
+   level->number_characters = count_characters(level);
+   level->characters = get_level_characters(level);
 
   // level->bonus = generate_empty_layer(40, 64);
   //
