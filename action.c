@@ -10,6 +10,7 @@
 #include "struct_character.h"
 #endif
 
+#include "log_manager.h"
 #include "action.h"
 #include "game_constants.h"
 #include "bomb_manager.h"
@@ -28,6 +29,7 @@ void move(t_level *level, t_character *character, int direction) {
     new_position_y = character->position_y - MOVE_DISTANCE;
     if (tile_is_free(level, new_position_x, new_position_y) == YES) {
       character->position_y = new_position_y;
+      b_log("Action : UP\n");
     }
     else {
       adjust_char(level, character);
@@ -37,6 +39,7 @@ void move(t_level *level, t_character *character, int direction) {
     new_position_y = character->position_y + MOVE_DISTANCE;
     if (tile_is_free(level, new_position_x, new_position_y + 1) == YES) {
       character->position_y = new_position_y;
+      b_log("Action : DOWN\n");
     }
     else {
       adjust_char(level, character);
@@ -46,6 +49,8 @@ void move(t_level *level, t_character *character, int direction) {
     new_position_x = character->position_x - MOVE_DISTANCE;
     if (tile_is_free(level, new_position_x, new_position_y) == YES) {
       character->position_x = new_position_x;
+      b_log("Action : LEFT\n");
+
     }
     else {
       adjust_char(level, character);
@@ -55,6 +60,7 @@ void move(t_level *level, t_character *character, int direction) {
     new_position_x = character->position_x + MOVE_DISTANCE;
     if (tile_is_free(level, new_position_x + 1, new_position_y) == YES) {
       character->position_x = new_position_x;
+      b_log("Action : RIGHT\n");
     }
     else {
       adjust_char(level, character);
@@ -63,50 +69,6 @@ void move(t_level *level, t_character *character, int direction) {
   pick_item(level, character);
 }
 
-int is_move_possible(t_level *level, t_character *character, int x, int y) {
-  int new_position_x;
-  int new_position_y;
-
-  new_position_x = character->position_x + x;
-  new_position_y = character->position_y + y;
-
-  if (tile_is_free(level, new_position_x, new_position_y) == YES) {
-    return YES;
-  }
-  return NO;
-}
-
-int is_move_to_top_possible(t_level *level, t_character *character) {
-  return is_move_possible(level, character, 0, -1);
-}
-
-int is_move_to_bot_possible(t_level *level, t_character *character) {
-  return is_move_possible(level, character, 0, 1);
-}
-
-int is_move_to_left_possible(t_level *level, t_character *character) {
-  return is_move_possible(level, character, -1, 0);
-}
-
-int is_move_to_right_possible(t_level *level, t_character *character) {
-  return is_move_possible(level, character, 1, 0);
-}
-
-int number_of_direction_possible(t_level *level, t_character *character) {
-  int number_of_direction_possible;
-
-  number_of_direction_possible = 0;
-
-  if (is_move_to_top_possible(level, character))
-    number_of_direction_possible++;
-  if (is_move_to_bot_possible(level, character))
-    number_of_direction_possible++;
-  if (is_move_to_left_possible(level, character))
-    number_of_direction_possible++;
-  if (is_move_to_right_possible(level, character))
-    number_of_direction_possible++;
-  return number_of_direction_possible;
-}
 
 void action(t_level *level, t_character *character, int touch_action) {
   if(touch_action == ACTION_UP)
@@ -139,3 +101,49 @@ void adjust_char(t_level *level, t_character *character) {
     character->position_y = (int) position_y + 1;
   }
 }
+
+//
+// int is_move_possible(t_level *level, t_character *character, int x, int y) {
+//   int new_position_x;
+//   int new_position_y;
+//
+//   new_position_x = character->position_x + x;
+//   new_position_y = character->position_y + y;
+//
+//   if (tile_is_free(level, new_position_x, new_position_y) == YES) {
+//     return YES;
+//   }
+//   return NO;
+// }
+
+// int is_move_to_top_possible(t_level *level, t_character *character) {
+//   return is_move_possible(level, character, 0, -1);
+// }
+//
+// int is_move_to_bot_possible(t_level *level, t_character *character) {
+//   return is_move_possible(level, character, 0, 1);
+// }
+//
+// int is_move_to_left_possible(t_level *level, t_character *character) {
+//   return is_move_possible(level, character, -1, 0);
+// }
+//
+// int is_move_to_right_possible(t_level *level, t_character *character) {
+//   return is_move_possible(level, character, 1, 0);
+// }
+
+// int number_of_direction_possible(t_level *level, t_character *character) {
+//   int number_of_direction_possible;
+//
+//   number_of_direction_possible = 0;
+//
+//   if (is_move_to_top_possible(level, character))
+//     number_of_direction_possible++;
+//   if (is_move_to_bot_possible(level, character))
+//     number_of_direction_possible++;
+//   if (is_move_to_left_possible(level, character))
+//     number_of_direction_possible++;
+//   if (is_move_to_right_possible(level, character))
+//     number_of_direction_possible++;
+//   return number_of_direction_possible;
+// }

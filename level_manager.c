@@ -39,17 +39,9 @@ int tile_is_character(t_level *level, int x, int y) {
 
 
 int tile_is_bomb_planted(t_level *level, int x, int y) {
-  if (bomb_at_pos(level, x, y) != NULL) {
+  if (level->bomb[y][x] == '@') {
     return YES;
   }
-  // if (level->bomb[y][x] == '@') {
-  //   return YES;
-  // }
-  // else {
-  //   if (bomb_at_pos(level, x, y) != NULL) {
-  //     return YES;
-  //   }
-  // }
   return NO;
 }
 

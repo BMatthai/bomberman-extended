@@ -14,6 +14,7 @@
 #include "struct_bomb.h"
 #endif
 
+#include "log_manager.h"
 #include "level_manager.h"
 #include "game_constants.h"
 #include "time_manager.h"
@@ -99,6 +100,7 @@ void put_bomb(t_level *level, t_character *character) {
       new_bomb->prev_bomb = cur_bomb;
       cur_bomb->next_bomb = new_bomb;
     }
+    b_log("Action : BOMB PLANTED\n");
   }
 }
 

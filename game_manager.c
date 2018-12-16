@@ -49,7 +49,6 @@ t_display *init_display(t_level *level) {
   Uint32 render_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 
 
-  display = malloc(sizeof(t_display));
 
   int offset_x = ((STANDARD_WIN_WIDTH / 2) - ((level->columns * STANDARD_TILE_WIDTH) / 2));
   int offset_y = STANDARD_WIN_HEIGHT - (level->lines * STANDARD_TILE_HEIGHT);
@@ -59,18 +58,19 @@ t_display *init_display(t_level *level) {
   SDL_Texture **text_bomb = malloc(4 * sizeof(SDL_Texture *));
   SDL_Texture **text_character = malloc(1 * sizeof(SDL_Texture *));
 
-  SDL_Surface *image_free = SDL_LoadBMP("resources/free.bmp");
   SDL_Surface *image_wall = SDL_LoadBMP("resources/wall.bmp");
+  SDL_Surface *image_free = SDL_LoadBMP("resources/free.bmp");
 
   SDL_Surface *image_char0 = SDL_LoadBMP("resources/char0.bmp");
   SDL_Surface *image_char1 = SDL_LoadBMP("resources/char1.bmp");
   SDL_Surface *image_char2 = SDL_LoadBMP("resources/char2.bmp");
   SDL_Surface *image_char3 = SDL_LoadBMP("resources/char3.bmp");
 
-  SDL_Surface *image_bomb0 = SDL_LoadBMP("resources/bomb.bmp");
+  SDL_Surface *image_bomb0 = SDL_LoadBMP("resources/bomb0.bmp");
+  SDL_Surface *image_bomb1 = SDL_LoadBMP("resources/bomb1.bmp");
 
-  text_terrain[0] = SDL_CreateTextureFromSurface(renderer, image_free);
-  text_terrain[1] = SDL_CreateTextureFromSurface(renderer, image_wall);
+  text_terrain[0] = SDL_CreateTextureFromSurface(renderer, image_wall);
+  text_terrain[1] = SDL_CreateTextureFromSurface(renderer, image_free);
 
   text_character[0] = SDL_CreateTextureFromSurface(renderer, image_char0);
   text_character[1] = SDL_CreateTextureFromSurface(renderer, image_char1);
@@ -78,8 +78,9 @@ t_display *init_display(t_level *level) {
   text_character[3] = SDL_CreateTextureFromSurface(renderer, image_char3);
 
   text_bomb[0] = SDL_CreateTextureFromSurface(renderer, image_bomb0);
+  text_bomb[1] = SDL_CreateTextureFromSurface(renderer, image_bomb1);
 
-  display = malloc(sizeof(display));
+  display = malloc(sizeof(t_display));
   display->window = window;
   display->renderer = renderer;
   display->offset_x = offset_x;
@@ -87,9 +88,6 @@ t_display *init_display(t_level *level) {
   display->text_terrain = text_terrain;
   display->text_character = text_character;
   display->text_bomb = text_bomb;
-
-  SDL_FreeSurface(image_free);
-  SDL_FreeSurface(image_wall);
 
   return display;
 }
@@ -119,17 +117,37 @@ void display_characters(t_level *level, t_display *display) {
 
   t_character character;
 
-  character = level->characters[0];
+  for (int i = 0; i < 4; i++) {
+    character = level->characters[i];
 
-  location.h = STANDARD_TILE_HEIGHT;
-  location.w = STANDARD_TILE_WIDTH;
-  location.x = STANDARD_TILE_WIDTH * character.position_x + display->offset_x;
-  location.y = STANDARD_TILE_HEIGHT * character.position_y + display->offset_y;
+    location.h = STANDARD_TILE_HEIGHT;
+    location.w = STANDARD_TILE_WIDTH;
+    location.x = STANDARD_TILE_WIDTH * character.position_x + display->offset_x;
+    location.y = STANDARD_TILE_HEIGHT * character.position_y + display->offset_y;
 
-  SDL_RenderCopy(display->renderer, display->text_character[0], NULL, &location);
-
+    SDL_RenderCopy(display->renderer, display->text_character[i], NULL, &location);
+  }
 }
 
+void display_bombs(t_level *level, t_display *display) {
+  SDL_Rect location;
+
+  for (int i = 0; i < level->lines; i++) {
+    for (int j = 0; j < level->columns; j++) {
+      location.h = STANDARD_TILE_HEIGHT;
+      location.w = STANDARD_TILE_WIDTH;
+      location.x = STANDARD_TILE_WIDTH * j + display->offset_x;
+      location.y = STANDARD_TILE_HEIGHT * i + display->offset_y;
+
+      if (tile_is_bomb_exploding(level, j, i) == YES) {
+        SDL_RenderCopy(display->renderer, display->text_bomb[1], NULL, &location);
+      }
+      else if (tile_is_bomb_planted(level, j, i) == YES){
+        SDL_RenderCopy(display->renderer, display->text_bomb[0], NULL, &location);
+      }
+    }
+  }
+}
 
 int game_state(t_game_data *game_data) {
   if(game_data->playable_character->heal_points < CHARACTER_ALIVE) {
@@ -166,10 +184,10 @@ int launch_game_SDL() {
 
   t_display *display = init_display(level);
 
+
   while (is_running)
   {
     SDL_PollEvent(&event);
-    SDL_RenderClear(display->renderer);
 
     switch (event.type)
     {
@@ -183,15 +201,18 @@ int launch_game_SDL() {
               case SDLK_RIGHT: action(level, playable_character, ACTION_RIGHT); break;
               case SDLK_UP:    action(level, playable_character, ACTION_UP); break;
               case SDLK_DOWN:  action(level, playable_character, ACTION_DOWN); break;
+              case SDLK_c:  action(level, playable_character, ACTION_BOMB); break;
           }
         break;
       case SDL_KEYUP: adjust_char(level, playable_character); break;
     }
-      display_map(level, display);
-      display_characters(level, display);
-      // display_bombs();
 
+    SDL_RenderClear(display->renderer);
+    display_map(level, display);
+    display_characters(level, display);
+    display_bombs(level, display);
     SDL_RenderPresent(display->renderer);
+
   }
 
   SDL_DestroyTexture(display->text_terrain[0]);
