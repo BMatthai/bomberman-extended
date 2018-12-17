@@ -31,7 +31,7 @@ void CarveMaze(char **maze, int width, int height, int x, int y) {
 
    dir = rand() % 4;
    count = 0;
-   while(count < 10) {
+   while(count < 3) {
       dx = 0; dy = 0;
       switch(dir) {
       case 0:  dx = 1;  break;
@@ -206,13 +206,13 @@ t_character *get_level_characters(t_level *level) {
 }
 
 char **generate_empty_layer(int lines, int columns) {
-  char **bomb_layer;
+  char **layer;
 
-  bomb_layer = malloc(lines * sizeof(char*));
+  layer = malloc(lines * sizeof(char*));
   for (int i = 0; i < lines; i++) {
-    bomb_layer[i] = malloc(sizeof(char) * columns);
+    layer[i] = malloc(sizeof(char) * columns);
   }
-  return bomb_layer;
+  return layer;
 }
 
 int isAChar(char tile) {
