@@ -15,7 +15,7 @@
 
 #include "game_constants.h"
 #include "game_manager.h"
-#include "level_generation.h"
+// #include "level_generation.h"
 #include "time_manager.h"
 #include "action.h"
 #include "level_generation.h"
@@ -27,6 +27,7 @@
 #include "tile_manager.h"
 #include "time_manager.h"
 #include "log_manager.h"
+#include "maze_generation.h"
 
 #include <poll.h>
 #include <stdio.h>
@@ -168,7 +169,8 @@ int launch_game_SDL() {
 
   //game_data->level = generate_level_from_file("./level/testlevel.lvl");
 
-  game_data->level = generate_level_random();
+  game_data->level = generate_maze_level(12, 12);
+  //generate_level_random();
 
   game_data->playable_character = &game_data->level->characters[0];
   t_character *playable_character = game_data->playable_character;

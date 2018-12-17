@@ -9,8 +9,11 @@ SOURCE_DIR=.
 
 all: $(EXEC)
 
-bomberman: bomberman.o level_generation.o character_creation.o action.o bomb_manager.o time_manager.o tile_manager.o game_manager.o log_manager.o
-	$(CC) -o bomberman bomberman.o level_generation.o character_creation.o action.o bomb_manager.o time_manager.o tile_manager.o game_manager.o log_manager.o $(LDFLAGS)
+bomberman: bomberman.o level_generation.o character_creation.o action.o bomb_manager.o time_manager.o tile_manager.o game_manager.o log_manager.o maze_generation.o
+	$(CC) -o bomberman bomberman.o level_generation.o character_creation.o action.o bomb_manager.o time_manager.o tile_manager.o game_manager.o log_manager.o maze_generation.o $(LDFLAGS)
+
+maze_generation.o: $(SOURCE_DIR)/maze_generation.c
+	$(CC) -o $(BUILD_DIR)/maze_generation.o -c $(SOURCE_DIR)/maze_generation.c $(CFLAGS)
 
 level_generation.o: $(SOURCE_DIR)/level_generation.c
 	$(CC) -o $(BUILD_DIR)/level_generation.o -c $(SOURCE_DIR)/level_generation.c $(CFLAGS)
