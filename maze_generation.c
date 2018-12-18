@@ -65,6 +65,10 @@ typedef struct s_set {
 } t_set;
 
 int is_same_set(t_set *set1, t_set *set2) {
+  if (set1 == NULL || set2 == NULL) {
+    return NO;
+  }
+
   t_element *cur_elt1 = NULL;
   t_element *cur_elt2 = NULL;
 
@@ -74,16 +78,19 @@ int is_same_set(t_set *set1, t_set *set2) {
   int value_elt1 = cur_elt1->value;
   int value_elt2 = cur_elt2->value;
 
-  while ((cur_elt1 = cur_elt1->next) != NULL) {
+  while (cur_elt1 != NULL) {
+    // printf("%d et %d\n", cur_elt1->value, value_elt2);
     if (cur_elt1->value == value_elt2) {
       return YES;
     }
+    cur_elt1 = cur_elt1->next;
   }
 
-  while((cur_elt2 = cur_elt2->next) != NULL) {
+  while(cur_elt2 != NULL) {
     if (cur_elt2->value == value_elt1) {
       return YES;
     }
+    cur_elt2 = cur_elt2->next;
   }
   return NO;
 }
@@ -154,11 +161,9 @@ t_set *create_sets(int height, int width) {
     value = ((2 * i + 1) % width) + (2 * cur_row * width);
     set[i].first = malloc(sizeof(t_element));
     set[i].first->value = value;
-    // printf("%d\n",value);
+
     set[i].first->next = NULL;
   }
-  // printf("SORTI\n");
-
   return set;
 }
 
@@ -189,39 +194,44 @@ t_set *set_from_value(t_set *sets, int value, int height, int width) {
   t_element *cur_elt;
   for (int i = 0; i < size; i++) {
     cur_elt = sets[i].first;
-    while ((cur_elt = cur_elt->next) != NULL) {
+    while (cur_elt != NULL) {
       if (cur_elt->value == value) {
         return &sets[i];
       }
+      cur_elt = cur_elt->next;
     }
   }
   return NULL;
 }
 
-void dig_walls(char **maze, int *wall_values, int height, int width) {
+void dig_walls(char **maze, int *walls, int height, int width) {
   int size = count_walls(height, width);
 
   t_set *sets = create_sets(height, width);
 
   int is_even;
+  int wall_index;
 
   for (int i = 0; i < size; i++) {
-    is_even = ((i / width) % 2) == 1 ? YES : NO;
-
+    wall_index = walls[i];
+    is_even = ((wall_index / width) % 2) == 1 ? NO : YES;
     t_set *set1 = NULL;
     t_set *set2 = NULL;
 
+    // printf("%d est pair ? %d\n", wall_index, is_even);
     if (is_even == YES) {
-      set1 = set_from_value(sets, i - 1, height, width);
-      set2 = set_from_value(sets, i + 1, height, width);
+      // printf("%d et %d\n", wall_index - 1, wall_index + 1);
+      set1 = set_from_value(sets, wall_index - 1, height, width);
+      set2 = set_from_value(sets, wall_index + 1, height, width);
     }
     else {
-      set1 = set_from_value(sets, i - width, height, width);
-      set2 = set_from_value(sets, i + width, height, width);
+      // printf("%d et %d\n", wall_index - width, wall_index + width);
+      set1 = set_from_value(sets, wall_index - width, height, width);
+      set2 = set_from_value(sets, wall_index + width, height, width);
     }
-    printf("dekoeok\n");
+
     if (is_same_set(set1, set2)) {
-      remove_wall(maze, height, width, i);
+      remove_wall(maze, height, width, wall_index);
       merge_sets(set1, set2);
     }
   }
@@ -234,6 +244,13 @@ char **generate_maze(int height, int width) {
   fill_array_with_wall(maze, height, width);
 
   int *walls = list_walls(height, width);
+
+  // for(int i=0;i< count_walls(height, width); i++) {
+  //   printf("%d \n", walls[i]);
+  // }
+
+
+
   shuffle(walls, height, width);
 
   dig_walls(maze, walls, height, width);
@@ -252,8 +269,6 @@ t_level *generate_maze_level(int height, int width) {
   level->columns = width;
 
   level->terrain = generate_maze(height, width);
-
-
   level->bonus = generate_empty_layer(level->lines, level->columns);
   level->bomb = generate_empty_layer(level->lines, level->columns);
   level->number_characters = count_characters(level);
