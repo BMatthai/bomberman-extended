@@ -67,6 +67,7 @@ typedef struct s_set {
 } t_set;
 
 int is_same_set(t_set *set1, t_set *set2) {
+
   if (set1 == NULL || set2 == NULL) {
     return NO;
   }
@@ -80,15 +81,16 @@ int is_same_set(t_set *set1, t_set *set2) {
   int value_elt1 = cur_elt1->value;
   int value_elt2 = cur_elt2->value;
 
+
   while (cur_elt1->next != NULL) {
-    // printf("%d et %d\n", cur_elt1->value, value_elt2);
+    printf("%d et %d\n", cur_elt1->value, value_elt2);
     if (cur_elt1->value == value_elt2) {
       return YES;
     }
     cur_elt1 = cur_elt1->next;
   }
 
-  while(cur_elt2->next != NULL) {
+  while(cur_elt2 != NULL) {
     if (cur_elt2->value == value_elt1) {
       return YES;
     }
@@ -205,8 +207,8 @@ t_set *set_from_value(t_set *sets, int value, int height, int width) {
     //printf("Val souhaitée %d\n", value);
     while (cur_elt->next != NULL) {
       printf("i : %d\n", i);
-      // printf("Val souhaitée %d\n", value);
-      // printf("Cur_elt %d\n", cur_elt->value);
+      printf("Val souhaitée %d\n", value);
+      printf("Cur_elt %d\n", cur_elt->value);
       if (cur_elt->value == value) {
         return &sets[i];
       }
@@ -232,24 +234,17 @@ void dig_walls(char **maze, int *walls, int height, int width) {
     t_set *set2 = NULL;
 
 
+
     if (is_even == YES) {
       set1 = set_from_value(sets, wall_index - 1, height, width);
       set2 = set_from_value(sets, wall_index + 1, height, width);
-      // printf("%d et %d\n", wall_index - 1, wall_index + 1);
+      printf("%d et %d\n", wall_index - 1, wall_index + 1);
     }
     else {
       set1 = set_from_value(sets, wall_index - width, height, width);
       set2 = set_from_value(sets, wall_index + width, height, width);
-      // printf("%d et %d\n", wall_index - width, wall_index + width);
+      printf("%d et %d\n", wall_index - width, wall_index + width);
     }
-
-    // if (set1 == NULL) {
-    //   printf("Set 1 null\n");
-    // }
-    //
-    // if (set2 == NULL) {
-    //   printf("Set 2 null\n");
-    // }
 
     if (is_same_set(set1, set2) == NO) {
       remove_wall(maze, height, width, wall_index);
@@ -273,6 +268,10 @@ char **generate_maze(int height, int width) {
 
 
   shuffle(walls, height, width);
+
+  for (int i = 0; i < count_walls(height, width); i++) {
+    printf("%d\n", walls[i]);
+  }
 
   dig_walls(maze, walls, height, width);
   return maze;
