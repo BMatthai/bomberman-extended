@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <time.h>
+
 
 
 int isAChar(char tile) {
@@ -78,7 +80,7 @@ int is_same_set(t_set *set1, t_set *set2) {
   int value_elt1 = cur_elt1->value;
   int value_elt2 = cur_elt2->value;
 
-  while (cur_elt1 != NULL) {
+  while (cur_elt1->next != NULL) {
     // printf("%d et %d\n", cur_elt1->value, value_elt2);
     if (cur_elt1->value == value_elt2) {
       return YES;
@@ -86,7 +88,7 @@ int is_same_set(t_set *set1, t_set *set2) {
     cur_elt1 = cur_elt1->next;
   }
 
-  while(cur_elt2 != NULL) {
+  while(cur_elt2->next != NULL) {
     if (cur_elt2->value == value_elt1) {
       return YES;
     }
@@ -96,14 +98,17 @@ int is_same_set(t_set *set1, t_set *set2) {
 }
 
 void merge_sets(t_set *set1, t_set *set2) {
+
   if (set1 == NULL || set2 == NULL) {
     return;
   }
 
+
   t_element *cur_elt = NULL;
 
   cur_elt = set1->first;
-  while(cur_elt != NULL) {
+
+  while(cur_elt->next != NULL) {
     cur_elt = cur_elt->next;
   };
   cur_elt->next = set2->first;
@@ -120,22 +125,20 @@ int count_cells(int height, int width) {
 void fill_array_with_wall(char **maze, int height, int width) {
   for (int i = 0; i < height; i++) {
     for (int j = 0; j < width; j++) {
-      maze[j][i] = '0';
+      maze[j][i] = '1';
     }
   }
 }
 
 void shuffle(int *walls, int height, int width) {
+  srand((unsigned)time(NULL));
   int size = count_walls(height, width);
 
-  if (size > 1) {
-      int i;
-      for (i = 0; i < size - 1; i++) {
-        int j = i + rand() / (RAND_MAX / (size - i) + 1);
-        int t = walls[j];
-        walls[j] = walls[i];
-        walls[i] = t;
-      }
+  for (int i = 0; i < size - 1; i++) {
+    int j = i + rand() / (RAND_MAX / (size - i) + 1);
+    int t = walls[j];
+    walls[j] = walls[i];
+    walls[i] = t;
   }
 }
 
@@ -199,7 +202,11 @@ t_set *set_from_value(t_set *sets, int value, int height, int width) {
   t_element *cur_elt;
   for (int i = 0; i < size; i++) {
     cur_elt = sets[i].first;
-    while (cur_elt != NULL) {
+    //printf("Val souhaitée %d\n", value);
+    while (cur_elt->next != NULL) {
+      printf("i : %d\n", i);
+      // printf("Val souhaitée %d\n", value);
+      // printf("Cur_elt %d\n", cur_elt->value);
       if (cur_elt->value == value) {
         return &sets[i];
       }
@@ -218,22 +225,31 @@ void dig_walls(char **maze, int *walls, int height, int width) {
   int wall_index;
 
   for (int i = 0; i < size; i++) {
+
     wall_index = walls[i];
     is_even = ((wall_index / width) % 2) == 1 ? NO : YES;
     t_set *set1 = NULL;
     t_set *set2 = NULL;
 
-    // printf("%d est pair ? %d\n", wall_index, is_even);
+
     if (is_even == YES) {
-      // printf("%d et %d\n", wall_index - 1, wall_index + 1);
       set1 = set_from_value(sets, wall_index - 1, height, width);
       set2 = set_from_value(sets, wall_index + 1, height, width);
+      // printf("%d et %d\n", wall_index - 1, wall_index + 1);
     }
     else {
-      // printf("%d et %d\n", wall_index - width, wall_index + width);
       set1 = set_from_value(sets, wall_index - width, height, width);
       set2 = set_from_value(sets, wall_index + width, height, width);
+      // printf("%d et %d\n", wall_index - width, wall_index + width);
     }
+
+    // if (set1 == NULL) {
+    //   printf("Set 1 null\n");
+    // }
+    //
+    // if (set2 == NULL) {
+    //   printf("Set 2 null\n");
+    // }
 
     if (is_same_set(set1, set2) == NO) {
       remove_wall(maze, height, width, wall_index);
