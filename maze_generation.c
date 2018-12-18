@@ -96,10 +96,16 @@ int is_same_set(t_set *set1, t_set *set2) {
 }
 
 void merge_sets(t_set *set1, t_set *set2) {
+  if (set1 == NULL || set2 == NULL) {
+    return;
+  }
+
   t_element *cur_elt = NULL;
 
   cur_elt = set1->first;
-  while((cur_elt = cur_elt->next) != NULL);
+  while(cur_elt != NULL) {
+    cur_elt = cur_elt->next;
+  };
   cur_elt->next = set2->first;
 }
 
@@ -184,7 +190,6 @@ void remove_wall(char **maze, int height, int width, int value) {
 
   i = value / width;
   j = value % width;
-
   maze[j][i] = ' ';
 }
 
@@ -230,7 +235,7 @@ void dig_walls(char **maze, int *walls, int height, int width) {
       set2 = set_from_value(sets, wall_index + width, height, width);
     }
 
-    if (is_same_set(set1, set2)) {
+    if (is_same_set(set1, set2) == NO) {
       remove_wall(maze, height, width, wall_index);
       merge_sets(set1, set2);
     }
