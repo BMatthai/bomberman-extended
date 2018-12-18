@@ -56,29 +56,32 @@ int count_characters(t_level *level) {
 }
 
 typedef struct s_element {
-    int index;
+    int value;
     struct s_element *next;
 } t_element;
 
 typedef struct s_set {
-    struct t_element *first;
+    struct s_element *first;
 } t_set;
 
 int is_same_set(t_set *set1, t_set *set2) {
-  t_element *cur_elt1 = set1->first;
-  t_element *cur_elt2 = set2->first;
+  t_element *cur_elt1 = NULL;
+  t_element *cur_elt2 = NULL;
 
-  int value_elt1 = cur_elt1->index;
-  int value_elt2 = cur_elt2->index;
+  cur_elt1 = set1->first;
+  cur_elt2 = set2->first;
+
+  int value_elt1 = cur_elt1->value;
+  int value_elt2 = cur_elt2->value;
 
   while ((cur_elt1 = cur_elt1->next) != NULL) {
-    if (cur_elt1->index == value_elt2) {
+    if (cur_elt1->value == value_elt2) {
       return YES;
     }
   }
 
   while((cur_elt2 = cur_elt2->next) != NULL) {
-    if (cur_elt2->index == value_elt1) {
+    if (cur_elt2->value == value_elt1) {
       return YES;
     }
   }
@@ -138,18 +141,24 @@ int *list_walls(int height, int width) {
   return walls;
 }
 
-t_element *create_sets(int height, int width) {
+t_set *create_sets(int height, int width) {
   int size = count_cells(height, width);
 
-  t_element *set = NULL;
-  set = malloc(size * sizeof(t_element));
+  t_set *set = NULL;
+  set = malloc(size * sizeof(t_set));
 
-  int ligne;
+  int cur_row;
+  int value;
   for (int i = 0; i < size; i++) {
-    ligne = i / width;
-    set[i]->first.index = (2 * ligne) + (2 * i + 1);
-    set[i]->first.next = NULL;
+    cur_row = (2 * i) / width;
+    value = ((2 * i + 1) % width) + (2 * cur_row * width);
+    set[i].first = malloc(sizeof(t_element));
+    set[i].first->value = value;
+    // printf("%d\n",value);
+    set[i].first->next = NULL;
   }
+  // printf("SORTI\n");
+
   return set;
 }
 
@@ -164,51 +173,53 @@ char **generate_empty_layer(int height, int width) {
   return layer;
 }
 
-void remove_wall(char **maze, int height, int width, int index) {
+void remove_wall(char **maze, int height, int width, int value) {
   int i;
   int j;
 
-  i = index / width;
-  j = index % width;
+  i = value / width;
+  j = value % width;
 
   maze[j][i] = ' ';
 }
 
-t_set *set_from_index(t_set *sets, int index, int height, int width) {
-  int size = count_cells(int height, int width);
+t_set *set_from_value(t_set *sets, int value, int height, int width) {
+  int size = count_cells(height, width);
 
   t_element *cur_elt;
   for (int i = 0; i < size; i++) {
-    cur_elt = sets[i]->first;
+    cur_elt = sets[i].first;
     while ((cur_elt = cur_elt->next) != NULL) {
-      
+      if (cur_elt->value == value) {
+        return &sets[i];
+      }
     }
-
   }
+  return NULL;
 }
 
-void creuser(char **maze, int *wall_indexes, int height, int width) {
+void dig_walls(char **maze, int *wall_values, int height, int width) {
   int size = count_walls(height, width);
 
-  t_element *sets = create_sets(height, width);
+  t_set *sets = create_sets(height, width);
 
   int is_even;
-  for (int i = 0; i < size; i++) {
 
+  for (int i = 0; i < size; i++) {
     is_even = ((i / width) % 2) == 1 ? YES : NO;
 
-    t_element *set1 = NULL;
-    t_element *set2 = NULL;
+    t_set *set1 = NULL;
+    t_set *set2 = NULL;
 
     if (is_even == YES) {
-      set1 = set_from_index(sets, i - 1);
-      set2 = set_from_index(sets, i + 1);
+      set1 = set_from_value(sets, i - 1, height, width);
+      set2 = set_from_value(sets, i + 1, height, width);
     }
     else {
-      set1 = set_from_index(sets, i - width);
-      set2 = set_from_index(sets, i + width);
+      set1 = set_from_value(sets, i - width, height, width);
+      set2 = set_from_value(sets, i + width, height, width);
     }
-
+    printf("dekoeok\n");
     if (is_same_set(set1, set2)) {
       remove_wall(maze, height, width, i);
       merge_sets(set1, set2);
@@ -222,9 +233,10 @@ char **generate_maze(int height, int width) {
   maze = generate_empty_layer(height, width);
   fill_array_with_wall(maze, height, width);
 
-  int *wall = list_walls(height, width);
-  shuffle(wall, height, width);
-  creuser();
+  int *walls = list_walls(height, width);
+  shuffle(walls, height, width);
+
+  dig_walls(maze, walls, height, width);
   return maze;
 }
 
@@ -238,7 +250,10 @@ t_level *generate_maze_level(int height, int width) {
 
   level->lines = height;
   level->columns = width;
+
   level->terrain = generate_maze(height, width);
+
+
   level->bonus = generate_empty_layer(level->lines, level->columns);
   level->bomb = generate_empty_layer(level->lines, level->columns);
   level->number_characters = count_characters(level);

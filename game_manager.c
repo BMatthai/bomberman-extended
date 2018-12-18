@@ -169,7 +169,7 @@ int launch_game_SDL() {
 
   //game_data->level = generate_level_from_file("./level/testlevel.lvl");
 
-  game_data->level = generate_maze_level(12, 12);
+  game_data->level = generate_maze_level(10, 10);
   //generate_level_random();
 
   game_data->playable_character = &game_data->level->characters[0];
