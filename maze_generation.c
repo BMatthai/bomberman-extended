@@ -83,20 +83,19 @@ int is_same_set(t_set *set1, t_set *set2) {
 
 
   while (cur_elt1 != NULL) {
-    printf("value courante : %d et valeur souhaitée %d\n", cur_elt1->value, value_elt2);
     if (cur_elt1->value == value_elt2) {
       return YES;
     }
     cur_elt1 = cur_elt1->next;
   }
 
-  while(cur_elt2 != NULL) {
-    printf("value courante : %d et valeur souhaitée %d\n", cur_elt2->value, value_elt1);
-    if (cur_elt2->value == value_elt1) {
-      return YES;
-    }
-    cur_elt2 = cur_elt2->next;
-  }
+  // while(cur_elt2 != NULL) {
+  //   printf("value courante : %d et valeur souhaitée %d\n", cur_elt2->value, value_elt1);
+  //   if (cur_elt2->value == value_elt1) {
+  //     return YES;
+  //   }
+  //   cur_elt2 = cur_elt2->next;
+  // }
   return NO;
 }
 
@@ -110,10 +109,10 @@ void list_set(t_set *set) {
   cur_elt = set->first;
 
   while(cur_elt != NULL) {
-    printf("%d ;", cur_elt->value);
+    // printf("%d ;", cur_elt->value);
     cur_elt = cur_elt->next;
   }
-  printf("\n");
+  // printf("\n");
 }
 
 
@@ -129,14 +128,13 @@ void merge_sets(t_set *set1, t_set *set2) {
   cur_elt = set1->first;
 
   //list_set(set1);
-
   while(cur_elt->next != NULL) {
-    cur_elt = cur_elt->next;
-  };
+        cur_elt = cur_elt->next;
+  }
+  printf("AAKA\n");
+
   cur_elt->next = set2->first;
-
-
-
+  printf("LOL\n");
 }
 
 int count_walls(int height, int width) {
@@ -233,6 +231,7 @@ t_set *set_from_value(t_set *sets, int value, int height, int width) {
 
   t_element *cur_elt;
   for (int i = 0; i < size; i++) {
+
     cur_elt = sets[i].first;
     //printf("Val souhaitée %d\n", value);
 
@@ -280,11 +279,6 @@ void dig_walls(char **maze, int *walls, int height, int width) {
     if (is_same_set(set1, set2) == NO) {
       remove_wall(maze, height, width, wall_index);
       merge_sets(set1, set2);
-      // printf("Not same\n");
-
-    }
-    else {
-      // printf("Le même\n");
     }
   }
 }
