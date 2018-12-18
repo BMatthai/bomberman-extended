@@ -4,6 +4,7 @@
 #endif
 
 #include "character_creation.h"
+#include "game_constants.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -64,17 +65,17 @@ int is_same_set(t_set *set1, t_set *set2) {
   t_set *cur_elt1 = set1;
   t_set *cur_elt2 = set2;
 
-  int value_elt1 = cur_elt1->value;
-  int value_elt2 = cur_elt2->value;
+  int value_elt1 = cur_elt1->index;
+  int value_elt2 = cur_elt2->index;
 
-  while((cur_elt1 = cur_elt1->next) != NULL)) {
-    if (cur_elt1->value = value_elt2) {
+  while ((cur_elt1 = cur_elt1->next) != NULL) {
+    if (cur_elt1->index == value_elt2) {
       return YES;
     }
   }
 
-  while((cur_elt2 = cur_elt2->next) != NULL)) {
-    if (cur_elt2->value = value_elt1) {
+  while((cur_elt2 = cur_elt2->next) != NULL) {
+    if (cur_elt2->index == value_elt1) {
       return YES;
     }
   }
@@ -143,9 +144,10 @@ t_set *create_sets(int height, int width) {
   int ligne;
   for (int i = 0; i < size; i++) {
     ligne = i / width;
-    set[i]->index = (2 * ligne) + (2 * i + 1);
-    set[i]->next = NULL;
+    set[i].index = (2 * ligne) + (2 * i + 1);
+    set[i].next = NULL;
   }
+  return set;
 }
 
 
@@ -195,7 +197,7 @@ void creuser(char **maze, int *wall_indexes, int height, int width) {
       set2 = set_from_index(sets, i + width);
     }
 
-    if (the cells divided by this wall belong to distinct sets) {
+    if (is_same_set(set1, set2)) {
       remove_wall(maze, height, width, i);
       merge_sets(set1, set2);
     }
