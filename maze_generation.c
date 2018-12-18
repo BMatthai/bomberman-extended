@@ -55,15 +55,18 @@ int count_characters(t_level *level) {
   return number_characters;
 }
 
-typedef struct s_set {
+typedef struct s_element {
     int index;
-    struct s_set *next;
+    struct s_element *next;
+} t_element;
+
+typedef struct s_set {
+    struct t_element *first;
 } t_set;
 
-
 int is_same_set(t_set *set1, t_set *set2) {
-  t_set *cur_elt1 = set1;
-  t_set *cur_elt2 = set2;
+  t_element *cur_elt1 = set1->first;
+  t_element *cur_elt2 = set2->first;
 
   int value_elt1 = cur_elt1->index;
   int value_elt2 = cur_elt2->index;
@@ -83,11 +86,11 @@ int is_same_set(t_set *set1, t_set *set2) {
 }
 
 void merge_sets(t_set *set1, t_set *set2) {
-  t_set *cur_elt = NULL;
+  t_element *cur_elt = NULL;
 
-  cur_elt = set1;
+  cur_elt = set1->first;
   while((cur_elt = cur_elt->next) != NULL);
-  cur_elt->next = set2;
+  cur_elt->next = set2->first;
 }
 
 int count_walls(int height, int width) {
@@ -135,17 +138,17 @@ int *list_walls(int height, int width) {
   return walls;
 }
 
-t_set *create_sets(int height, int width) {
+t_element *create_sets(int height, int width) {
   int size = count_cells(height, width);
 
-  t_set *set = NULL;
-  set = malloc(size * sizeof(t_set));
+  t_element *set = NULL;
+  set = malloc(size * sizeof(t_element));
 
   int ligne;
   for (int i = 0; i < size; i++) {
     ligne = i / width;
-    set[i].index = (2 * ligne) + (2 * i + 1);
-    set[i].next = NULL;
+    set[i]->first.index = (2 * ligne) + (2 * i + 1);
+    set[i]->first.next = NULL;
   }
   return set;
 }
@@ -171,22 +174,31 @@ void remove_wall(char **maze, int height, int width, int index) {
   maze[j][i] = ' ';
 }
 
-t_set *set_from_index(t_set *sets, int index) {
+t_set *set_from_index(t_set *sets, int index, int height, int width) {
+  int size = count_cells(int height, int width);
 
+  t_element *cur_elt;
+  for (int i = 0; i < size; i++) {
+    cur_elt = sets[i]->first;
+    while ((cur_elt = cur_elt->next) != NULL) {
+      
+    }
+
+  }
 }
 
 void creuser(char **maze, int *wall_indexes, int height, int width) {
   int size = count_walls(height, width);
 
-  t_set *sets = create_sets(height, width);
+  t_element *sets = create_sets(height, width);
 
   int is_even;
   for (int i = 0; i < size; i++) {
 
     is_even = ((i / width) % 2) == 1 ? YES : NO;
 
-    t_set *set1 = NULL;
-    t_set *set2 = NULL;
+    t_element *set1 = NULL;
+    t_element *set2 = NULL;
 
     if (is_even == YES) {
       set1 = set_from_index(sets, i - 1);
