@@ -24,50 +24,111 @@ typedef struct s_set {
     struct s_set *next_set;
 } t_set;
 
+int count_walls(int height, int width) {
+  return (height * width) / 2;
+}
 
-int isAChar(char tile) {
-  if (tile == 'A' || tile == 'B' ||  tile == 'C' ||  tile == 'D')
-    return 1;
-  return 0;
+int count_cells(int height, int width) {
+  return (height * width) / 4;
+}
+
+void shuffle(int *elts, int nb_elts) {
+  srand((unsigned)time(NULL));
+
+  for (int i = 0; i < nb_elts - 1; i++) {
+    int j = i + rand() / (RAND_MAX / (nb_elts - i) + 1);
+    int t = elts[j];
+    elts[j] = elts[i];
+    elts[i] = t;
+  }
+}
+
+// int isAChar(char tile) {
+//   if (tile == 'A' || tile == 'B' ||  tile == 'C' ||  tile == 'D')
+//     return 1;
+//   return 0;
+// }
+
+int *list_cells(int height, int width) {
+  int size = count_cells(height, width);
+  int *cells = malloc(sizeof(int) * size);
+
+  int cur_row;
+  int value;
+
+  for (int i = 0; i < size; i++) {
+    cur_row = (2 * i) / width;
+    value = ((2 * i + 1) % width) + (2 * cur_row * width);
+
+    cells[i] = value;
+  }
+  return cells;
 }
 
 t_character *get_level_characters(t_level *level) {
-  int i;
-  int j;
-  int k;
+  // int i;
+  // int j;
+  // int k;
+  // int number_characters;
+  // t_character *characters;
+  //
+  // number_characters = level->number_characters;
+  // k = 0;
+  // for(i = 0; i < level->lines; i++) {
+  //   for(j = 0; j < level->columns; j++) {
+  //     if (isAChar(level->terrain[i][j])) {
+  //
+  //       level->terrain[i][j] = ' ';
+  //       k++;
+  //     }
+  //   }
+  // }
+  // return characters;
+
   int number_characters;
-  t_character *characters;
+  t_character *characters = NULL;
 
   number_characters = level->number_characters;
+
+  int height;
+  int width;
+
+  height = level->lines;
+  width = level->columns;
+
+  int *cells = list_cells(height, width);
+  int nb_cells = count_cells(height, width);
+
   characters = malloc(sizeof(t_character) * number_characters);
-  k = 0;
-  for(i = 0; i < level->lines; i++) {
-    for(j = 0; j < level->columns; j++) {
-      if (isAChar(level->terrain[i][j])) {
-        characters[k] = create_character(level->terrain[i][j], j, i);
-        level->terrain[i][j] = ' ';
-        k++;
-      }
-    }
+  shuffle(cells, nb_cells);
+
+  int x_cur;
+  int y_cur;
+
+  for (int i = 0; i < number_characters; i++) {
+    x_cur = cells[i] / width;
+    y_cur = cells[i] % width;
+    printf("x : %d et y : %d\n", x_cur, y_cur);
+    characters[i] = create_character(TILE_WITH_PLAYER_A + i, x_cur, y_cur);
   }
   return characters;
 }
 
-int count_characters(t_level *level) {
-  int i;
-  int j;
-  int number_characters;
-
-  number_characters = 0;
-  for(i = 0; i < level->lines; i++) {
-    for(j = 0; j < level->columns; j++) {
-      if (isAChar(level->terrain[i][j]))
-        number_characters++;
-    }
-  }
-  level->number_characters = number_characters;
-  return number_characters;
-}
+// int count_characters(t_level *level) {
+//   int i;
+//   int j;
+//   int number_characters;
+//
+//   number_characters = 0;
+//   for(i = 0; i < level->lines; i++) {
+//     for(j = 0; j < level->columns; j++) {
+//       if (isAChar(level->terrain[i][j]))
+//         number_characters++;
+//     }
+//   }
+//   level->number_characters = number_characters;
+//   return number_characters;
+// }
 
 
 
@@ -220,13 +281,7 @@ void merge_sets(t_set *set1, t_set *set2) {
 //   //set2->first = set1->first;
 // }
 
-int count_walls(int height, int width) {
-  return (height * width) / 2;
-}
 
-int count_cells(int height, int width) {
-  return (height * width) / 4;
-}
 
 void fill_array(char **maze, int height, int width) {
   int size = count_walls(height, width);
@@ -240,18 +295,6 @@ void fill_array(char **maze, int height, int width) {
         maze[j][i] = '0';
       }
     }
-  }
-}
-
-void shuffle(int *walls, int height, int width) {
-  srand((unsigned)time(NULL));
-  int size = count_walls(height, width);
-
-  for (int i = 0; i < size - 1; i++) {
-    int j = i + rand() / (RAND_MAX / (size - i) + 1);
-    int t = walls[j];
-    walls[j] = walls[i];
-    walls[i] = t;
   }
 }
 
@@ -364,8 +407,10 @@ t_set *set_from_value(t_set *sets, int value, int height, int width) {
   cur_set = sets;
   cur_elt = cur_set->first;
   while(cur_set->next_set != NULL) {
-    //printf("First : %d\n", cur_set->first->value);
-    while(cur_elt->next_elt != NULL) {
+    //printf("GNI\n");
+
+    while(cur_elt != NULL) {
+      //printf("Valeur actuelle : %d et valeur souhaitée : %d\n", cur_elt->value, value);
       if (cur_elt->value == value) {
         return cur_set;
       }
@@ -373,7 +418,6 @@ t_set *set_from_value(t_set *sets, int value, int height, int width) {
     }
 
     cur_set = cur_set->next_set;
-
     cur_elt = cur_set->first;
   }
   return NULL;
@@ -448,9 +492,6 @@ void dig_walls(char **maze, int *walls, int height, int width) {
         remove_wall(maze, height, width, wall_index);
         merge_sets(set1, set2);
       }
-      else {
-        printf("Ils font partis du meme set");
-      }
     }
   }
 }
@@ -469,8 +510,10 @@ char **generate_maze(int height, int width) {
   // printf("\n");
 
 
+  int nb_walls;
 
-  shuffle(walls, height, width);
+  nb_walls = count_walls(height,width);
+  shuffle(walls, nb_walls);
 
   // for(int i=0;i< count_walls(height, width); i++) {
   //   printf("%d - ", walls[i]);
@@ -494,7 +537,7 @@ t_level *generate_maze_level(int height, int width) {
   level->terrain = generate_maze(height, width);
   level->bonus = generate_empty_layer(level->lines, level->columns);
   level->bomb = generate_empty_layer(level->lines, level->columns);
-  level->number_characters = count_characters(level);
+  level->number_characters = 4;
   level->characters = get_level_characters(level);
 
   return level;
