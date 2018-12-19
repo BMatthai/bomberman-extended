@@ -12,6 +12,18 @@
 #include <time.h>
 
 
+typedef struct s_element {
+    int value;
+    struct s_element *prev_elt;
+    struct s_element *next_elt;
+} t_element;
+
+typedef struct s_set {
+    struct s_element *first;
+    struct s_set *prev_set;
+    struct s_set *next_set;
+} t_set;
+
 
 int isAChar(char tile) {
   if (tile == 'A' || tile == 'B' ||  tile == 'C' ||  tile == 'D')
@@ -57,23 +69,15 @@ int count_characters(t_level *level) {
   return number_characters;
 }
 
-typedef struct s_element {
-    int value;
-    struct s_element *prev;
-    struct s_element *next;
-} t_element;
 
-typedef struct s_set {
-    struct s_element *first;
-} t_set;
 
 t_element *get_head(t_set *set) {
   t_element *cur_elt = NULL;
 
   cur_elt = set->first;
 
-  while (cur_elt->prev != NULL) {
-        cur_elt = cur_elt->prev;
+  while (cur_elt->prev_elt != NULL) {
+        cur_elt = cur_elt->prev_elt;
   }
   return cur_elt;
 }
@@ -94,17 +98,16 @@ int is_same_set(t_set *set1, t_set *set2) {
   int value_elt1 = cur_elt1->value;
   int value_elt2 = cur_elt2->value;
 
-  while (cur_elt1->next != NULL) {
+  while (cur_elt1->next_elt != NULL) {
     if (cur_elt1->value == value_elt2) {
       return YES;
     }
-    cur_elt1 = cur_elt1->next;
+    cur_elt1 = cur_elt1->next_elt;
   }
   return NO;
 }
 
-void list_set(t_set *set) {
-
+void list_elt_of_set(t_set *set) {
   if (set == NULL ) {
     return;
   }
@@ -113,40 +116,97 @@ void list_set(t_set *set) {
 
   cur_elt = set->first;
 
-  while(cur_elt != NULL) {
-     printf("%d ;", cur_elt->value);
-    cur_elt = cur_elt->next;
+  // if (cur_elt == NULL) {
+  //   printf("NULLLL\n");
+  // }
+
+  while(cur_elt->next_elt != NULL) {
+     printf("%d -", cur_elt->value);
+    cur_elt = cur_elt->next_elt;
   }
+  printf("\n");
 }
 
+void list_all_sets(t_set *sets) {
+  t_set *cur_set = NULL;
+  int i = 0;
+  cur_set = sets;
+
+  while (cur_set->next_set != NULL) {
+    printf("Set %d :\n    ", i);
+    list_elt_of_set(cur_set);
+    cur_set = cur_set->next_set;
+    i++;
+  }
+
+}
+
+t_element *last_of_set(t_set *set) {
+  t_element *cur_elt = NULL;
+
+  cur_elt = set->first;
+
+  while (cur_elt->next_elt != NULL) {
+    cur_elt = cur_elt->next_elt;
+  }
+
+  return cur_elt;
+}
+
+void delete_set(t_set *set) {
+  t_set *prev_set = NULL;
+  t_set *next_set = NULL;
+
+  prev_set = set->prev_set;
+  next_set = set->next_set;
+
+  prev_set->next_set = next_set;
+  next_set->prev_set = prev_set;
+
+  free(set);
+}
 
 void merge_sets(t_set *set1, t_set *set2) {
-
-  // printf("Procédure merge\n");
-
   if (set1 == NULL || set2 == NULL) {
     return;
   }
 
-  printf("--------\nOn va merger ");
-  // printf("i : %d\n", i);
-  list_set(set1);
-  printf(" et ");
-  list_set(set2);
-  printf("--------\n");
-
   t_element *cur_elt = NULL;
 
-  cur_elt = set1->first;
+  cur_elt = last_of_set(set1);
 
-  while (cur_elt->next != NULL) {
-        cur_elt = cur_elt->next;
-  }
-
-  cur_elt->next = set2->first;
-  set2->first->prev = cur_elt;
-  //set2->first = set1->first;
+  cur_elt->next_elt = set2->first;
+  set2->first->prev_elt = cur_elt;
+  delete_set(set2);
 }
+
+// void merge_sets(t_set *set1, t_set *set2) {
+//
+//   // printf("Procédure merge\n");
+//
+//   if (set1 == NULL || set2 == NULL) {
+//     return;
+//   }
+//
+//   printf("--------\nOn va merger ");
+//   // printf("i : %d\n", i);
+//   list_set(set1);
+//   printf(" et ");
+//   list_set(set2);
+//   printf("--------\n");
+//
+//   t_element *cur_elt = NULL;
+//
+//   cur_elt = set1->first;
+//
+//   while (cur_elt->next_elt != NULL) {
+//         cur_elt = cur_elt->next_elt;
+//   }
+//
+//   cur_elt->next_elt = set2->first;
+//   set2->first->prev_elt = cur_elt;
+//   //set2->first = set1->first;
+// }
 
 int count_walls(int height, int width) {
   return (height * width) / 2;
@@ -198,24 +258,73 @@ int *list_walls(int height, int width) {
   return walls;
 }
 
-t_set *create_sets(int height, int width) {
-  int size = count_cells(height, width);
 
-  t_set *set = NULL;
-  set = malloc(size * sizeof(t_set));
 
+
+
+int init_cell(int height, int width, int i) {
   int cur_row;
   int value;
-  for (int i = 0; i < size; i++) {
-    cur_row = (2 * i) / width;
-    value = ((2 * i + 1) % width) + (2 * cur_row * width);
-    set[i].first = malloc(sizeof(t_element));
-    set[i].first->value = value;
-    set[i].first->next = NULL;
-    set[i].first->prev = NULL;
-  }
-  return set;
+
+  cur_row = (2 * i) / width;
+  value = ((2 * i + 1) % width) + (2 * cur_row * width);
+
+  return value;
 }
+
+t_set *init_sets(int height, int width) {
+  int size = count_cells(height, width);
+
+  int i = 0;
+
+  t_set *cur_set = NULL;
+  t_set *prev_set = NULL;
+
+
+  t_set *first_set = NULL;
+  first_set = malloc(sizeof(t_set));
+  first_set->prev_set = NULL;
+  first_set->first = malloc(sizeof(t_element));
+  first_set->first->value = init_cell(height, width, i);
+
+
+
+  prev_set = first_set;
+
+  for (i = 1; i < size; i++) {
+    cur_set = malloc(sizeof(t_set));
+    cur_set->first = malloc(sizeof(t_element));
+    cur_set->first->value = init_cell(height, width, i);
+
+    cur_set->first->next_elt = NULL;
+    cur_set->first->prev_elt = NULL;
+
+    cur_set->prev_set = prev_set;
+    cur_set->prev_set->next_set = cur_set;
+    prev_set = cur_set;
+  }
+  return first_set;
+}
+
+
+// t_set *create_sets(int height, int width) {
+//   int size = count_cells(height, width);
+//
+//   t_set *set = NULL;
+//   set = malloc(size * sizeof(t_set));
+//
+//   int cur_row;
+//   int value;
+//   for (int i = 0; i < size; i++) {
+//     cur_row = (2 * i) / width;
+//     value = ((2 * i + 1) % width) + (2 * cur_row * width);
+//     set[i].first = malloc(sizeof(t_element));
+//     set[i].first->value = value;
+//     set[i].first->next = NULL;
+//     set[i].first->prev = NULL;
+//   }
+//   return set;
+// }
 
 
 char **generate_empty_layer(int height, int width) {
@@ -237,32 +346,50 @@ void remove_wall(char **maze, int height, int width, int value) {
   maze[j][i] = ' ';
 }
 
-
-
 t_set *set_from_value(t_set *sets, int value, int height, int width) {
-  int size = count_cells(height, width);
+  t_set *cur_set = NULL;
+  t_element *cur_elt = NULL;
 
-  t_element *cur_elt;
-  for (int i = 0; i < size; i++) {
-    cur_elt = sets[i].first;
-    if (cur_elt->value == value) {
-      if (cur_elt->prev == NULL) {
-        return &sets[i];
+  cur_set = sets;
+  cur_elt = cur_set->first;
+  while(cur_set->next_set != NULL) {
+    printf("First : %d\n", cur_set->first->value);
+    while(cur_elt->next_elt != NULL) {
+      if (cur_elt->value == value) {
+        return cur_set;
       }
+      cur_elt = cur_elt->next_elt;
     }
+
+    cur_set = cur_set->next_set;
+
+    cur_elt = cur_set->first;
   }
   return NULL;
 }
 
+// t_set *set_from_value(t_set *sets, int value, int height, int width) {
+//   int size = count_cells(height, width);
+//
+//   t_element *cur_elt;
+//   for (int i = 0; i < size; i++) {
+//     cur_elt = sets[i].first;
+//     if (cur_elt->value == value) {
+//       if (cur_elt->prev == NULL) {
+//         return &sets[i];
+//       }
+//     }
+//   }
+//   return NULL;
+// }
+
 void dig_walls(char **maze, int *walls, int height, int width) {
   int size = count_walls(height, width);
 
-  t_set *sets = create_sets(height, width);
+  //t_set *sets = create_sets(height, width);
+  t_set *sets = init_sets(height, width);
 
-  // for (int j = 0; j < size; j++) {
-  //   //list_set(&sets[j]);
-  // }
-
+  list_all_sets(sets);
 
   int is_even;
   int wall_index;
@@ -288,9 +415,11 @@ void dig_walls(char **maze, int *walls, int height, int width) {
       // printf("%d et %d\n", wall_index - width, wall_index + width);
     }
 
+
     set1 = set_from_value(sets, cell_side_A, height, width);
     set2 = set_from_value(sets, cell_side_B, height, width);
     printf("Mur : %d\n", wall_index);
+
 
     // printf("\n");
     // list_set(set1);
