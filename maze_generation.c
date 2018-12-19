@@ -109,30 +109,29 @@ void list_set(t_set *set) {
 
 void merge_sets(t_set *set1, t_set *set2) {
 
-  printf("Procédure merge\n");
+  // printf("Procédure merge\n");
 
   if (set1 == NULL || set2 == NULL) {
     return;
   }
 
-  printf("--------\nOn va merger ");
-  // printf("i : %d\n", i);
-  list_set(set1);
-  printf(" et ");
-  list_set(set2);
-  printf("--------\n");
+  // printf("--------\nOn va merger ");
+  // // printf("i : %d\n", i);
+  // list_set(set1);
+  // printf(" et ");
+  // list_set(set2);
+  // printf("--------\n");
 
   t_element *cur_elt = NULL;
 
   cur_elt = set1->first;
 
-  //list_set(set1);
-  while(cur_elt->next != NULL) {
+  while (cur_elt->next != NULL) {
         cur_elt = cur_elt->next;
   }
+
   cur_elt->next = set2->first;
   set2->first = set1->first;
-  set2 = set1;
 }
 
 int count_walls(int height, int width) {
@@ -152,7 +151,7 @@ void fill_array(char **maze, int height, int width) {
         maze[j][i] = ' ';
       }
       else {
-        maze[j][i] = '1';
+        maze[j][i] = '0';
       }
     }
   }
@@ -198,7 +197,12 @@ t_set *create_sets(int height, int width) {
     value = ((2 * i + 1) % width) + (2 * cur_row * width);
     set[i].first = malloc(sizeof(t_element));
     set[i].first->value = value;
-    set[i].first->next = NULL;
+    if (i > 0) {
+      set[i].first->next = set[i - 1].first;
+    }
+    else {
+        set[i].first->next = NULL;
+    }
   }
   return set;
 }
@@ -222,6 +226,8 @@ void remove_wall(char **maze, int height, int width, int value) {
   j = value % width;
   maze[j][i] = ' ';
 }
+
+
 
 t_set *set_from_value(t_set *sets, int value, int height, int width) {
   int size = count_cells(height, width);
@@ -256,8 +262,6 @@ void dig_walls(char **maze, int *walls, int height, int width) {
     t_set *set1 = NULL;
     t_set *set2 = NULL;
 
-
-
     if (is_even == YES) {
       set1 = set_from_value(sets, wall_index - 1, height, width);
       set2 = set_from_value(sets, wall_index + 1, height, width);
@@ -276,6 +280,16 @@ void dig_walls(char **maze, int *walls, int height, int width) {
       if (is_same_set(set1, set2) == NO) {
         remove_wall(maze, height, width, wall_index);
         merge_sets(set1, set2);
+        printf("Y a pas\n");
+
+      }
+      else {
+        printf("Y a probleme\n");
+        // list_set(set1);
+        // printf(" et ");
+        // list_set(set2);
+        // printf("--------\n");
+
       }
     }
   }
@@ -297,9 +311,7 @@ char **generate_maze(int height, int width) {
 
   shuffle(walls, height, width);
 
-  // for (int i = 0; i < count_walls(height, width); i++) {
-  //   printf("%d\n", walls[i]);
-  // }
+
 
   dig_walls(maze, walls, height, width);
   return maze;

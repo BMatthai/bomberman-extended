@@ -1,4 +1,5 @@
 int is_tile_wall(t_level *level, int x, int y);
+int is_tile_undestructible_wall(t_level *level, int x, int y);
 int is_tile_destructible_wall(t_level *level, int x, int y);
 int is_tile_character(t_level *level, int x, int y);
 int is_tile_bomb_planted(t_level *level, int x, int y);

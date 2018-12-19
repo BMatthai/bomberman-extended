@@ -14,6 +14,12 @@ int is_tile_wall(t_level *level, int x, int y) {
   return NO;
 }
 
+int is_tile_undestructible_wall(t_level *level, int x, int y) {
+  if (level->terrain[y][x] == TILE_WITH_WALL_ZERO)
+      return YES;
+  return NO;
+}
+
 int is_tile_destructible_wall(t_level *level, int x, int y) {
   if (level->terrain[y][x] > TILE_WITH_WALL_ZERO && level->terrain[y][x] <= TILE_WITH_WALL_NINE)
       return YES;
