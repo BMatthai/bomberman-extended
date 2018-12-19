@@ -83,12 +83,10 @@ int is_same_set(t_set *set1, t_set *set2) {
 
   while (cur_elt1->next != NULL) {
     if (cur_elt1->value == value_elt2) {
-      printf("OUI\n");
       return YES;
     }
     cur_elt1 = cur_elt1->next;
   }
-  printf("NON\n");
   return NO;
 }
 
@@ -97,29 +95,32 @@ void list_set(t_set *set) {
   if (set == NULL ) {
     return;
   }
+
   t_element *cur_elt = NULL;
 
   cur_elt = set->first;
 
-  while(cur_elt->next != NULL) {
+  while(cur_elt != NULL) {
     printf("%d ;", cur_elt->value);
     cur_elt = cur_elt->next;
   }
-  printf("\n");
 }
 
 
 void merge_sets(t_set *set1, t_set *set2) {
 
+  printf("Procédure merge\n");
+
   if (set1 == NULL || set2 == NULL) {
     return;
   }
 
-  // printf("--------\n");
-  // // printf("i : %d\n", i);
-  // list_set(set1);
-  // list_set(set2);
-  // printf("--------\n");
+  printf("--------\nOn va merger ");
+  // printf("i : %d\n", i);
+  list_set(set1);
+  printf(" et ");
+  list_set(set2);
+  printf("--------\n");
 
   t_element *cur_elt = NULL;
 
@@ -131,6 +132,7 @@ void merge_sets(t_set *set1, t_set *set2) {
   }
   cur_elt->next = set2->first;
   set2->first = set1->first;
+  set2 = set1;
 }
 
 int count_walls(int height, int width) {
@@ -196,7 +198,6 @@ t_set *create_sets(int height, int width) {
     value = ((2 * i + 1) % width) + (2 * cur_row * width);
     set[i].first = malloc(sizeof(t_element));
     set[i].first->value = value;
-
     set[i].first->next = NULL;
   }
   return set;
@@ -240,6 +241,11 @@ void dig_walls(char **maze, int *walls, int height, int width) {
 
   t_set *sets = create_sets(height, width);
 
+  for (int j = 0; j < size; j++) {
+    //list_set(&sets[j]);
+  }
+
+
   int is_even;
   int wall_index;
 
@@ -263,8 +269,8 @@ void dig_walls(char **maze, int *walls, int height, int width) {
       // printf("%d et %d\n", wall_index - width, wall_index + width);
     }
 
-    list_set(set1);
-    list_set(set2);
+    // list_set(set1);
+    // list_set(set2);
 
     if (set1 != NULL && set2 != NULL) {
       if (is_same_set(set1, set2) == NO) {
