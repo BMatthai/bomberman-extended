@@ -116,13 +116,11 @@ void list_elt_of_set(t_set *set) {
 
   cur_elt = set->first;
 
-  // if (cur_elt == NULL) {
-  //   printf("NULLLL\n");
-  // }
+  while(cur_elt != NULL) {
+    printf("%d ;", cur_elt->value);
 
-  while(cur_elt->next_elt != NULL) {
-     printf("%d -", cur_elt->value);
     cur_elt = cur_elt->next_elt;
+
   }
   printf("\n");
 }
@@ -133,13 +131,27 @@ void list_all_sets(t_set *sets) {
   cur_set = sets;
 
   while (cur_set->next_set != NULL) {
-    printf("Set %d :\n    ", i);
+    printf("Set %d :\n      ", i);
+
     list_elt_of_set(cur_set);
     cur_set = cur_set->next_set;
     i++;
   }
 
 }
+
+// void list_all_sets(t_set *sets) {
+//
+//   t_set *cur_set = NULL;
+//   t_element *cur_elt = NULL;
+//
+//   cur_set = sets;
+//   cur_elt = cur_set->first;
+//   while(cur_set->next_set != NULL) {
+//     printf("First : %d\n", cur_set->first->value);
+//     cur_set = cur_set->next_set;
+//   }
+// }
 
 t_element *last_of_set(t_set *set) {
   t_element *cur_elt = NULL;
@@ -280,14 +292,13 @@ t_set *init_sets(int height, int width) {
   t_set *cur_set = NULL;
   t_set *prev_set = NULL;
 
-
   t_set *first_set = NULL;
   first_set = malloc(sizeof(t_set));
   first_set->prev_set = NULL;
   first_set->first = malloc(sizeof(t_element));
   first_set->first->value = init_cell(height, width, i);
-
-
+  first_set->first->next_elt = NULL;
+  first_set->first->prev_elt = NULL;
 
   prev_set = first_set;
 
@@ -353,7 +364,7 @@ t_set *set_from_value(t_set *sets, int value, int height, int width) {
   cur_set = sets;
   cur_elt = cur_set->first;
   while(cur_set->next_set != NULL) {
-    printf("First : %d\n", cur_set->first->value);
+    //printf("First : %d\n", cur_set->first->value);
     while(cur_elt->next_elt != NULL) {
       if (cur_elt->value == value) {
         return cur_set;
@@ -414,7 +425,6 @@ void dig_walls(char **maze, int *walls, int height, int width) {
       cell_side_B = wall_index + width;
       // printf("%d et %d\n", wall_index - width, wall_index + width);
     }
-
 
     set1 = set_from_value(sets, cell_side_A, height, width);
     set2 = set_from_value(sets, cell_side_B, height, width);
