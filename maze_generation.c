@@ -440,31 +440,55 @@ void remove_wall(char **maze, int height, int width, int value) {
 }
 
 t_set *set_from_value(t_set *sets, int value, int height, int width) {
-  if (value < 0 || value >= (height * width)) {
-    return NULL;
-  }
-
   t_set *cur_set = NULL;
-  t_element *cur_elt = NULL;
 
   cur_set = sets;
-  cur_elt = cur_set->first;
-  while(cur_set->next_set != NULL) {
-    //printf("GNI\n");
+  printf("OK\n");
 
-    while(cur_elt != NULL) {
-      //printf("Valeur actuelle : %d et valeur souhaitée : %d\n", cur_elt->value, value);
-      if (cur_elt->value == value) {
-        return cur_set;
-      }
-      cur_elt = cur_elt->next_elt;
-    }
+  while (cur_set->next_set != NULL) {
+    printf("aaaa\n");
 
     cur_set = cur_set->next_set;
-    cur_elt = cur_set->first;
   }
-  return NULL;
+
+  printf("afoezpoefezofekzopko\n");
+
+  return cur_set;
+
+
 }
+
+// t_set *set_from_value(t_set *sets, int value, int height, int width) {
+//   if (value < 0 || value >= (height * width)) {
+//     return NULL;
+//   }
+//
+//   t_set *cur_set = NULL;
+//   t_element *cur_elt = NULL;
+//
+//   cur_set = sets;
+//   cur_elt = cur_set->first;
+//   while(cur_set->next_set != NULL) {
+//
+//     while(cur_elt != NULL) {
+//
+//       //printf("Valeur actuelle : %d et valeur souhaitée : %d\n", cur_elt->value, value);
+//       if (cur_elt->value == value) {
+//         return cur_set;
+//       }
+//
+//       cur_elt = cur_elt->next_elt;
+//
+//     }
+//
+//
+//       cur_set = cur_set->next_set;
+//       cur_elt = cur_set->first;
+//
+//   }
+//
+//   return NULL;
+// }
 
 // t_set *set_from_value(t_set *sets, int value, int height, int width) {
 //   int size = count_cells(height, width);
