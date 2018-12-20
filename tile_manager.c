@@ -4,6 +4,9 @@
 #include "struct_level.h"
 #endif
 
+#include <stdlib.h>
+
+
 #include "game_constants.h"
 #include "tile_manager.h"
 #include "bomb_manager.h"
@@ -155,6 +158,7 @@ int tile_content(t_level *level, int x, int y) {
 }
 
 int is_tile_defined(t_level *level, int x, int y) {
+
   if (x < 0)
     return NO;
   if (y < 0)
