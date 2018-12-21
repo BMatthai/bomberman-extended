@@ -396,6 +396,8 @@ t_set *init_sets(int height, int width) {
     cur_set->prev_set->next_set = cur_set;
     prev_set = cur_set;
   }
+  cur_set->next_set = NULL;
+
   return first_set;
 }
 
@@ -445,10 +447,14 @@ t_set *set_from_value(t_set *sets, int value, int height, int width) {
   cur_set = sets;
   printf("OK\n");
 
+  // for (int i = 0; cur_set->next_set != NULL; i++) {
+  //   i
+  // }
   while (cur_set->next_set != NULL) {
     printf("aaaa\n");
 
     cur_set = cur_set->next_set;
+      printf("bbbb\n");
   }
 
   printf("afoezpoefezofekzopko\n");
