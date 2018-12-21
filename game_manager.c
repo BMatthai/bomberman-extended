@@ -106,10 +106,10 @@ void display_map(t_level *level, t_display *display) {
         SDL_RenderCopy(display->renderer, display->text_terrain[0], NULL, &location);
       }
       else if (is_tile_undestructible_wall(level, j, i) == YES) {
-        SDL_RenderCopy(display->renderer, display->text_terrain[2], NULL, &location);
+        SDL_RenderCopy(display->renderer, display->text_terrain[1], NULL, &location);
       }
       else if (is_tile_destructible_wall(level, j, i) == YES) {
-        SDL_RenderCopy(display->renderer, display->text_terrain[1], NULL, &location);
+        SDL_RenderCopy(display->renderer, display->text_terrain[2], NULL, &location);
       }
     }
   }
@@ -174,7 +174,7 @@ int launch_game_SDL() {
 
   //game_data->level = generate_level_from_file("./level/testlevel.lvl");
 
-  game_data->level = generate_maze_level(4, 4);
+  game_data->level = generate_maze_level(10, 10);
   //generate_level_random();
 
   game_data->playable_character = &game_data->level->characters[0];

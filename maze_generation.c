@@ -138,15 +138,21 @@ t_element *get_head(t_set *set) {
   cur_elt = set->first;
 
   while (cur_elt->prev_elt != NULL) {
-        cur_elt = cur_elt->prev_elt;
+    printf("Inf\n");
+    cur_elt = cur_elt->prev_elt;
   }
   return cur_elt;
 }
 
 int is_same_set(t_set *set1, t_set *set2) {
-
+  printf("Testons si les deux sets sont le même\n");
   if (set1 == NULL || set2 == NULL) {
     return NO;
+  }
+
+  if (set1 == set2) {
+    printf("Valeur sets : %d et %d\n", set1->first->value, set2->first->value);
+    return YES;
   }
 
   t_element *cur_elt1 = NULL;
@@ -156,12 +162,18 @@ int is_same_set(t_set *set1, t_set *set2) {
 
   cur_elt2 = set2->first;
 
-  int value_elt1 = cur_elt1->value;
+  //int value_elt1 = cur_elt1->value;
   int value_elt2 = cur_elt2->value;
 
+  //printf("Valeur souhaitée : %d\n", value_elt2);
+
   while (cur_elt1->next_elt != NULL) {
+    printf("Cur value : %d", cur_elt1->value);
     if (cur_elt1->value == value_elt2) {
       return YES;
+    }
+    else {
+
     }
     cur_elt1 = cur_elt1->next_elt;
   }
@@ -261,6 +273,8 @@ void delete_set(t_set *set) {
   t_set *prev_set = NULL;
   t_set *next_set = NULL;
 
+  prev_set = set->prev_set;
+  next_set = set->next_set;
 
   if (set->next_set != NULL && prev_set != NULL) {
     prev_set->next_set = set->next_set;
@@ -270,8 +284,6 @@ void delete_set(t_set *set) {
     next_set->prev_set = set->prev_set;
   }
 
-
-
   free(set);
 }
 
@@ -279,6 +291,7 @@ void merge_sets(t_set *set1, t_set *set2) {
   if (set1 == NULL || set2 == NULL) {
     return;
   }
+  printf("On va merger %d et %d.\n", set1->first->value, set2->first->value);
 
   t_element *cur_elt = NULL;
 
@@ -287,7 +300,10 @@ void merge_sets(t_set *set1, t_set *set2) {
   cur_elt->next_elt = set2->first;
 
   set2->first->prev_elt = cur_elt;
+  printf("FOZOKF\n");
 
+  printf("First value : %d\n", set1->first->value);
+  printf("AHBAHCLA\n");
   delete_set(set2);
 
 }
@@ -398,6 +414,9 @@ t_set *init_sets(int height, int width) {
   }
   cur_set->next_set = NULL;
 
+
+
+
   return first_set;
 }
 
@@ -443,25 +462,19 @@ void remove_wall(char **maze, int height, int width, int value) {
 
 t_set *set_from_value(t_set *sets, int value, int height, int width) {
   t_set *cur_set = NULL;
-
+  int val_first;
   cur_set = sets;
-  printf("OK\n");
 
-  // for (int i = 0; cur_set->next_set != NULL; i++) {
-  //   i
-  // }
   while (cur_set->next_set != NULL) {
-    printf("aaaa\n");
-
+    printf("Show first\n");
+    val_first = cur_set->first->value;
+    printf("Showed first\n");
+    if (val_first == value) {
+      return cur_set;
+    }
     cur_set = cur_set->next_set;
-      printf("bbbb\n");
   }
-
-  printf("afoezpoefezofekzopko\n");
-
-  return cur_set;
-
-
+  return  NULL;
 }
 
 // t_set *set_from_value(t_set *sets, int value, int height, int width) {
@@ -516,8 +529,8 @@ void dig_walls(char **maze, int *walls, int height, int width) {
 
   //t_set *sets = create_sets(height, width);
   t_set *sets = init_sets(height, width);
-
   //list_all_sets(sets);
+
 
   int is_even;
   int wall_index;
@@ -542,14 +555,10 @@ void dig_walls(char **maze, int *walls, int height, int width) {
       printf("%d et %d\n", wall_index - width, wall_index + width);
     }
 
-
-    set1 = set_from_value(sets, cell_side_A, height, width);
-
-    set2 = set_from_value(sets, cell_side_B, height, width);
     printf("Mur : %d\n", wall_index);
 
-
-
+    set1 = set_from_value(sets, cell_side_A, height, width);
+    set2 = set_from_value(sets, cell_side_B, height, width);
 
     if (set1 == NULL) {
       printf("Cell at %d null (Set 1)\n", cell_side_A);
@@ -559,10 +568,13 @@ void dig_walls(char **maze, int *walls, int height, int width) {
     }
 
     if (set1 != NULL && set2 != NULL) {
+      printf("Les sets ne sont pas nuls\n");
+      printf("Val first set 1 : %d\n", set1->first->value);
+      printf("Val first set 2 : %d\n", set2->first->value);
+
       if (is_same_set(set1, set2) == NO) {
         remove_wall(maze, height, width, wall_index);
         merge_sets(set1, set2);
-
       }
       else {
         printf("C'est déjà le même set...\n");
