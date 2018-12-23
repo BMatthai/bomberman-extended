@@ -174,7 +174,7 @@ int launch_game_SDL() {
 
   //game_data->level = generate_level_from_file("./level/testlevel.lvl");
 
-  game_data->level = generate_maze_level(10, 10);
+  game_data->level = generate_maze_level(40,40);
   //generate_level_random();
 
   game_data->playable_character = &game_data->level->characters[0];
@@ -191,7 +191,6 @@ int launch_game_SDL() {
   int time_to_reload = get_time();
 
   t_display *display = init_display(level);
-
 
   while (is_running)
   {
@@ -217,8 +216,8 @@ int launch_game_SDL() {
 
     SDL_RenderClear(display->renderer);
     display_map(level, display);
-    display_characters(level, display);
-    display_bombs(level, display);
+    //display_characters(level, display);
+    //display_bombs(level, display);
     SDL_RenderPresent(display->renderer);
 
     check_bombs_timer(level);

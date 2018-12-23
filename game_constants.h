@@ -74,6 +74,9 @@
 #define YES 1
 #define NO 0
 
+#define EVEN 1
+#define ODD 0
+
 #define MOVE_POSSIBLE 1
 #define MOVE_IMPOSSIBLE 0
 
