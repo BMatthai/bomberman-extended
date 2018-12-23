@@ -129,6 +129,7 @@ void action(t_level *level, t_character *character, int touch_action) {
     move(level, character, ACTION_RIGHT);
   if(touch_action == ACTION_BOMB)
     put_bomb(level, character);
+    
 }
 
 void adjust_char(t_level *level, t_character *character) {

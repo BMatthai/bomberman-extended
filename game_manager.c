@@ -174,7 +174,7 @@ int launch_game_SDL() {
 
   //game_data->level = generate_level_from_file("./level/testlevel.lvl");
 
-  game_data->level = generate_maze_level(40,40);
+  game_data->level = generate_maze_level(14, 14);
   //generate_level_random();
 
   game_data->playable_character = &game_data->level->characters[0];
@@ -209,6 +209,7 @@ int launch_game_SDL() {
               case SDLK_UP:    action(level, playable_character, ACTION_UP); break;
               case SDLK_DOWN:  action(level, playable_character, ACTION_DOWN); break;
               case SDLK_c:  action(level, playable_character, ACTION_BOMB); break;
+              case SDLK_ESCAPE: is_running = NO; break;
           }
         break;
       case SDL_KEYUP: adjust_char(level, playable_character); break;
@@ -216,8 +217,8 @@ int launch_game_SDL() {
 
     SDL_RenderClear(display->renderer);
     display_map(level, display);
-    //display_characters(level, display);
-    //display_bombs(level, display);
+    display_characters(level, display);
+    display_bombs(level, display);
     SDL_RenderPresent(display->renderer);
 
     check_bombs_timer(level);
