@@ -8,7 +8,7 @@ Projet de bomberman en ASCII !!! C'était plutôt stylé même si l'interface pa
 **Backlog :**
 - [x] Rendre le jeu existant plus stable
 - [x] Explosion en chaîne des bombes
-- [x] Ajouter création de map aléatoires en se basant sur l'algorithme de Kruskal. __(Presque terminé)__
+- [x] Ajouter création de map aléatoires en se basant sur l'algorithme de Kruskal.
 - [x] Implémenter un nouvel affichage en utilisant SDL __(A améliorer en continu)__
 - [ ] Implémenter réseau __(WIP Bastien)__
 - [ ] Amélioration du Makefile : factoriser le fichier. Séparer les fichiers .o .h et .c dans des dossiers build, inc et src.
