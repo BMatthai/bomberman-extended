@@ -1,3 +1,17 @@
+#define STANDARD_TILE_WIDTH 16
+#define STANDARD_TILE_HEIGHT 16
+#define STANDARD_WIN_WIDTH 1024
+#define STANDARD_WIN_HEIGHT 768
+
+#define MOVE_DISTANCE 0.01
+
+
+#define ACTION_UP 1
+#define ACTION_DOWN 2
+#define ACTION_LEFT 3
+#define ACTION_RIGHT 4
+#define ACTION_BOMB 5
+
 #define CHARACTER_HEAL_POINT 5
 #define CHARACTER_BOMB_RANGE 2
 #define CHARACTER_BOMB_DAMAGE 1
@@ -59,6 +73,9 @@
 
 #define YES 1
 #define NO 0
+
+#define EVEN 1
+#define ODD 0
 
 #define MOVE_POSSIBLE 1
 #define MOVE_IMPOSSIBLE 0

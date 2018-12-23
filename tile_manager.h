@@ -1,0 +1,14 @@
+int is_tile_wall(t_level *level, int x, int y);
+int is_tile_undestructible_wall(t_level *level, int x, int y);
+int is_tile_destructible_wall(t_level *level, int x, int y);
+int is_tile_character(t_level *level, int x, int y);
+int is_tile_bomb_planted(t_level *level, int x, int y);
+int is_tile_bomb_exploding(t_level *level, int x, int y);
+int is_tile_free(t_level *level, float x, float y);
+int tile_character(t_level *level, int x, int y);
+int is_tile_bonus(t_level *level, int x, int y);
+int is_tile_bomb_blast(t_level *level, int x, int y);
+int tile_content(t_level *level, int x, int y);
+int is_tile_free_for_bomb(t_level *level, int x, int y);
+int is_tile_free_bomb_blast(t_level *level, int x, int y);
+int is_tile_defined(t_level *level, int x, int y);
