@@ -12,7 +12,7 @@ Projet de bomberman en ASCII !!! C'était plutôt stylé même si l'interface pa
 - [x] Implémenter un nouvel affichage en utilisant SDL __(A améliorer en continu)__
 - [ ] Implémenter réseau __(WIP Bastien)__
 - [ ] Amélioration du Makefile : factoriser le fichier. Séparer les fichiers .o .h et .c dans des dossiers build, inc et src.
-- [ ] Créer le menu de jeu (+ affichage SDL)
+- [ ] Créer le menu de jeu (+ affichage SDL) __(WIP Bastien)__
 - [ ] Créer une boucle de jeu qui ne dépend pas du CPU
 
 - [ ] ~~Vérifier le retours des mallocs et gérer les erreurs~~ __(Pas prio)__
