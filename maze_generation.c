@@ -260,10 +260,10 @@ void fill_array(char **maze, int height, int width) {
   for (int i = 0; i < height; i++) {
     for (int j = 0; j < width; j++) {
       if (i % 2 == 0 && j % 2 == 1) {
-        maze[j][i] = ' ';
+        maze[j][i] = '1';
       }
       else {
-        maze[j][i] = '0';
+        maze[j][i] = ' ';
       }
     }
   }
@@ -348,7 +348,7 @@ t_set *init_sets(int height, int width) {
 char **generate_empty_layer(int height, int width) {
   char **layer;
 
-  layer = malloc(height * sizeof(char*));
+  layer = malloc(height * sizeof(char *));
   for (int i = 0; i < height; i++) {
     layer[i] = malloc(sizeof(char) * width);
   }
@@ -432,6 +432,7 @@ t_set *set_from_value(t_set *sets, int value, int height, int width) {
 
 
 void dig_walls(char **maze, int *walls, int height, int width) {
+
   int size = count_walls(height, width);
 
   t_set *sets = init_sets(height, width);
@@ -439,7 +440,6 @@ void dig_walls(char **maze, int *walls, int height, int width) {
   int is_even;
   int is_separator;
   int wall_index;
-
 
   for (int i = 0; i < size; i++) {
     wall_index = walls[i];
@@ -470,9 +470,7 @@ void dig_walls(char **maze, int *walls, int height, int width) {
         if (is_same_set(set1, set2) == NO) {
           remove_wall(maze, height, width, wall_index);
           merge_sets(set1, set2);
-          // printf("-------\n");
-          // list_all_sets(sets);
-          // printf("-------\n");
+
         }
         else {
           set_wall_content(maze, height, width, wall_index);
@@ -492,9 +490,10 @@ void dig_walls(char **maze, int *walls, int height, int width) {
 
 
 char **generate_maze(int height, int width) {
-  char **maze;
+  char **maze = NULL;
 
   maze = generate_empty_layer(height, width);
+
   fill_array(maze, height, width);
 
   int *walls = list_walls(height, width);
@@ -504,7 +503,7 @@ char **generate_maze(int height, int width) {
   nb_walls = count_walls(height,width);
   shuffle(walls, nb_walls);
 
-  dig_walls(maze, walls, height, width);
+  //dig_walls(maze, walls, height, width);
   return maze;
 }
 
