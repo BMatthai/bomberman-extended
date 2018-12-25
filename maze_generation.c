@@ -366,7 +366,7 @@ void remove_wall(char **maze, int height, int width, int value) {
 
   if (rand_number > PROBA_EMPTY)
     maze[j][i] = ' ';
-  else 
+  else
     maze[j][i] = '1';
 }
 
