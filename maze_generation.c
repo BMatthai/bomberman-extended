@@ -361,7 +361,29 @@ void remove_wall(char **maze, int height, int width, int value) {
 
   i = value / width;
   j = value % width;
-  maze[j][i] = ' ';
+
+  int rand_number = (rand() % (100 - 0 + 1));
+
+  if (rand_number > PROBA_EMPTY)
+    maze[j][i] = ' ';
+  else 
+    maze[j][i] = '1';
+}
+
+void set_wall_content(char **maze, int height, int width, int wall_index) {
+  int i;
+  int j;
+
+  i = wall_index / width;
+  j = wall_index % width;
+
+
+  int rand_number = (rand() % (100 - 0 + 1));
+
+  if (rand_number > PROBA_EMPTY)
+    maze[j][i] = ' ';
+  else if (rand_number > PROBA_DESTRUCTIBLE)
+    maze[j][i] = '1';
 }
 
 int is_a_cell(int value, int height, int width) {
@@ -446,8 +468,6 @@ void dig_walls(char **maze, int *walls, int height, int width) {
       if (set1 != NULL && set2 != NULL) {
 
         if (is_same_set(set1, set2) == NO) {
-
-
           remove_wall(maze, height, width, wall_index);
           merge_sets(set1, set2);
           // printf("-------\n");
@@ -455,6 +475,7 @@ void dig_walls(char **maze, int *walls, int height, int width) {
           // printf("-------\n");
         }
         else {
+          set_wall_content(maze, height, width, wall_index);
         }
       }
       else {
@@ -467,6 +488,8 @@ void dig_walls(char **maze, int *walls, int height, int width) {
   // list_all_sets(sets);
   // printf("-------\n");
 }
+
+
 
 char **generate_maze(int height, int width) {
   char **maze;
