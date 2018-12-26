@@ -113,11 +113,11 @@ void display_map(t_level *level, t_display *display) {
         location.y = STANDARD_TILE_HEIGHT * i + display->offset_y;
 
         cur_tile = terrain[j][i];
-        if (cur_tile == '0')
-          SDL_RenderCopy(display->renderer, display->text_terrain[0], NULL, &location);
-        if (cur_tile == '1')
-          SDL_RenderCopy(display->renderer, display->text_terrain[3], NULL, &location);
         if (cur_tile == ' ')
+          SDL_RenderCopy(display->renderer, display->text_terrain[0], NULL, &location);
+        if (cur_tile == '0')
+          SDL_RenderCopy(display->renderer, display->text_terrain[1], NULL, &location);
+        if (cur_tile == '1')
           SDL_RenderCopy(display->renderer, display->text_terrain[2], NULL, &location);
 
         // if (is_tile_free(level, j, i) == YES){
@@ -289,10 +289,7 @@ int launch_game_SDL() {
    return -1;
   }
 
-  //game_data->level = generate_level_from_file("./level/testlevel.lvl");
-
-  game_data->level = generate_maze_level(7, 5);
-  //generate_level_random();
+  game_data->level = generate_maze_level(22, 42);
 
   game_data->playable_character = &game_data->level->characters[0];
   t_character *playable_character = game_data->playable_character;
@@ -334,8 +331,8 @@ int launch_game_SDL() {
 
     SDL_RenderClear(display->renderer);
     display_map(level, display);
-    display_characters(level, display);
-    display_bombs(level, display);
+    // display_characters(level, display);
+    // display_bombs(level, display);
     SDL_RenderPresent(display->renderer);
 
     check_bombs_timer(level);
