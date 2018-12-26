@@ -29,7 +29,7 @@ int count_walls_separator(int width, int height) {
 }
 
 int count_walls(int width, int height) {
-  if (width % 2 == 1 && height % 2 == 0) {
+  if ((width % 2) == 1 && (height % 2) == 1) {
     return ((height * width) + 1) / 2;
   }
   else {
@@ -41,6 +41,17 @@ int count_cells(int width, int height) {
   int count_cells;
 
   count_cells = (height * width) / 4;
+  if (width % 2 == 1 && height % 2 == 0) {
+    count_cells += height / 2;
+  }
+  // if  (width % 2 == 0 && height % 2 == 1) {
+  //   count_cells += width / 2;
+  // }
+  // if  (width % 2 == 1 && height % 2 == 1) {
+  //   count_cells += 1;
+  // }
+
+
   return count_cells;
 }
 
@@ -64,10 +75,9 @@ int *list_cells(int width, int height) {
   int value;
 
   for (int i = 0; i < size; i++) {
-    cur_row = (2 * i) / width;
-    cur_col = (2 * i + 1) % width;
-    
-    value = (cur_row * width) + cur_col;
+    cur_row = 2 * (i * width);
+    cur_col = (2 * (i % width)) + 1;
+    value = cur_row * width + cur_col;
 
     cells[i] = value;
   }
@@ -155,19 +165,25 @@ void list_elt_of_set(t_set *set) {
   cur_elt = set->first;
 
   while(cur_elt != NULL) {
+    printf("%d - ",cur_elt->value);
+
     cur_elt = cur_elt->next_elt;
   }
+  printf("\n");
+
+
 }
 
 void list_all_sets(t_set *sets) {
   t_set *cur_set = NULL;
   int i = 0;
   cur_set = sets;
-
+  printf("Liste des sets :\n");
   while (cur_set != NULL) {
-
+    printf("    Nouveau set :\n");
     list_elt_of_set(cur_set);
     cur_set = cur_set->next_set;
+
     i++;
   }
 
@@ -292,31 +308,38 @@ int *list_walls(int width, int height) {
   int size = count_walls(width, height);
   int *walls = malloc(sizeof(int) * size);
 
-  // for (int i = 0; i < size; i++) {
-  //   if (((i * 2 / width) % 2) == 0) {
-  //     walls[i] = i * 2;
-  //   }
-  //   else {
-  //     walls[i] = i * 2 + 1;
-  //   }
-  // }
   for (int i = 0; i < size; i++) {
-    if (((i * 2 / width) % 2) == 0) {
-      walls[i] = i * 2;
+    if (width % 2 == 0) {
+      if (((i * 2 / width) % 2) == 0) {
+        walls[i] = i * 2;
+      }
+      else {
+        walls[i] = i * 2 + 1;
+      }
     }
     else {
-      walls[i] = i * 2 + 1;
+      walls[i] = i * 2;
     }
+
   }
   return walls;
 }
 
 int init_cell(int width, int height, int i) {
   int cur_row;
+  //int cur_col;
   int value;
 
-  cur_row = (2 * i) / width;
-  value = ((2 * i + 1) % width) + (2 * cur_row * width);
+  if (width % 2 == 0) {
+    cur_row = (2 * i) / width;
+    value = ((2 * i + 1) % width) + (2 * cur_row * width);
+  }
+  else {
+    value = ((2 * i + 1) % width) + (2 * cur_row * width);
+
+  }
+
+
 
   return value;
 }
@@ -449,48 +472,40 @@ void dig_walls(char **maze, int *walls, int width, int height) {
 
   t_set *sets = init_sets(width, height);
 
+  list_all_sets(sets);
+
   int is_even;
   int is_separator;
   int wall_index;
 
   for (int i = 0; i < size; i++) {
     wall_index = walls[i];
+    is_even = ((wall_index / width) % 2) == 1 ? NO : YES;
+    t_set *set1 = NULL;
+    t_set *set2 = NULL;
 
-    is_separator = is_wall_separator(wall_index, width, height);
-    if (is_separator) {
-      is_even = ((wall_index / width) % 2) == 1 ? NO : YES;
-      t_set *set1 = NULL;
-      t_set *set2 = NULL;
+    int cell_side_A;
+    int cell_side_B;
 
-      int cell_side_A;
-      int cell_side_B;
-
-      if (is_even == YES) {
-        cell_side_A = wall_index - 1;
-        cell_side_B = wall_index + 1;
-      }
-      else {
-        cell_side_A = wall_index - width;
-        cell_side_B = wall_index + width;
-      }
-
-      set1 = set_from_value(sets, cell_side_A, width, height);
-      set2 = set_from_value(sets, cell_side_B, width, height);
-
-      if (set1 != NULL && set2 != NULL) {
-
-        if (is_same_set(set1, set2) == NO) {
-          remove_wall(maze, width, height, wall_index);
-          merge_sets(set1, set2);
-        }
-        else {
-          // set_wall_content(maze, width, height, wall_index);
-        }
-      }
-      else {
-      }
+    if (is_even == YES) {
+      cell_side_A = wall_index - 1;
+      cell_side_B = wall_index + 1;
     }
     else {
+      cell_side_A = wall_index - width;
+      cell_side_B = wall_index + width;
+    }
+    set1 = set_from_value(sets, cell_side_A, width, height);
+    set2 = set_from_value(sets, cell_side_B, width, height);
+
+    if (set1 != NULL && set2 != NULL) {
+      if (is_same_set(set1, set2) == NO) {
+        remove_wall(maze, width, height, wall_index);
+        merge_sets(set1, set2);
+      }
+      else {
+        //set_wall_content(maze, width, height, wall_index);
+      }
     }
   }
 }
@@ -505,6 +520,8 @@ char **generate_maze_layer(int width, int height) {
   int nb_walls;
 
   nb_walls = count_walls(width, height);
+
+
 
   shuffle(walls, nb_walls);
 
