@@ -52,13 +52,14 @@ t_display *init_display(t_level *level) {
   int offset_y = STANDARD_WIN_HEIGHT - (level->lines * STANDARD_TILE_HEIGHT);
   SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, render_flags);
 
-  SDL_Texture **text_terrain = malloc(3 * sizeof(SDL_Texture *));
+  SDL_Texture **text_terrain = malloc(4 * sizeof(SDL_Texture *));
   SDL_Texture **text_bomb = malloc(4 * sizeof(SDL_Texture *));
   SDL_Texture **text_character = malloc(1 * sizeof(SDL_Texture *));
 
   SDL_Surface *image_free = SDL_LoadBMP("resources/free.bmp");
   SDL_Surface *image_wall = SDL_LoadBMP("resources/wall.bmp");
   SDL_Surface *image_destr = SDL_LoadBMP("resources/destructible.bmp");
+  SDL_Surface *image_misc = SDL_LoadBMP("resources/misc.bmp");
 
   SDL_Surface *image_char0 = SDL_LoadBMP("resources/char0.bmp");
   SDL_Surface *image_char1 = SDL_LoadBMP("resources/char1.bmp");
@@ -73,6 +74,7 @@ t_display *init_display(t_level *level) {
   text_terrain[0] = SDL_CreateTextureFromSurface(renderer, image_free);
   text_terrain[1] = SDL_CreateTextureFromSurface(renderer, image_wall);
   text_terrain[2] = SDL_CreateTextureFromSurface(renderer, image_destr);
+  text_terrain[3] = SDL_CreateTextureFromSurface(renderer, image_misc);
 
   text_character[0] = SDL_CreateTextureFromSurface(renderer, image_char0);
   text_character[1] = SDL_CreateTextureFromSurface(renderer, image_char1);
@@ -98,25 +100,53 @@ t_display *init_display(t_level *level) {
 
 void display_map(t_level *level, t_display *display) {
   SDL_Rect location;
+  char cur_tile;
+  char **terrain = NULL;
+
+  terrain = level->terrain;
 
   for (int i = 0; i < level->lines; i++) {
     for (int j = 0; j < level->columns; j++) {
-      location.h = STANDARD_TILE_HEIGHT;
-      location.w = STANDARD_TILE_WIDTH;
-      location.x = STANDARD_TILE_WIDTH * j + display->offset_x;
-      location.y = STANDARD_TILE_HEIGHT * i + display->offset_y;
+        location.h = STANDARD_TILE_HEIGHT;
+        location.w = STANDARD_TILE_WIDTH;
+        location.x = STANDARD_TILE_WIDTH * j + display->offset_x;
+        location.y = STANDARD_TILE_HEIGHT * i + display->offset_y;
 
-      if (is_tile_free(level, j, i) == YES){
-        SDL_RenderCopy(display->renderer, display->text_terrain[0], NULL, &location);
-      }
-      else if (is_tile_undestructible_wall(level, j, i) == YES) {
-        SDL_RenderCopy(display->renderer, display->text_terrain[1], NULL, &location);
-      }
-      else if (is_tile_destructible_wall(level, j, i) == YES) {
-        SDL_RenderCopy(display->renderer, display->text_terrain[2], NULL, &location);
-      }
+        cur_tile = terrain[j][i];
+        if (cur_tile == '0')
+          SDL_RenderCopy(display->renderer, display->text_terrain[0], NULL, &location);
+        if (cur_tile == '1')
+          SDL_RenderCopy(display->renderer, display->text_terrain[3], NULL, &location);
+        if (cur_tile == ' ')
+          SDL_RenderCopy(display->renderer, display->text_terrain[2], NULL, &location);
+
+        // if (is_tile_free(level, j, i) == YES){
+        //   SDL_RenderCopy(display->renderer, display->text_terrain[0], NULL, &location);
+        // }
+        // else if (is_tile_undestructible_wall(level, j, i) == YES) {
+        //   SDL_RenderCopy(display->renderer, display->text_terrain[1], NULL, &location);
+        // }
+        // else if (is_tile_destructible_wall(level, j, i) == YES) {
+        //   SDL_RenderCopy(display->renderer, display->text_terrain[2], NULL, &location);
+        // }
     }
   }
+    //   location.h = STANDARD_TILE_HEIGHT;
+    //   location.w = STANDARD_TILE_WIDTH;
+    //   location.x = STANDARD_TILE_WIDTH * j + display->offset_x;
+    //   location.y = STANDARD_TILE_HEIGHT * i + display->offset_y;
+    //
+    //   if (is_tile_free(level, j, i) == YES){
+    //     SDL_RenderCopy(display->renderer, display->text_terrain[0], NULL, &location);
+    //   }
+    //   else if (is_tile_undestructible_wall(level, j, i) == YES) {
+    //     SDL_RenderCopy(display->renderer, display->text_terrain[1], NULL, &location);
+    //   }
+    //   else if (is_tile_destructible_wall(level, j, i) == YES) {
+    //     SDL_RenderCopy(display->renderer, display->text_terrain[2], NULL, &location);
+    //   }
+    // }
+
 }
 
 void display_characters(t_level *level, t_display *display) {
@@ -261,7 +291,7 @@ int launch_game_SDL() {
 
   //game_data->level = generate_level_from_file("./level/testlevel.lvl");
 
-  game_data->level = generate_maze_level(32, 30);
+  game_data->level = generate_maze_level(7, 5);
   //generate_level_random();
 
   game_data->playable_character = &game_data->level->characters[0];

@@ -24,16 +24,20 @@ typedef struct s_set {
     struct s_set *next_set;
 } t_set;
 
-int count_walls_separator(int height, int width) {
+int count_walls_separator(int width, int height) {
   return (((height - 1) * (width - 1)) - 1) / 2;
 }
 
-int count_walls(int height, int width) {
-
-  return (height * width) / 2;
+int count_walls(int width, int height) {
+  if (width % 2 == 1 && height % 2 == 0) {
+    return ((height * width) + 1) / 2;
+  }
+  else {
+    return (height * width) / 2;
+  }
 }
 
-int count_cells(int height, int width) {
+int count_cells(int width, int height) {
   int count_cells;
 
   count_cells = (height * width) / 4;
@@ -51,8 +55,8 @@ void shuffle(int *elts, int nb_elts) {
   }
 }
 
-int *list_cells(int height, int width) {
-  int size = count_cells(height, width);
+int *list_cells(int width, int height) {
+  int size = count_cells(width, height);
   int *cells = malloc(sizeof(int) * size);
 
   int cur_row;
@@ -80,8 +84,8 @@ t_character *get_level_characters(t_level *level) {
   height = level->lines;
   width = level->columns;
 
-  int *cells = list_cells(height, width);
-  int nb_cells = count_cells(height, width);
+  int *cells = list_cells(width, height);
+  int nb_cells = count_cells(width, height);
 
   characters = malloc(sizeof(t_character) * number_characters);
   shuffle(cells, nb_cells);
@@ -148,12 +152,8 @@ void list_elt_of_set(t_set *set) {
   cur_elt = set->first;
 
   while(cur_elt != NULL) {
-    // printf("%d ;", cur_elt->value);
-
     cur_elt = cur_elt->next_elt;
-
   }
-  // printf("\n");
 }
 
 void list_all_sets(t_set *sets) {
@@ -254,22 +254,30 @@ void merge_sets(t_set *set1, t_set *set2) {
   delete_set(set2);
 }
 
-void fill_array(char **maze, int height, int width) {
-  int size = count_walls(height, width);
+void fill_maze_default(char **maze, int width, int height) {
+  int size = count_walls(width, height);
 
   for (int i = 0; i < height; i++) {
     for (int j = 0; j < width; j++) {
       if (i % 2 == 0 && j % 2 == 1) {
-        maze[j][i] = '1';
+        maze[j][i] = '0';
       }
       else {
-        maze[j][i] = ' ';
+        maze[j][i] = '1';
       }
     }
   }
 }
 
-int is_wall_separator(int wall_index, int height, int width) {
+// void fill_empty_default(char **maze, int width, int height) {
+//   for (int i = 0; i < height; i++) {
+//     for (int j = 0; j < width; j++) {
+//         maze[j][i] = ' ';
+//     }
+//   }
+// }
+
+int is_wall_separator(int wall_index, int width, int height) {
 int row;
 int col;
 
@@ -285,8 +293,8 @@ col = wall_index % width;
   return YES;
 }
 
-int *list_walls(int height, int width) {
-  int size = count_walls(height, width);
+int *list_walls(int width, int height) {
+  int size = count_walls(width, height);
   int *walls = malloc(sizeof(int) * size);
 
   for (int i = 0; i < size; i++) {
@@ -300,7 +308,7 @@ int *list_walls(int height, int width) {
   return walls;
 }
 
-int init_cell(int height, int width, int i) {
+int init_cell(int width, int height, int i) {
   int cur_row;
   int value;
 
@@ -310,8 +318,8 @@ int init_cell(int height, int width, int i) {
   return value;
 }
 
-t_set *init_sets(int height, int width) {
-  int size = count_cells(height, width);
+t_set *init_sets(int width, int height) {
+  int size = count_cells(width, height);
 
   int i = 0;
 
@@ -322,7 +330,7 @@ t_set *init_sets(int height, int width) {
   first_set = malloc(sizeof(t_set));
   first_set->prev_set = NULL;
   first_set->first = malloc(sizeof(t_element));
-  first_set->first->value = init_cell(height, width, i);
+  first_set->first->value = init_cell(width, height, i);
   first_set->first->next_elt = NULL;
   first_set->first->prev_elt = NULL;
 
@@ -331,7 +339,7 @@ t_set *init_sets(int height, int width) {
   for (i = 1; i < size; i++) {
     cur_set = malloc(sizeof(t_set));
     cur_set->first = malloc(sizeof(t_element));
-    cur_set->first->value = init_cell(height, width, i);
+    cur_set->first->value = init_cell(width, height, i);
 
     cur_set->first->next_elt = NULL;
     cur_set->first->prev_elt = NULL;
@@ -345,17 +353,17 @@ t_set *init_sets(int height, int width) {
   return first_set;
 }
 
-char **generate_empty_layer(int height, int width) {
-  char **layer;
+char **generate_empty_layer(int width, int height) {
+  char **maze = NULL;
 
-  layer = malloc(height * sizeof(char *));
-  for (int i = 0; i < height; i++) {
-    layer[i] = malloc(sizeof(char) * width);
+  maze = malloc(width * sizeof(char *));
+  for (int i = 0; i < width; i++) {
+    maze[i] = malloc(sizeof(char) * height);
   }
-  return layer;
+  return maze;
 }
 
-void remove_wall(char **maze, int height, int width, int value) {
+void remove_wall(char **maze, int width, int height, int value) {
   int i;
   int j;
 
@@ -365,12 +373,12 @@ void remove_wall(char **maze, int height, int width, int value) {
   int rand_number = (rand() % (100 - 0 + 1));
 
   if (rand_number > PROBA_EMPTY)
-    maze[j][i] = ' ';
+    maze[j][i] = '0';
   else
     maze[j][i] = '1';
 }
 
-void set_wall_content(char **maze, int height, int width, int wall_index) {
+void set_wall_content(char **maze, int width, int height, int wall_index) {
   int i;
   int j;
 
@@ -381,16 +389,16 @@ void set_wall_content(char **maze, int height, int width, int wall_index) {
   int rand_number = (rand() % (100 - 0 + 1));
 
   if (rand_number > PROBA_EMPTY)
-    maze[j][i] = ' ';
+    maze[j][i] = '0';
   else if (rand_number > PROBA_DESTRUCTIBLE)
     maze[j][i] = '1';
 }
 
-int is_a_cell(int value, int height, int width) {
+int is_a_cell(int value, int width, int height) {
   int cur_row;
   int cur_value;
 
-  for (int i = 0; i < count_cells(height, width); i++) {
+  for (int i = 0; i < count_cells(width, height); i++) {
     cur_row = (2 * i) / width;
     cur_value = ((2 * i + 1) % width) + (2 * cur_row * width);
       if (cur_value == value) {
@@ -400,7 +408,7 @@ int is_a_cell(int value, int height, int width) {
   return NO;
 }
 
-t_set *set_from_value(t_set *sets, int value, int height, int width) {
+t_set *set_from_value(t_set *sets, int value, int width, int height) {
 
   if (value >= (height * width)) {
     return NULL;
@@ -431,11 +439,11 @@ t_set *set_from_value(t_set *sets, int value, int height, int width) {
 }
 
 
-void dig_walls(char **maze, int *walls, int height, int width) {
+void dig_walls(char **maze, int *walls, int width, int height) {
 
-  int size = count_walls(height, width);
+  int size = count_walls(width, height);
 
-  t_set *sets = init_sets(height, width);
+  t_set *sets = init_sets(width, height);
 
   int is_even;
   int is_separator;
@@ -444,7 +452,7 @@ void dig_walls(char **maze, int *walls, int height, int width) {
   for (int i = 0; i < size; i++) {
     wall_index = walls[i];
 
-    is_separator = is_wall_separator(wall_index, height, width);
+    is_separator = is_wall_separator(wall_index, width, height);
     if (is_separator) {
       is_even = ((wall_index / width) % 2) == 1 ? NO : YES;
       t_set *set1 = NULL;
@@ -462,18 +470,17 @@ void dig_walls(char **maze, int *walls, int height, int width) {
         cell_side_B = wall_index + width;
       }
 
-      set1 = set_from_value(sets, cell_side_A, height, width);
-      set2 = set_from_value(sets, cell_side_B, height, width);
+      set1 = set_from_value(sets, cell_side_A, width, height);
+      set2 = set_from_value(sets, cell_side_B, width, height);
 
       if (set1 != NULL && set2 != NULL) {
 
         if (is_same_set(set1, set2) == NO) {
-          remove_wall(maze, height, width, wall_index);
-          merge_sets(set1, set2);
-
+          // remove_wall(maze, width, height, wall_index);
+          // merge_sets(set1, set2);
         }
         else {
-          set_wall_content(maze, height, width, wall_index);
+          //set_wall_content(maze, width, height, wall_index);
         }
       }
       else {
@@ -482,32 +489,49 @@ void dig_walls(char **maze, int *walls, int height, int width) {
     else {
     }
   }
-  // printf("-------\n");
-  // list_all_sets(sets);
-  // printf("-------\n");
 }
 
-
-
-char **generate_maze(int height, int width) {
+char **generate_maze_layer(int width, int height) {
   char **maze = NULL;
 
-  maze = generate_empty_layer(height, width);
+  maze = generate_empty_layer(width, height);
+  fill_maze_default(maze, width, height);
 
-  fill_array(maze, height, width);
+  for (int i = 0; i < height; i++) {
+    for (int j = 0; j < width; j++) {
+      printf("%c", maze[j][i]);
+    }
+    printf("\n");
+  }
 
-  int *walls = list_walls(height, width);
-
+  int *walls = list_walls(width, height);
   int nb_walls;
 
-  nb_walls = count_walls(height,width);
-  shuffle(walls, nb_walls);
+  nb_walls = count_walls(width, height);
 
-  //dig_walls(maze, walls, height, width);
+  //shuffle(walls, nb_walls);
+
+  dig_walls(maze, walls, width, height);
   return maze;
 }
 
-t_level *generate_maze_level(int height, int width) {
+char **generate_bomb_layer(int width, int height) {
+  char **maze = NULL;
+
+  maze = generate_empty_layer(width, height);
+
+  return maze;
+}
+
+char **generate_bonus_layer(int width, int height) {
+  char **maze = NULL;
+
+  maze = generate_empty_layer(width, height);
+
+  return maze;
+}
+
+t_level *generate_maze_level(int width, int height) {
   t_level *level;
   level = malloc(sizeof(t_level));
 
@@ -515,12 +539,12 @@ t_level *generate_maze_level(int height, int width) {
     return NULL;
   }
 
-  level->lines = height;
   level->columns = width;
+  level->lines = height;
 
-  level->terrain = generate_maze(height, width);
-  level->bonus = generate_empty_layer(level->lines, level->columns);
-  level->bomb = generate_empty_layer(level->lines, level->columns);
+  level->terrain = generate_maze_layer(width, height);
+  level->bonus = generate_bomb_layer(width, height);
+  level->bomb = generate_bonus_layer(width, height);
   level->number_characters = 4;
   level->characters = get_level_characters(level);
 
