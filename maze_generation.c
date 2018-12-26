@@ -66,6 +66,7 @@ int *list_cells(int width, int height) {
   for (int i = 0; i < size; i++) {
     cur_row = (2 * i) / width;
     cur_col = (2 * i + 1) % width;
+    
     value = (cur_row * width) + cur_col;
 
     cells[i] = value;
@@ -371,8 +372,8 @@ void remove_wall(char **maze, int width, int height, int value) {
 
   i = value / width;
   j = value % width;
-  
-  maze[j][i] = ' ';
+
+  maze[j][i] = '1';
   // int rand_number = (rand() % (100 - 0 + 1));
   //
   // if (rand_number > PROBA_EMPTY)
