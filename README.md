@@ -11,7 +11,6 @@ Projet de bomberman en ASCII !!! C'était plutôt stylé même si l'interface pa
 - [x] Ajouter création de map aléatoires en se basant sur l'algorithme de Kruskal.
 - [x] Implémenter un nouvel affichage en utilisant SDL __(A améliorer en continu)__
 
-![#f03c15]fsfssfe `#f03c15`
 - [ ] Faire en sorte que ça compile avec SDL sous Linux et Windows
 - [ ] Amélioration du Makefile : factoriser le fichier. Séparer les fichiers .o .h et .c dans des dossiers build, inc et src.
 
