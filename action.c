@@ -129,7 +129,7 @@ void action(t_level *level, t_character *character, int touch_action) {
     move(level, character, ACTION_RIGHT);
   if(touch_action == ACTION_BOMB)
     put_bomb(level, character);
-    
+
 }
 
 void adjust_char(t_level *level, t_character *character) {
@@ -150,49 +150,3 @@ void adjust_char(t_level *level, t_character *character) {
     character->position_y = (int) position_y + 1;
   }
 }
-
-//
-// int is_move_possible(t_level *level, t_character *character, int x, int y) {
-//   int new_position_x;
-//   int new_position_y;
-//
-//   new_position_x = character->position_x + x;
-//   new_position_y = character->position_y + y;
-//
-//   if (is_tile_free(level, new_position_x, new_position_y) == YES) {
-//     return YES;
-//   }
-//   return NO;
-// }
-
-// int is_move_to_top_possible(t_level *level, t_character *character) {
-//   return is_move_possible(level, character, 0, -1);
-// }
-//
-// int is_move_to_bot_possible(t_level *level, t_character *character) {
-//   return is_move_possible(level, character, 0, 1);
-// }
-//
-// int is_move_to_left_possible(t_level *level, t_character *character) {
-//   return is_move_possible(level, character, -1, 0);
-// }
-//
-// int is_move_to_right_possible(t_level *level, t_character *character) {
-//   return is_move_possible(level, character, 1, 0);
-// }
-
-// int number_of_direction_possible(t_level *level, t_character *character) {
-//   int number_of_direction_possible;
-//
-//   number_of_direction_possible = 0;
-//
-//   if (is_move_to_top_possible(level, character))
-//     number_of_direction_possible++;
-//   if (is_move_to_bot_possible(level, character))
-//     number_of_direction_possible++;
-//   if (is_move_to_left_possible(level, character))
-//     number_of_direction_possible++;
-//   if (is_move_to_right_possible(level, character))
-//     number_of_direction_possible++;
-//   return number_of_direction_possible;
-// }

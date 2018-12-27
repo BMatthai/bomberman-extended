@@ -12,19 +12,19 @@
 #include "bomb_manager.h"
 
 int is_tile_wall(t_level *level, int x, int y) {
-  if (level->terrain[y][x] >= TILE_WITH_WALL_ZERO && level->terrain[y][x] <= TILE_WITH_WALL_NINE)
+  if (level->terrain[x][y] >= TILE_WITH_WALL_ZERO && level->terrain[x][y] <= TILE_WITH_WALL_NINE)
       return YES;
   return NO;
 }
 
 int is_tile_undestructible_wall(t_level *level, int x, int y) {
-  if (level->terrain[y][x] == TILE_WITH_WALL_ZERO)
+  if (level->terrain[x][y] == TILE_WITH_WALL_ZERO)
       return YES;
   return NO;
 }
 
 int is_tile_destructible_wall(t_level *level, int x, int y) {
-  if (level->terrain[y][x] > TILE_WITH_WALL_ZERO && level->terrain[y][x] <= TILE_WITH_WALL_NINE)
+  if (level->terrain[x][y] > TILE_WITH_WALL_ZERO && level->terrain[x][y] <= TILE_WITH_WALL_NINE)
       return YES;
   return NO;
 }
@@ -42,37 +42,37 @@ int is_tile_character(t_level *level, int x, int y) {
 
 
 int is_tile_bomb_planted(t_level *level, int x, int y) {
-  if (level->bomb[y][x] == '@')
+  if (level->bomb[x][y] == '@')
     return YES;
   return NO;
 }
 
 int is_tile_bomb_exploding_up(t_level *level, int x, int y) {
-  if(level->bomb[y][x] == '^')
+  if(level->bomb[x][y] == '^')
       return YES;
   return NO;
 }
 
 int is_tile_bomb_exploding_down(t_level *level, int x, int y) {
-  if(level->bomb[y][x] == 'v')
+  if(level->bomb[x][y] == 'v')
       return YES;
   return NO;
 }
 
 int is_tile_bomb_exploding_left(t_level *level, int x, int y) {
-  if(level->bomb[y][x] == '<')
+  if(level->bomb[x][y] == '<')
       return YES;
   return NO;
 }
 
 int is_tile_bomb_exploding_right(t_level *level, int x, int y) {
-  if(level->bomb[y][x] == '>')
+  if(level->bomb[x][y] == '>')
       return YES;
   return NO;
 }
 
 int is_tile_bomb_exploding_origin(t_level *level, int x, int y) {
-  if(level->bomb[y][x] == 'O')
+  if(level->bomb[x][y] == 'O')
       return YES;
   return NO;
 }
@@ -106,13 +106,13 @@ int tile_character(t_level *level, int x, int y) {
 }
 
 int is_tile_bonus(t_level *level, int x, int y) {
-  if (level->bonus[y][x] == TILE_WITH_BONUS_1) {
+  if (level->bonus[x][y] == TILE_WITH_BONUS_1) {
     return YES;
   }
-  if (level->bonus[y][x] == TILE_WITH_BONUS_2) {
+  if (level->bonus[x][y] == TILE_WITH_BONUS_2) {
     return YES;
   }
-  if (level->bonus[y][x] == TILE_WITH_BONUS_3) {
+  if (level->bonus[x][y] == TILE_WITH_BONUS_3) {
     return YES;
   }
   return NO;
@@ -135,18 +135,20 @@ int is_tile_free_bomb_blast(t_level *level, int x, int y) {
     return NO;
   if (is_tile_bomb_planted(level, x, y))
     return NO;
+  if (is_tile_defined(level, x, y) == NO)
+    return NO;
   return YES;
 }
 
 int tile_content(t_level *level, int x, int y) {
   if (is_tile_bomb_planted(level, x, y))
-    return level->bomb[y][x];
+    return level->bomb[x][y];
   if (is_tile_bomb_exploding(level, x, y))
-    return level->bomb[y][x];
+    return level->bomb[x][y];
   if (is_tile_wall(level, x, y))
-    return level->terrain[y][x];
+    return level->terrain[x][y];
   if (is_tile_bonus(level, x, y))
-    return level->bonus[y][x];
+    return level->bonus[x][y];
   for (int i = 0; i < level->number_characters; i++) {
     if (level->characters[i].position_x == x &&
       level->characters[i].position_y == y &&
@@ -154,7 +156,7 @@ int tile_content(t_level *level, int x, int y) {
       return TILE_WITH_PLAYER_A + i;
     }
   }
-  return level->terrain[y][x];
+  return level->terrain[x][y];
 }
 
 int is_tile_defined(t_level *level, int x, int y) {

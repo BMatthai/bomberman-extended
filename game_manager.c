@@ -46,19 +46,18 @@ t_display *init_display(t_level *level) {
 
   Uint32 render_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 
-
-
   int offset_x = ((STANDARD_WIN_WIDTH / 2) - ((level->columns * STANDARD_TILE_WIDTH) / 2));
   int offset_y = STANDARD_WIN_HEIGHT - (level->lines * STANDARD_TILE_HEIGHT);
   SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, render_flags);
 
-  SDL_Texture **text_terrain = malloc(3 * sizeof(SDL_Texture *));
-  SDL_Texture **text_bomb = malloc(2 * sizeof(SDL_Texture *));
+  SDL_Texture **text_terrain = malloc(4 * sizeof(SDL_Texture *));
+  SDL_Texture **text_bomb = malloc(4 * sizeof(SDL_Texture *));
   SDL_Texture **text_character = malloc(1 * sizeof(SDL_Texture *));
 
   SDL_Surface *image_free = SDL_LoadBMP("resources/free.bmp");
   SDL_Surface *image_wall = SDL_LoadBMP("resources/wall.bmp");
   SDL_Surface *image_destr = SDL_LoadBMP("resources/destructible.bmp");
+  SDL_Surface *image_misc = SDL_LoadBMP("resources/misc.bmp");
 
   SDL_Surface *image_char0 = SDL_LoadBMP("resources/char0.bmp");
   SDL_Surface *image_char1 = SDL_LoadBMP("resources/char1.bmp");
@@ -67,10 +66,13 @@ t_display *init_display(t_level *level) {
 
   SDL_Surface *image_bomb0 = SDL_LoadBMP("resources/bomb0.bmp");
   SDL_Surface *image_bomb1 = SDL_LoadBMP("resources/bomb1.bmp");
+  SDL_Surface *image_bomb2 = SDL_LoadBMP("resources/bomb2.bmp");
+  SDL_Surface *image_bomb3 = SDL_LoadBMP("resources/bomb2b.bmp");
 
   text_terrain[0] = SDL_CreateTextureFromSurface(renderer, image_free);
   text_terrain[1] = SDL_CreateTextureFromSurface(renderer, image_wall);
   text_terrain[2] = SDL_CreateTextureFromSurface(renderer, image_destr);
+  text_terrain[3] = SDL_CreateTextureFromSurface(renderer, image_misc);
 
   text_character[0] = SDL_CreateTextureFromSurface(renderer, image_char0);
   text_character[1] = SDL_CreateTextureFromSurface(renderer, image_char1);
@@ -79,6 +81,8 @@ t_display *init_display(t_level *level) {
 
   text_bomb[0] = SDL_CreateTextureFromSurface(renderer, image_bomb0);
   text_bomb[1] = SDL_CreateTextureFromSurface(renderer, image_bomb1);
+  text_bomb[2] = SDL_CreateTextureFromSurface(renderer, image_bomb2);
+  text_bomb[3] = SDL_CreateTextureFromSurface(renderer, image_bomb3);
 
   display = malloc(sizeof(t_display));
   display->window = window;
@@ -94,23 +98,25 @@ t_display *init_display(t_level *level) {
 
 void display_map(t_level *level, t_display *display) {
   SDL_Rect location;
+  char cur_tile;
+  char **terrain = NULL;
+
+  terrain = level->terrain;
 
   for (int i = 0; i < level->lines; i++) {
     for (int j = 0; j < level->columns; j++) {
-      location.h = STANDARD_TILE_HEIGHT;
-      location.w = STANDARD_TILE_WIDTH;
-      location.x = STANDARD_TILE_WIDTH * j + display->offset_x;
-      location.y = STANDARD_TILE_HEIGHT * i + display->offset_y;
+        location.h = STANDARD_TILE_HEIGHT;
+        location.w = STANDARD_TILE_WIDTH;
+        location.x = STANDARD_TILE_WIDTH * j + display->offset_x;
+        location.y = STANDARD_TILE_HEIGHT * i + display->offset_y;
 
-      if (is_tile_free(level, j, i) == YES){
-        SDL_RenderCopy(display->renderer, display->text_terrain[0], NULL, &location);
-      }
-      else if (is_tile_undestructible_wall(level, j, i) == YES) {
-        SDL_RenderCopy(display->renderer, display->text_terrain[1], NULL, &location);
-      }
-      else if (is_tile_destructible_wall(level, j, i) == YES) {
-        SDL_RenderCopy(display->renderer, display->text_terrain[2], NULL, &location);
-      }
+        cur_tile = terrain[j][i];
+        if (cur_tile == ' ')
+          SDL_RenderCopy(display->renderer, display->text_terrain[0], NULL, &location);
+        if (cur_tile == '0')
+          SDL_RenderCopy(display->renderer, display->text_terrain[1], NULL, &location);
+        if (cur_tile == '1')
+          SDL_RenderCopy(display->renderer, display->text_terrain[2], NULL, &location);
     }
   }
 }
@@ -135,20 +141,81 @@ void display_characters(t_level *level, t_display *display) {
 void display_bombs(t_level *level, t_display *display) {
   SDL_Rect location;
 
-  for (int i = 0; i < level->lines; i++) {
-    for (int j = 0; j < level->columns; j++) {
-      location.h = STANDARD_TILE_HEIGHT;
-      location.w = STANDARD_TILE_WIDTH;
-      location.x = STANDARD_TILE_WIDTH * j + display->offset_x;
-      location.y = STANDARD_TILE_HEIGHT * i + display->offset_y;
+  t_bomb *cur_bomb = NULL;
+  int pos_x;
+  int pos_y;
 
-      if (is_tile_bomb_planted(level, j, i) == YES){
-        SDL_RenderCopy(display->renderer, display->text_bomb[0], NULL, &location);
-      }
-      else if (is_tile_bomb_exploding(level, j, i) == YES) {
-        SDL_RenderCopy(display->renderer, display->text_bomb[1], NULL, &location);
+  cur_bomb = level->first_bomb;
+
+  while (cur_bomb != NULL) {
+    pos_x = cur_bomb->position_x;
+    pos_y = cur_bomb->position_y;
+
+    location.h = STANDARD_TILE_HEIGHT;
+    location.w = STANDARD_TILE_WIDTH;
+    location.x = STANDARD_TILE_WIDTH * pos_x + display->offset_x;
+    location.y = STANDARD_TILE_HEIGHT * pos_y + display->offset_y;
+
+    if (cur_bomb->state == BOMB_IS_PLACED_ON_GROUND) {
+      SDL_RenderCopy(display->renderer, display->text_bomb[0], NULL, &location);
+    }
+    else if (cur_bomb->state == BOMB_IS_UNSTABLE) {
+      SDL_RenderCopy(display->renderer, display->text_bomb[1], NULL, &location);
+    }
+    else {
+      SDL_RenderCopy(display->renderer, display->text_bomb[2], NULL, &location);
+      for (int i = 1; i <= cur_bomb->range; i++) {
+        if (is_tile_bomb_exploding(level, pos_x - i, pos_y) == YES) {
+          location.h = STANDARD_TILE_HEIGHT;
+          location.w = STANDARD_TILE_WIDTH;
+          location.x = STANDARD_TILE_WIDTH * (pos_x - i) + display->offset_x;
+          location.y = STANDARD_TILE_HEIGHT * pos_y + display->offset_y;
+          if (i < cur_bomb->range) {
+            SDL_RenderCopy(display->renderer, display->text_bomb[2], NULL, &location);
+          }
+          else {
+            SDL_RenderCopyEx(display->renderer, display->text_bomb[3], NULL, &location, 0, 0, SDL_FLIP_NONE);
+          }
+        }
+        if (is_tile_bomb_exploding(level, pos_x + i, pos_y) == YES) {
+          location.h = STANDARD_TILE_HEIGHT;
+          location.w = STANDARD_TILE_WIDTH;
+          location.x = STANDARD_TILE_WIDTH * (pos_x + i) + display->offset_x;
+          location.y = STANDARD_TILE_HEIGHT * pos_y + display->offset_y;
+          if (i < cur_bomb->range) {
+            SDL_RenderCopy(display->renderer, display->text_bomb[2], NULL, &location);
+          }
+          else {
+            SDL_RenderCopyEx(display->renderer, display->text_bomb[3], NULL, &location, 180, 0, SDL_FLIP_NONE);
+          }
+        }
+        if (is_tile_bomb_exploding(level, pos_x, pos_y - i) == YES) {
+          location.h = STANDARD_TILE_HEIGHT;
+          location.w = STANDARD_TILE_WIDTH;
+          location.x = STANDARD_TILE_WIDTH * pos_x + display->offset_x;
+          location.y = STANDARD_TILE_HEIGHT * (pos_y - i) + display->offset_y;
+          if (i < cur_bomb->range) {
+            SDL_RenderCopy(display->renderer, display->text_bomb[2], NULL, &location);
+          }
+          else {
+            SDL_RenderCopyEx(display->renderer, display->text_bomb[3], NULL, &location, 90, 0, SDL_FLIP_NONE);
+          }
+        }
+        if (is_tile_bomb_exploding(level, pos_x, pos_y + i) == YES) {
+          location.h = STANDARD_TILE_HEIGHT;
+          location.w = STANDARD_TILE_WIDTH;
+          location.x = STANDARD_TILE_WIDTH * pos_x + display->offset_x;
+          location.y = STANDARD_TILE_HEIGHT * (pos_y + i) + display->offset_y;
+          if (i < cur_bomb->range) {
+            SDL_RenderCopy(display->renderer, display->text_bomb[2], NULL, &location);
+          }
+          else {
+            SDL_RenderCopyEx(display->renderer, display->text_bomb[3], NULL, &location, 270, 0, SDL_FLIP_NONE);
+          }
+        }
       }
     }
+    cur_bomb = cur_bomb->next_bomb;
   }
 }
 
@@ -159,7 +226,7 @@ int game_state(t_game_data *game_data) {
     game_data->level->characters[2].state == CHARACTER_DEAD &&
     game_data->level->characters[3].state == CHARACTER_DEAD)
     return GAME_IS_WON;
-return GAME_IS_RUNNING;
+  return GAME_IS_RUNNING;
 }
 
 int launch_game_SDL() {
@@ -172,10 +239,7 @@ int launch_game_SDL() {
    return -1;
   }
 
-  //game_data->level = generate_level_from_file("./level/testlevel.lvl");
-
-  game_data->level = generate_maze_level(14, 14);
-  //generate_level_random();
+  game_data->level = generate_maze_level(9, 5);
 
   game_data->playable_character = &game_data->level->characters[0];
   t_character *playable_character = game_data->playable_character;

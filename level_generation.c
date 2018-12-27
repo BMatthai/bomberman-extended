@@ -104,9 +104,9 @@
 //
 //    level->terrain = empty_level;
 //
-//    level->bonus = generate_empty_layer(level->lines, level->columns);
+//    level->bonus = generate_empty_layer(level->columns, level->lines);
 //
-//    level->bomb = generate_empty_layer(level->lines, level->columns);
+//    level->bomb = generate_empty_layer(level->columns, level->lines);
 //
 //    level->number_characters = count_characters(level);
 //    level->characters = get_level_characters(level);
@@ -114,7 +114,7 @@
 //   // level->bonus = generate_empty_layer(40, 64);
 //   //
 //   //
-//   // level->bomb = generate_empty_layer(level->lines, level->columns);
+//   // level->bomb = generate_empty_layer(level->columns, level->lines);
 //   // level->number_characters = 4;
 //   //level->characters = get_level_characters(level);
 //
@@ -136,9 +136,9 @@
 //
 //   level->lines = get_one_dim(fd);
 //   level->columns = get_one_dim(fd);
-//   level->terrain = get_level_layer_raw(fd, level->lines, level->columns);
-//   level->bonus = get_level_layer_raw(fd, level->lines, level->columns);
-//   level->bomb = generate_empty_layer(level->lines, level->columns);
+//   level->terrain = get_level_layer_raw(fd, level->columns, level->lines);
+//   level->bonus = get_level_layer_raw(fd, level->columns, level->lines);
+//   level->bomb = generate_empty_layer(level->columns, level->lines);
 //   level->number_characters = count_characters(level);
 //   level->characters = get_level_characters(level);
 //

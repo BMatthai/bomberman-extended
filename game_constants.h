@@ -83,4 +83,7 @@
 #define TIME_TO_REPLAY_IA 200 //Default 200
 #define TIME_TO_REDISPLAY 40 //Default 50
 
+#define PROBA_EMPTY 00
+#define PROBA_DESTRUCTIBLE 00
+
 #define PATH_LEVEL = "./level/"
