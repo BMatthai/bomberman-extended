@@ -135,6 +135,8 @@ int is_tile_free_bomb_blast(t_level *level, int x, int y) {
     return NO;
   if (is_tile_bomb_planted(level, x, y))
     return NO;
+  if (is_tile_defined(level, x, y) == NO)
+    return NO;
   return YES;
 }
 

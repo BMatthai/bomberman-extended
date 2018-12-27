@@ -58,8 +58,6 @@ void set_exploding_routine(t_level *level, t_bomb *bomb) {
   }
 }
 
-
-
 int is_in_bomb_range(t_level *level, t_bomb *bomb, int position_x, int position_y) {
   int bomb_position_x = bomb->position_x;
   int bomb_position_y = bomb->position_y;
@@ -91,7 +89,6 @@ int is_in_bomb_range(t_level *level, t_bomb *bomb, int position_x, int position_
     i++;
   }
   return IS_SAFE;
-
 }
 
 int is_position_in_any_bomb_range(t_level *level, int position_x, int position_y) {
@@ -125,7 +122,7 @@ void explode_bomb(t_level *level, t_bomb *bomb) {
   int i;
   int last_hitted_is_free;
 
-  for (i = 1;i <= bomb->range && (last_hitted_is_free = is_tile_free_bomb_blast(level, bomb_position_x, bomb_position_y - i)); ++i) {
+  for (i = 1; i <= bomb->range && (last_hitted_is_free = is_tile_free_bomb_blast(level, bomb_position_x, bomb_position_y - i)); i++) {
     level->bomb[bomb_position_x][bomb_position_y - i] = '^';
   }
   if (last_hitted_is_free == NO)
@@ -133,21 +130,21 @@ void explode_bomb(t_level *level, t_bomb *bomb) {
   else
     damage_tile(level, bomb_position_x, bomb_position_y - i + 1);
 
-  for (i = 1;i <= bomb->range && (last_hitted_is_free = is_tile_free_bomb_blast(level, bomb_position_x, bomb_position_y + i)); i++) {
+  for (i = 1; i <= bomb->range && (last_hitted_is_free = is_tile_free_bomb_blast(level, bomb_position_x, bomb_position_y + i)); i++) {
     level->bomb[bomb_position_x][bomb_position_y + i] = 'v';
   }
   if (last_hitted_is_free == NO)
     damage_tile(level, bomb_position_x, bomb_position_y + i);
   else
     damage_tile(level, bomb_position_x, bomb_position_y + i - 1);
-  for (i = 1;i <= bomb->range && (last_hitted_is_free = is_tile_free_bomb_blast(level, bomb_position_x - i, bomb_position_y)); i++) {
+  for (i = 1; i <= bomb->range && (last_hitted_is_free = is_tile_free_bomb_blast(level, bomb_position_x - i, bomb_position_y)); i++) {
     level->bomb[bomb_position_x - i][bomb_position_y] = '<';
   }
   if (last_hitted_is_free == NO)
     damage_tile(level, bomb_position_x - i, bomb_position_y);
   else
     damage_tile(level, bomb_position_x - i + 1, bomb_position_y);
-  for (i = 1;i <= bomb->range && (last_hitted_is_free = is_tile_free_bomb_blast(level, bomb_position_x + i, bomb_position_y)); i++) {
+  for (i = 1; i <= bomb->range && (last_hitted_is_free = is_tile_free_bomb_blast(level, bomb_position_x + i, bomb_position_y)); i++) {
     level->bomb[bomb_position_x + i][bomb_position_y] = '>';
   }
   if (last_hitted_is_free == NO)
