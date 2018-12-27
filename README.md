@@ -10,9 +10,12 @@ Projet de bomberman en ASCII !!! C'était plutôt stylé même si l'interface pa
 - [x] Explosion en chaîne des bombes
 - [x] Ajouter création de map aléatoires en se basant sur l'algorithme de Kruskal.
 - [x] Implémenter un nouvel affichage en utilisant SDL __(A améliorer en continu)__
-- [ ] Implémenter réseau __(WIP Bastien)__
-- [ ] Créer le menu de jeu __(WIP Bastien)__
+
+- [ ] Faire en sorte que ça compile avec SDL sous Linux et Windows
 - [ ] Amélioration du Makefile : factoriser le fichier. Séparer les fichiers .o .h et .c dans des dossiers build, inc et src.
+
+- [ ] Implémenter réseau 
+- [ ] Créer le menu de jeu 
 - [ ] Créer une boucle de jeu qui ne dépend pas du CPU
 
 - [ ] ~~Vérifier le retours des mallocs et gérer les erreurs~~ __(Pas prio)__
