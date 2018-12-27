@@ -289,7 +289,7 @@ int launch_game_SDL() {
    return -1;
   }
 
-  game_data->level = generate_maze_level(64, 4);
+  game_data->level = generate_maze_level(21, 21);
 
   game_data->playable_character = &game_data->level->characters[0];
   t_character *playable_character = game_data->playable_character;
