@@ -35,11 +35,26 @@
 #include <termios.h>
 #include <stdlib.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+
 
 t_display *init_display(t_level *level) {
   t_display *display;
 
   SDL_Init(SDL_INIT_VIDEO);
+
+  // *police = NULL; //initialisation de la police
+  //TTF_Init(); //initialisation de ttf
+  // police = TTF_OpenFont("ta_police.ttf", 15); //déclare la police
+  // TTF_SetFontStyle(police, TTF_STYLE_BOLD); //On gère la police
+  // SDL_Color couleurBlanc = {255, 255, 255}; //La couleur
+  // SDL_Surface *texte = {NULL}; //la surface de la police
+  // SDL_Rect position_texte = {NULL}; //La position de la police
+  // texte = TTF_RenderText_Solid(police, "Hello", couleurBlanc); //on dit le texte
+  // SDL_BlitSurface(texte, NULL, ecran, &position_texte); // On blite la surface
+  // SDL_FreeSurface(texte); //libère la surface du texte
+  // TTF_CloseFont(police); //libère la police
+  // TTF_Quit(); //on quitte sdl_ttf
 
   SDL_Window *window = SDL_CreateWindow("Bomberman",
       SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, STANDARD_WIN_WIDTH, STANDARD_WIN_HEIGHT, 0);
@@ -137,6 +152,34 @@ void display_characters(t_level *level, t_display *display) {
     SDL_RenderCopy(display->renderer, display->text_character[i], NULL, &location);
   }
 }
+
+void display_misc(t_level *level, t_display *display) {
+
+  TTF_Font *font = NULL;
+
+  font = TTF_OpenFont("Arial.ttf", 50); //this opens a font style and sets a size
+
+  SDL_Color White = {255, 34, 34};  // this is the color in rgb format, maxing out all would give you the color white, and it will be your text's color
+
+  SDL_Surface* surfaceMessage = TTF_RenderText_Solid(font, "put your text here", White); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
+
+  SDL_Texture* Message = SDL_CreateTextureFromSurface(display->renderer, surfaceMessage); //now you can convert it into a texture
+
+  SDL_Rect Message_rect; //create a rect
+  Message_rect.x = 0;  //controls the rect's x coordinate
+  Message_rect.y = 0; // controls the rect's y coordinte
+  Message_rect.w = 100; // controls the width of the rect
+  Message_rect.h = 100; // controls the height of the rect
+
+  // Mind you that (0,0) is on the top left of the window/screen, think a rect as the text's box, that way it would be very simple to understance
+
+  // Now since it's a texture, you have to put RenderCopy in your game loop area, the area where the whole code executes
+
+ SDL_RenderCopy(display->renderer, Message, NULL, &Message_rect); //you put the renderer's name first, the Message, the crop size(you can ignore this if you don't want to dabble with cropping), and the rect which is the size and coordinate of your texture
+
+  // Don't forget too free your surface and texture
+}
+
 
 void display_bombs(t_level *level, t_display *display) {
   SDL_Rect location;
@@ -239,7 +282,7 @@ int launch_game_SDL() {
    return -1;
   }
 
-  game_data->level = generate_maze_level(9, 5);
+  game_data->level = generate_maze_level(40, 40);
 
   game_data->playable_character = &game_data->level->characters[0];
   t_character *playable_character = game_data->playable_character;
@@ -255,6 +298,7 @@ int launch_game_SDL() {
   int time_to_reload = get_time();
 
   t_display *display = init_display(level);
+
 
   while (is_running)
   {
@@ -280,9 +324,10 @@ int launch_game_SDL() {
     }
 
     SDL_RenderClear(display->renderer);
-    display_map(level, display);
-    display_characters(level, display);
-    display_bombs(level, display);
+    // display_map(level, display);
+    // display_characters(level, display);
+    // display_bombs(level, display);
+    display_misc(level, display);
     SDL_RenderPresent(display->renderer);
 
     check_bombs_timer(level);
