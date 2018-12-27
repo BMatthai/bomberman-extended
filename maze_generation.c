@@ -126,8 +126,8 @@ t_character *get_level_characters(t_level *level) {
   int y_cur;
 
   for (int i = 0; i < number_characters; i++) {
-    x_cur = cells[i] / width;
-    y_cur = cells[i] % width;
+    y_cur = cells[i] / width;
+    x_cur = cells[i] % width;
     characters[i] = create_character(TILE_WITH_PLAYER_A + i, x_cur, y_cur);
   }
   return characters;
@@ -184,7 +184,7 @@ void list_elt_of_set(t_set *set) {
   cur_elt = set->first;
 
   while(cur_elt != NULL) {
-    printf("%d - ",cur_elt->value);
+    // printf("%d - ",cur_elt->value);
 
     cur_elt = cur_elt->next_elt;
   }
@@ -197,9 +197,9 @@ void list_all_sets(t_set *sets) {
   t_set *cur_set = NULL;
   int i = 0;
   cur_set = sets;
-  printf("Liste des sets :\n");
+  // printf("Liste des sets :\n");
   while (cur_set != NULL) {
-    printf("    Nouveau set :\n");
+    // printf("    Nouveau set :\n");
     list_elt_of_set(cur_set);
     cur_set = cur_set->next_set;
 
@@ -301,7 +301,7 @@ void fill_maze_default(int *cells, char **maze, int width, int height) {
 
   for (int i = 0; i < height; i ++) {
     for (int j = 0; j < width; j ++) {
-      maze[j][i] = '2';
+      maze[j][i] = '1';
 
     }
   }
@@ -455,7 +455,7 @@ t_set *set_from_value(t_set *sets, int value, int width, int height) {
   cur_set = sets;
 
   t_element *first = NULL;
-  printf("On veut la valeur : %d\n", value);
+  // printf("On veut la valeur : %d\n", value);
   while (cur_set != NULL) {
 
     cur_elt = get_head(cur_set);
