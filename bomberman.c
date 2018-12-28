@@ -75,10 +75,12 @@ void display_menu(t_display *display, int selected) {
 
 }
 
-void go_to_selected(selected) {
+void go_to_selected(t_display *display, int selected) {
   if (selected == MENU_MONOPLAYER) {
 
     t_game_settings *game_settings = NULL;
+
+    game_settings = malloc(sizeof(t_game_settings));
 
     int width = (rand() % (64 - 4 + 1)) + 4;
     int height = (rand() % (48 - 4 + 1)) + 4;
@@ -90,7 +92,7 @@ void go_to_selected(selected) {
     game_settings->proba_destr_wall = proba_destr_wall;
     game_settings->proba_empty = proba_empty;
 
-    launch_game_SDL(game_settings);
+    launch_game(display, game_settings);
   }
 }
 
@@ -146,7 +148,7 @@ int main(int argc, char **argv) {
             {
                 case SDLK_UP:    selected -= 1; break;
                 case SDLK_DOWN:  selected += 1; break;
-                case SDLK_RETURN: go_to_selected(selected); break;
+                case SDLK_RETURN: go_to_selected(display, selected); break;
 
             }
             selected %= 3;

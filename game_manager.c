@@ -63,8 +63,8 @@ t_display *init_display(t_level *level) {
 
   Uint32 render_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 
-  int offset_x = ((STANDARD_WIN_WIDTH / 2) - ((level->columns * STANDARD_TILE_WIDTH) / 2));
-  int offset_y = STANDARD_WIN_HEIGHT - (level->lines * STANDARD_TILE_HEIGHT);
+  int offset_x = ((STANDARD_WIN_WIDTH / 2) - ((level->width * STANDARD_TILE_WIDTH) / 2));
+  int offset_y = STANDARD_WIN_HEIGHT - (level->height * STANDARD_TILE_HEIGHT);
   SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, render_flags);
 
   SDL_Texture **text_terrain = malloc(4 * sizeof(SDL_Texture *));
@@ -120,8 +120,8 @@ void display_map(t_level *level, t_display *display) {
 
   terrain = level->terrain;
 
-  for (int i = 0; i < level->lines; i++) {
-    for (int j = 0; j < level->columns; j++) {
+  for (int i = 0; i < level->height; i++) {
+    for (int j = 0; j < level->width; j++) {
         location.h = STANDARD_TILE_HEIGHT;
         location.w = STANDARD_TILE_WIDTH;
         location.x = STANDARD_TILE_WIDTH * j + display->offset_x;
@@ -274,7 +274,7 @@ int game_state(t_game_data *game_data) {
   return GAME_IS_RUNNING;
 }
 
-int launch_game(t_game_settings *game_settings) {
+int launch_game(t_display *display, t_game_settings *game_settings) {
 
   SDL_Event event;
 
@@ -284,8 +284,8 @@ int launch_game(t_game_settings *game_settings) {
    return -1;
   }
 
-  int columns = game_settings->width;
-  int rows = game_settings->height;
+  int width = game_settings->width;
+  int height = game_settings->height;
 
   game_data->level = generate_maze_level(game_settings);
 
@@ -295,13 +295,10 @@ int launch_game(t_game_settings *game_settings) {
   t_level *level = game_data->level;
 
   int is_running = YES;
-  int offset_x = ((STANDARD_WIN_WIDTH / 2) - ((columns * STANDARD_TILE_WIDTH) / 2));
-  int offset_y = STANDARD_WIN_HEIGHT - (rows * STANDARD_TILE_HEIGHT);
+  int offset_x = ((STANDARD_WIN_WIDTH / 2) - ((width * STANDARD_TILE_WIDTH) / 2));
+  int offset_y = STANDARD_WIN_HEIGHT - (height * STANDARD_TILE_HEIGHT);
 
-  int time_to_reload = get_time();
-
-  t_display *display = init_display(level);
-
+  //t_display *display = init_display(level);
 
   while (is_running)
   {
@@ -345,4 +342,6 @@ int launch_game(t_game_settings *game_settings) {
   SDL_Quit();
 
   return 0;
+}
+return 0;
 }

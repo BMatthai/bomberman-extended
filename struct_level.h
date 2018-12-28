@@ -11,8 +11,8 @@
 
 typedef struct s_level {
     char *level_name;
-    char lines;
-    char columns;
+    char width;
+    char height;
     char **terrain;
     char **bonus;
     char **bomb;

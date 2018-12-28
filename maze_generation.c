@@ -115,8 +115,8 @@ t_character *get_level_characters(t_level *level) {
   int height;
   int width;
 
-  height = level->lines;
-  width = level->columns;
+  height = level->height;
+  width = level->width;
 
   int *cells = list_cells(width, height);
   int nb_cells = count_cells(width, height);
@@ -410,22 +410,23 @@ void remove_wall(char **maze, int width, int height, int value) {
 }
 
 void set_wall_content(char **maze, int wall_index, t_game_settings *settings) {
-  int i;
-  int j;
+  int cur_row;
+  int cur_col;
+  int width = settings->width;
   int proba_destr_wall;
   int proba_empty;
   int rand_number;
 
-  i = wall_index / width;
-  j = wall_index % width;
+  cur_row = wall_index / width;
+  cur_col = wall_index % width;
   proba_destr_wall = settings->proba_destr_wall;
   proba_empty = settings->proba_empty;
   rand_number = (rand() % (100 - 0 + 1));
 
   if (rand_number > proba_empty)
-    maze[j][i] = ' ';
+    maze[cur_col][cur_row] = ' ';
   else if (rand_number > proba_destr_wall)
-    maze[j][i] = '1';
+    maze[cur_col][cur_row] = '1';
 }
 
 int is_a_cell(int value, int width, int height) {
@@ -490,7 +491,7 @@ void dig_walls(char **maze, int *cells, t_game_settings *settings) {
 
   // list_all_sets(sets);
 
-  int is_even;
+  int is_cur_row_even;
   int is_separator;
   int wall_index;
 
@@ -545,16 +546,26 @@ char **generate_maze_layer(t_game_settings *settings) {
   return maze;
 }
 
-char **generate_bomb_layer(int width, int height) {
+char **generate_bomb_layer(t_game_settings *settings) {
   char **maze = NULL;
+  int width;
+  int height;
+
+  width = settings->width;
+  height = settings->height;
 
   maze = generate_empty_layer(width, height);
 
   return maze;
 }
 
-char **generate_bonus_layer(int width, int height) {
+char **generate_bonus_layer(t_game_settings *settings) {
   char **maze = NULL;
+  int width;
+  int height;
+
+  width = settings->width;
+  height = settings->height;
 
   maze = generate_empty_layer(width, height);
 
@@ -569,11 +580,11 @@ t_level *generate_maze_level(t_game_settings *settings) {
     return NULL;
   }
 
-  int width = setting->width;
+  int width = settings->width;
   int height = settings->height;
 
-  level->columns = width;
-  level->lines = height;
+  level->width = width;
+  level->height = height;
 
   level->terrain = generate_maze_layer(settings);
   level->bonus = generate_bomb_layer(settings);

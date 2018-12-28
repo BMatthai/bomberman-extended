@@ -165,9 +165,9 @@ int is_tile_defined(t_level *level, int x, int y) {
     return NO;
   if (y < 0)
     return NO;
-  if (x >= level->columns)
+  if (x >= level->width)
     return NO;
-  if (y >= level->lines)
+  if (y >= level->height)
     return NO;
   return YES;
 }

@@ -71,8 +71,8 @@
 //
 //   int lines = 21;
 //   int columns = 21;
-//   level->lines = lines;
-//   level->columns = columns;
+//   level->height = lines;
+//   level->width = columns;
 //
 //    char **empty_level = generate_empty_layer(lines, columns);
 //    for(int i = 0; i < lines; i++) {
@@ -104,9 +104,9 @@
 //
 //    level->terrain = empty_level;
 //
-//    level->bonus = generate_empty_layer(level->columns, level->lines);
+//    level->bonus = generate_empty_layer(level->width, level->height);
 //
-//    level->bomb = generate_empty_layer(level->columns, level->lines);
+//    level->bomb = generate_empty_layer(level->width, level->height);
 //
 //    level->number_characters = count_characters(level);
 //    level->characters = get_level_characters(level);
@@ -114,7 +114,7 @@
 //   // level->bonus = generate_empty_layer(40, 64);
 //   //
 //   //
-//   // level->bomb = generate_empty_layer(level->columns, level->lines);
+//   // level->bomb = generate_empty_layer(level->width, level->height);
 //   // level->number_characters = 4;
 //   //level->characters = get_level_characters(level);
 //
@@ -134,11 +134,11 @@
 //     return NULL;
 //   }
 //
-//   level->lines = get_one_dim(fd);
-//   level->columns = get_one_dim(fd);
-//   level->terrain = get_level_layer_raw(fd, level->columns, level->lines);
-//   level->bonus = get_level_layer_raw(fd, level->columns, level->lines);
-//   level->bomb = generate_empty_layer(level->columns, level->lines);
+//   level->height = get_one_dim(fd);
+//   level->width = get_one_dim(fd);
+//   level->terrain = get_level_layer_raw(fd, level->width, level->height);
+//   level->bonus = get_level_layer_raw(fd, level->width, level->height);
+//   level->bomb = generate_empty_layer(level->width, level->height);
 //   level->number_characters = count_characters(level);
 //   level->characters = get_level_characters(level);
 //
@@ -173,8 +173,8 @@
 //   int number_characters;
 //
 //   number_characters = 0;
-//   for(i = 0; i < level->lines; i++) {
-//     for(j = 0; j < level->columns; j++) {
+//   for(i = 0; i < level->height; i++) {
+//     for(j = 0; j < level->width; j++) {
 //       if (isAChar(level->terrain[i][j]))
 //         number_characters++;
 //     }
@@ -193,8 +193,8 @@
 //   number_characters = level->number_characters;
 //   characters = malloc(sizeof(t_character) * number_characters);
 //   k = 0;
-//   for(i = 0; i < level->lines; i++) {
-//     for(j = 0; j < level->columns; j++) {
+//   for(i = 0; i < level->height; i++) {
+//     for(j = 0; j < level->width; j++) {
 //       if (isAChar(level->terrain[i][j])) {
 //         characters[k] = create_character(level->terrain[i][j], j, i);
 //         level->terrain[i][j] = ' ';
