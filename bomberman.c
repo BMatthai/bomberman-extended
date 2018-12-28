@@ -4,6 +4,9 @@
 #include "struct_display.h"
 #endif
 
+#include "struct_game_settings.h"
+
+
 #include "game_constants.h"
 #include "game_manager.h"
 
@@ -72,9 +75,22 @@ void display_menu(t_display *display, int selected) {
 
 }
 
-int go_to_selected(selected) {
+void go_to_selected(selected) {
   if (selected == MENU_MONOPLAYER) {
-    launch_game_SDL();
+
+    t_game_settings *game_settings = NULL;
+
+    int width = (rand() % (64 - 4 + 1)) + 4;
+    int height = (rand() % (48 - 4 + 1)) + 4;
+    int proba_destr_wall = (rand() % (100 - 0 + 1)) + 0;
+    int proba_empty = (rand() % (100 - proba_destr_wall + 1)) + proba_destr_wall;
+
+    game_settings->width = width;
+    game_settings->height = height;
+    game_settings->proba_destr_wall = proba_destr_wall;
+    game_settings->proba_empty = proba_empty;
+
+    launch_game_SDL(game_settings);
   }
 }
 

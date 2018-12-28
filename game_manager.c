@@ -13,6 +13,8 @@
 #include "struct_game_data.h"
 #endif
 
+#include "struct_game_settings.h"
+
 #include "game_constants.h"
 #include "game_manager.h"
 // #include "level_generation.h"
@@ -272,7 +274,7 @@ int game_state(t_game_data *game_data) {
   return GAME_IS_RUNNING;
 }
 
-int launch_game(t_game_settings *settings) {
+int launch_game(t_game_settings *game_settings) {
 
   SDL_Event event;
 
@@ -282,18 +284,19 @@ int launch_game(t_game_settings *settings) {
    return -1;
   }
 
-  game_data->level = generate_maze_level(40, 40);
+  int columns = game_settings->width;
+  int rows = game_settings->height;
+
+  game_data->level = generate_maze_level(game_settings);
 
   game_data->playable_character = &game_data->level->characters[0];
   t_character *playable_character = game_data->playable_character;
 
   t_level *level = game_data->level;
-  int lines = level->lines;
-  int columns = level->columns;
 
   int is_running = YES;
   int offset_x = ((STANDARD_WIN_WIDTH / 2) - ((columns * STANDARD_TILE_WIDTH) / 2));
-  int offset_y = STANDARD_WIN_HEIGHT - (lines * STANDARD_TILE_HEIGHT);
+  int offset_y = STANDARD_WIN_HEIGHT - (rows * STANDARD_TILE_HEIGHT);
 
   int time_to_reload = get_time();
 
@@ -302,10 +305,9 @@ int launch_game(t_game_settings *settings) {
 
   while (is_running)
   {
-    SDL_PollEvent(&event);
-
-    switch (event.type)
-    {
+    while (SDL_PollEvent(&event)) {
+      switch (event.type)
+      {
       case SDL_QUIT:
         is_running = NO;
         break;
@@ -324,9 +326,9 @@ int launch_game(t_game_settings *settings) {
     }
 
     SDL_RenderClear(display->renderer);
-    // display_map(level, display);
-    // display_characters(level, display);
-    // display_bombs(level, display);
+    display_map(level, display);
+    display_characters(level, display);
+    display_bombs(level, display);
     // display_misc(level, display);
     SDL_RenderPresent(display->renderer);
 

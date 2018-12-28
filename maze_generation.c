@@ -3,6 +3,8 @@
 #include "struct_level.h"
 #endif
 
+#include "struct_game_settings.h"
+
 #include "character_creation.h"
 #include "game_constants.h"
 
@@ -405,27 +407,24 @@ void remove_wall(char **maze, int width, int height, int value) {
   j = value % width;
 
   maze[j][i] = ' ';
-  // int rand_number = (rand() % (100 - 0 + 1));
-  //
-  // if (rand_number > PROBA_EMPTY)
-  //   maze[j][i] = '0';
-  // else
-  //   maze[j][i] = '0';
 }
 
-void set_wall_content(char **maze, int width, int height, int wall_index) {
+void set_wall_content(char **maze, int wall_index, t_game_settings *settings) {
   int i;
   int j;
+  int proba_destr_wall;
+  int proba_empty;
+  int rand_number;
 
   i = wall_index / width;
   j = wall_index % width;
+  proba_destr_wall = settings->proba_destr_wall;
+  proba_empty = settings->proba_empty;
+  rand_number = (rand() % (100 - 0 + 1));
 
-
-  int rand_number = (rand() % (100 - 0 + 1));
-
-  if (rand_number > PROBA_EMPTY)
-    maze[j][i] = '0';
-  else if (rand_number > PROBA_DESTRUCTIBLE)
+  if (rand_number > proba_empty)
+    maze[j][i] = ' ';
+  else if (rand_number > proba_destr_wall)
     maze[j][i] = '1';
 }
 
@@ -455,7 +454,7 @@ t_set *set_from_value(t_set *sets, int value, int width, int height) {
   cur_set = sets;
 
   t_element *first = NULL;
-  // printf("On veut la valeur : %d\n", value);
+
   while (cur_set != NULL) {
 
     cur_elt = get_head(cur_set);
@@ -474,29 +473,39 @@ t_set *set_from_value(t_set *sets, int value, int width, int height) {
 }
 
 
-void dig_walls(char **maze, int *walls, int *cells, int width, int height) {
+void dig_walls(char **maze, int *cells, t_game_settings *settings) {
+  int nb_walls;
+  int width;
+  int height;
+  int *walls = NULL;
+  t_set *sets = NULL;
 
-  int size = count_walls(width, height);
 
-  t_set *sets = init_sets(cells, width, height);
+  width = settings->width;
+  height = settings->height;
 
-  list_all_sets(sets);
+  walls = list_walls(width, height);
+  nb_walls = count_walls(width, height);
+  sets = init_sets(cells, width, height);
+
+  // list_all_sets(sets);
 
   int is_even;
   int is_separator;
   int wall_index;
 
+  shuffle(walls, nb_walls);
 
-  for (int i = 0; i < size; i++) {
+  for (int i = 0; i < nb_walls; i++) {
     wall_index = walls[i];
-    is_even = ((wall_index / width) % 2) == 1 ? NO : YES;
+    is_cur_row_even = ((wall_index / width) % 2) == 1 ? NO : YES;
     t_set *set1 = NULL;
     t_set *set2 = NULL;
 
     int cell_side_A;
     int cell_side_B;
 
-    if (is_even == YES) {
+    if (is_cur_row_even == YES) {
       cell_side_A = wall_index - width;
       cell_side_B = wall_index + width;
 
@@ -514,38 +523,25 @@ void dig_walls(char **maze, int *walls, int *cells, int width, int height) {
         merge_sets(set1, set2);
       }
       else {
-        //set_wall_content(maze, width, height, wall_index);
+        set_wall_content(maze, wall_index, settings);
       }
     }
     else {
-      //printf("dqzjkjidqz\n");
     }
   }
 }
 
-char **generate_maze_layer(int width, int height) {
+char **generate_maze_layer(t_game_settings *settings) {
   char **maze = NULL;
-
-
   int *cells = NULL;
+  int width = settings->width;
+  int height = settings->height;
+
   cells = list_cells(width, height);
-
-  int *walls = NULL;
-  walls = list_walls(width, height);
-
-  int nb_walls;
-  nb_walls = count_walls(width, height);
-
-  // for (int i = 0; i < nb_walls; i++) {
-  //   printf("%d\n", walls[i]);
-  // }
 
   maze = generate_empty_layer(width, height);
   fill_maze_default(cells, maze, width, height);
-
-  shuffle(walls, nb_walls);
-
-  dig_walls(maze, walls, cells, width, height);
+  dig_walls(maze, cells, settings);
   return maze;
 }
 
@@ -565,7 +561,7 @@ char **generate_bonus_layer(int width, int height) {
   return maze;
 }
 
-t_level *generate_maze_level(int width, int height) {
+t_level *generate_maze_level(t_game_settings *settings) {
   t_level *level;
   level = malloc(sizeof(t_level));
 
@@ -573,12 +569,15 @@ t_level *generate_maze_level(int width, int height) {
     return NULL;
   }
 
+  int width = setting->width;
+  int height = settings->height;
+
   level->columns = width;
   level->lines = height;
 
-  level->terrain = generate_maze_layer(width, height);
-  level->bonus = generate_bomb_layer(width, height);
-  level->bomb = generate_bonus_layer(width, height);
+  level->terrain = generate_maze_layer(settings);
+  level->bonus = generate_bomb_layer(settings);
+  level->bomb = generate_bonus_layer(settings);
   level->number_characters = 4;
   level->characters = get_level_characters(level);
 
