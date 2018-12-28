@@ -272,7 +272,7 @@ int game_state(t_game_data *game_data) {
   return GAME_IS_RUNNING;
 }
 
-int launch_game_SDL() {
+int launch_game(t_game_settings *settings) {
 
   SDL_Event event;
 

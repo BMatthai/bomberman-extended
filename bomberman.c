@@ -45,19 +45,37 @@ t_display *init_window() {
   return display;
 }
 
-void display_menu(TTF_Font *font, t_display *display) {
+void display_menu(t_display *display, int selected) {
 
   SDL_Rect location;
   int width = 400;
   int height = 100;
   for (int i = 0; i < 3; i++) {
-    location.x = (STANDARD_WIN_WIDTH / 2) - (width / 2);  //controls the rect's x coordinate
-    location.y = (STANDARD_WIN_HEIGHT / 2) - ((3 * height) / 2) + (i * height); // controls the rect's y coordinte
-    location.w = width; // controls the width of the rect
-    location.h = height; // controls the height of the rect
+    location.x = (STANDARD_WIN_WIDTH / 2) - (width / 2);
+    location.y = (STANDARD_WIN_HEIGHT / 2) - ((3 * height) / 2) + (i * height);
+    location.w = width;
+    location.h = height;
     SDL_RenderCopy(display->renderer, display->text_menu[i], NULL, &location);
   }
 
+  location.x = (STANDARD_WIN_WIDTH / 2) - (width / 2) - 100;
+  location.y = (STANDARD_WIN_HEIGHT / 2) - ((3 * height) / 2) + (selected * height);
+  location.w = height;
+  location.h = height;
+  SDL_RenderCopy(display->renderer, display->text_menu[3], NULL, &location);
+
+  location.x = (STANDARD_WIN_WIDTH / 2) + (width / 2) + 100;
+  location.y = (STANDARD_WIN_HEIGHT / 2) - ((3 * height) / 2) + (selected * height);
+  location.w = height;
+  location.h = height;
+  SDL_RenderCopy(display->renderer, display->text_menu[4], NULL, &location);
+
+}
+
+int go_to_selected(selected) {
+  if (selected == MENU_MONOPLAYER) {
+    launch_game_SDL();
+  }
 }
 
 int main(int argc, char **argv) {
@@ -68,43 +86,62 @@ int main(int argc, char **argv) {
   TTF_Init();
   TTF_Font *font = NULL;
 
-  font = TTF_OpenFont("./resources/fonts/OpenSans-Light.ttf", 50); //this opens a font style and sets a size
+  font = TTF_OpenFont("./resources/fonts/OpenSans-Light.ttf", 100); //this opens a font style and sets a size
 
   if(!font) {
     printf("TTF_OpenFont: %s\n", TTF_GetError());
    // handle error
 }
 
-  SDL_Color white = {144, 144, 144};  // this is the color in rgb format, maxing out all would give you the color white, and it will be your text's color
+  display->font = font;
+
+  SDL_Color white = {255, 255, 255};
 
   SDL_Surface *surfaceMono = TTF_RenderText_Solid(font, "Monojoueur", white); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
   SDL_Surface *surfaceMulti = TTF_RenderText_Solid(font, "Multijoueur", white); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
   SDL_Surface *surfaceQuit = TTF_RenderText_Solid(font, "Quitter", white); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
+  SDL_Surface *surfaceSelectL = TTF_RenderText_Solid(font, ">", white); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
+  SDL_Surface *surfaceSelectR = TTF_RenderText_Solid(font, "<", white); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
 
-  SDL_Texture *textMenu[3];
+  SDL_Texture *textMenu[5];
 
   textMenu[0] = SDL_CreateTextureFromSurface(display->renderer, surfaceMono); //now you can convert it into a texture
   textMenu[1] = SDL_CreateTextureFromSurface(display->renderer, surfaceMulti); //now you can convert it into a texture
   textMenu[2] = SDL_CreateTextureFromSurface(display->renderer, surfaceQuit); //now you can convert it into a texture
+  textMenu[3] = SDL_CreateTextureFromSurface(display->renderer, surfaceSelectL); //now you can convert it into a texture
+  textMenu[4] = SDL_CreateTextureFromSurface(display->renderer, surfaceSelectR); //now you can convert it into a texture
 
   display->text_menu = textMenu;
 
 
   int is_running = YES;
   SDL_Event event;
+  int selected = 0;
 
   while (is_running) {
-      SDL_PollEvent(&event);
+      while (SDL_PollEvent(&event)) {
+        switch (event.type)
+        {
+          case SDL_QUIT:
+            is_running = NO;
+            break;
+          case SDL_KEYDOWN:
+            switch (event.key.keysym.sym)
+            {
+                case SDLK_UP:    selected -= 1; break;
+                case SDLK_DOWN:  selected += 1; break;
+                case SDLK_RETURN: go_to_selected(selected); break;
 
-      switch (event.type)
-      {
-        case SDL_QUIT:
-          is_running = NO;
-          break;
+            }
+            selected %= 3;
+            break;
+
+        }
       }
 
+
       SDL_RenderClear(display->renderer);
-      display_menu(font, display);
+      display_menu(display, selected);
 
       SDL_RenderPresent(display->renderer);
 

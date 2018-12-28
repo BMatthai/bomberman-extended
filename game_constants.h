@@ -86,4 +86,8 @@
 #define PROBA_EMPTY 00
 #define PROBA_DESTRUCTIBLE 00
 
+#define MENU_MONOPLAYER 0
+#define MENU_MULTIPLAYER 1
+#define MENU_QUIT 2
+
 #define PATH_LEVEL = "./level/"
