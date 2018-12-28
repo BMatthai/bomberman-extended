@@ -287,6 +287,7 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
   int width = game_settings->width;
   int height = game_settings->height;
 
+
   game_data->level = generate_maze_level(game_settings);
 
   game_data->playable_character = &game_data->level->characters[0];
@@ -299,40 +300,40 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
   int offset_y = STANDARD_WIN_HEIGHT - (height * STANDARD_TILE_HEIGHT);
 
   //t_display *display = init_display(level);
-
   while (is_running)
   {
     while (SDL_PollEvent(&event)) {
-      switch (event.type)
-      {
-      case SDL_QUIT:
-        is_running = NO;
-        break;
-      case SDL_KEYDOWN:
-          switch (event.key.keysym.sym)
-          {
-              case SDLK_LEFT:  action(level, playable_character, ACTION_LEFT); break;
-              case SDLK_RIGHT: action(level, playable_character, ACTION_RIGHT); break;
-              case SDLK_UP:    action(level, playable_character, ACTION_UP); break;
-              case SDLK_DOWN:  action(level, playable_character, ACTION_DOWN); break;
-              case SDLK_c:  action(level, playable_character, ACTION_BOMB); break;
-              case SDLK_ESCAPE: is_running = NO; break;
-          }
-        break;
-      case SDL_KEYUP: adjust_char(level, playable_character); break;
+      switch (event.type) {
+        case SDL_QUIT:
+          is_running = NO;
+          break;
+        case SDL_KEYDOWN:
+            switch (event.key.keysym.sym)
+            {
+                case SDLK_LEFT:  action(level, playable_character, ACTION_LEFT); break;
+                case SDLK_RIGHT: action(level, playable_character, ACTION_RIGHT); break;
+                case SDLK_UP:    action(level, playable_character, ACTION_UP); break;
+                case SDLK_DOWN:  action(level, playable_character, ACTION_DOWN); break;
+                case SDLK_c:  action(level, playable_character, ACTION_BOMB); break;
+                case SDLK_ESCAPE: is_running = NO; break;
+            }
+          break;
+        case SDL_KEYUP: adjust_char(level, playable_character); break;
+      }
+
+      SDL_RenderClear(display->renderer);
+      //  display_map(level, display);
+
+      //LES DISPLAY DECLENCHENT SEGFAULT, VOIR POURQUOI !
+      display_characters(level, display);
+
+      display_bombs(level, display);
+
+      SDL_RenderPresent(display->renderer);
+
+      check_bombs_timer(level);
     }
-
-    SDL_RenderClear(display->renderer);
-    display_map(level, display);
-    display_characters(level, display);
-    display_bombs(level, display);
-    // display_misc(level, display);
-    SDL_RenderPresent(display->renderer);
-
-    check_bombs_timer(level);
-
   }
-
   SDL_DestroyTexture(display->text_terrain[0]);
   SDL_DestroyTexture(display->text_terrain[1]);
 
@@ -342,6 +343,4 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
   SDL_Quit();
 
   return 0;
-}
-return 0;
 }

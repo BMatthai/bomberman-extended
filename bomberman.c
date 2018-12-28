@@ -148,12 +148,14 @@ int main(int argc, char **argv) {
             {
                 case SDLK_UP:    selected -= 1; break;
                 case SDLK_DOWN:  selected += 1; break;
-                case SDLK_RETURN: go_to_selected(display, selected); break;
-
+                case SDLK_RETURN: {
+                  is_running = NO;
+                  go_to_selected(display, selected);
+                  break;
+                }
             }
             selected %= 3;
             break;
-
         }
       }
 
