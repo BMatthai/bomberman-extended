@@ -1,18 +1,123 @@
 
+#ifndef T_DISPLAY
+#define T_DISPLAY
+#include "struct_display.h"
+#endif
+
 #include "game_constants.h"
 #include "game_manager.h"
 
 #include <string.h>
 #include <signal.h>
+
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
+t_display *init_window() {
+  t_display *display;
 
+  SDL_Init(SDL_INIT_VIDEO);
 
+  // *police = NULL; //initialisation de la police
+  // TTF_Init(); //initialisation de ttf
+  // police = TTF_OpenFont("Sans.ttf", 15); //déclare la police
+  // TTF_SetFontStyle(police, TTF_STYLE_BOLD); //On gère la police
+  // SDL_Color couleurBlanc = {255, 255, 255}; //La couleur
+  // SDL_Surface *texte = {NULL}; //la surface de la police
+  // SDL_Rect position_texte = {NULL}; //La position de la police
+  // texte = TTF_RenderText_Solid(police, "Hello", couleurBlanc); //on dit le texte
+  // SDL_BlitSurface(texte, NULL, ecran, &position_texte); // On blite la surface
+  // SDL_FreeSurface(texte); //libère la surface du texte
+  // TTF_CloseFont(police); //libère la police
+  // TTF_Quit(); //on quitte sdl_ttf
+
+  SDL_Window *window = SDL_CreateWindow("Bomberman",
+      SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, STANDARD_WIN_WIDTH, STANDARD_WIN_HEIGHT, 0);
+
+  Uint32 render_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
+
+  SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, render_flags);
+
+  display = malloc(sizeof(t_display));
+  display->window = window;
+  display->renderer = renderer;
+
+  return display;
+}
+
+void display_menu(TTF_Font *font, t_display *display) {
+
+  SDL_Rect location;
+  int width = 400;
+  int height = 100;
+  for (int i = 0; i < 3; i++) {
+    location.x = (STANDARD_WIN_WIDTH / 2) - (width / 2);  //controls the rect's x coordinate
+    location.y = (STANDARD_WIN_HEIGHT / 2) - ((3 * height) / 2) + (i * height); // controls the rect's y coordinte
+    location.w = width; // controls the width of the rect
+    location.h = height; // controls the height of the rect
+    SDL_RenderCopy(display->renderer, display->text_menu[i], NULL, &location);
+  }
+
+}
 
 int main(int argc, char **argv) {
 
+  t_display *display = NULL;
+  display = init_window();
 
-launch_game_SDL();
+  TTF_Init();
+  TTF_Font *font = NULL;
+
+  font = TTF_OpenFont("./resources/fonts/OpenSans-Light.ttf", 50); //this opens a font style and sets a size
+
+  if(!font) {
+    printf("TTF_OpenFont: %s\n", TTF_GetError());
+   // handle error
+}
+
+  SDL_Color white = {144, 144, 144};  // this is the color in rgb format, maxing out all would give you the color white, and it will be your text's color
+
+  SDL_Surface *surfaceMono = TTF_RenderText_Solid(font, "Monojoueur", white); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
+  SDL_Surface *surfaceMulti = TTF_RenderText_Solid(font, "Multijoueur", white); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
+  SDL_Surface *surfaceQuit = TTF_RenderText_Solid(font, "Quitter", white); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
+
+  SDL_Texture *textMenu[3];
+
+  textMenu[0] = SDL_CreateTextureFromSurface(display->renderer, surfaceMono); //now you can convert it into a texture
+  textMenu[1] = SDL_CreateTextureFromSurface(display->renderer, surfaceMulti); //now you can convert it into a texture
+  textMenu[2] = SDL_CreateTextureFromSurface(display->renderer, surfaceQuit); //now you can convert it into a texture
+
+  display->text_menu = textMenu;
+
+
+  int is_running = YES;
+  SDL_Event event;
+
+  while (is_running) {
+      SDL_PollEvent(&event);
+
+      switch (event.type)
+      {
+        case SDL_QUIT:
+          is_running = NO;
+          break;
+      }
+
+      SDL_RenderClear(display->renderer);
+      display_menu(font, display);
+
+      SDL_RenderPresent(display->renderer);
+
+  }
+
+  SDL_RenderPresent(display->renderer);
+
+
+  SDL_DestroyWindow(display->window);
+  SDL_Quit();
+  return 0;
+
+//launch_game_SDL();
 
   //
   // SDL_Window *window;                    // Declare a pointer

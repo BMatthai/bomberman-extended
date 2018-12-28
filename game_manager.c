@@ -327,7 +327,7 @@ int launch_game_SDL() {
     // display_map(level, display);
     // display_characters(level, display);
     // display_bombs(level, display);
-    display_misc(level, display);
+    // display_misc(level, display);
     SDL_RenderPresent(display->renderer);
 
     check_bombs_timer(level);
