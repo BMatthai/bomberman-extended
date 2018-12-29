@@ -17,27 +17,23 @@
 #include <SDL2/SDL_ttf.h>
 
 t_display *init_window() {
-  t_display *display;
 
   SDL_Init(SDL_INIT_VIDEO);
+  TTF_Init();
 
   SDL_Window *window = SDL_CreateWindow("Bomberman",
       SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, STANDARD_WIN_WIDTH, STANDARD_WIN_HEIGHT, 0);
-
   Uint32 render_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 
-  SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, render_flags);
-
-  TTF_Init();
+  SDL_Renderer *renderer = NULL;
   TTF_Font *font = NULL;
 
-  font = TTF_OpenFont("./resources/fonts/OpenSans-Light.ttf", 100); //this opens a font style and sets a size
+  renderer = SDL_CreateRenderer(window, -1, render_flags);
+  font = TTF_OpenFont("./resources/fonts/OpenSans-Light.ttf", 100);
 
   if(!font) {
     printf("TTF_OpenFont: %s\n", TTF_GetError());
-   // handle error
-}
-
+  }
 
   SDL_Color white = {255, 0, 255};
 
@@ -82,11 +78,13 @@ t_display *init_window() {
   text_bomb[2] = SDL_CreateTextureFromSurface(renderer, image_bomb2);
   text_bomb[3] = SDL_CreateTextureFromSurface(renderer, image_bomb3);
 
-  text_menu[0] = SDL_CreateTextureFromSurface(display->renderer, surfaceMono);
-  text_menu[1] = SDL_CreateTextureFromSurface(display->renderer, surfaceMulti);
-  text_menu[2] = SDL_CreateTextureFromSurface(display->renderer, surfaceQuit);
-  text_menu[3] = SDL_CreateTextureFromSurface(display->renderer, surfaceSelectL);
-  text_menu[4] = SDL_CreateTextureFromSurface(display->renderer, surfaceSelectR);
+  text_menu[0] = SDL_CreateTextureFromSurface(renderer, surfaceMono);
+  text_menu[1] = SDL_CreateTextureFromSurface(renderer, surfaceMulti);
+  text_menu[2] = SDL_CreateTextureFromSurface(renderer, surfaceQuit);
+  text_menu[3] = SDL_CreateTextureFromSurface(renderer, surfaceSelectL);
+  text_menu[4] = SDL_CreateTextureFromSurface(renderer, surfaceSelectR);
+
+  t_display *display = NULL;
 
   display = malloc(sizeof(t_display));
   display->window = window;
@@ -96,8 +94,8 @@ t_display *init_window() {
   display->text_character = text_character;
   display->text_menu = text_menu;
   display->font = font;
-  display->offset_x = 0;
-  display->offset_y = 0;
+  // display->offset_x = 0;
+  // display->offset_y = 0;
 
   return display;
 }

@@ -278,11 +278,9 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
       }
 
       SDL_RenderClear(display->renderer);
-      //display_map(level, display);
-
-      // display_characters(level, display);
-      //
-      // display_bombs(level, display);
+      display_map(level, display);
+      display_characters(level, display);
+      //display_bombs(level, display);
 
       SDL_RenderPresent(display->renderer);
       //
