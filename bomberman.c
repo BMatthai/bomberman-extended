@@ -21,19 +21,6 @@ t_display *init_window() {
 
   SDL_Init(SDL_INIT_VIDEO);
 
-  // *police = NULL; //initialisation de la police
-  // TTF_Init(); //initialisation de ttf
-  // police = TTF_OpenFont("Sans.ttf", 15); //déclare la police
-  // TTF_SetFontStyle(police, TTF_STYLE_BOLD); //On gère la police
-  // SDL_Color couleurBlanc = {255, 255, 255}; //La couleur
-  // SDL_Surface *texte = {NULL}; //la surface de la police
-  // SDL_Rect position_texte = {NULL}; //La position de la police
-  // texte = TTF_RenderText_Solid(police, "Hello", couleurBlanc); //on dit le texte
-  // SDL_BlitSurface(texte, NULL, ecran, &position_texte); // On blite la surface
-  // SDL_FreeSurface(texte); //libère la surface du texte
-  // TTF_CloseFont(police); //libère la police
-  // TTF_Quit(); //on quitte sdl_ttf
-
   SDL_Window *window = SDL_CreateWindow("Bomberman",
       SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, STANDARD_WIN_WIDTH, STANDARD_WIN_HEIGHT, 0);
 
@@ -41,9 +28,76 @@ t_display *init_window() {
 
   SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, render_flags);
 
+  TTF_Init();
+  TTF_Font *font = NULL;
+
+  font = TTF_OpenFont("./resources/fonts/OpenSans-Light.ttf", 100); //this opens a font style and sets a size
+
+  if(!font) {
+    printf("TTF_OpenFont: %s\n", TTF_GetError());
+   // handle error
+}
+
+
+  SDL_Color white = {255, 0, 255};
+
+  SDL_Texture **text_terrain = malloc(4 * sizeof(SDL_Texture *));
+  SDL_Texture **text_bomb = malloc(4 * sizeof(SDL_Texture *));
+  SDL_Texture **text_character = malloc(4 * sizeof(SDL_Texture *));
+  SDL_Texture **text_menu = malloc(5 * sizeof(SDL_Texture *));
+
+  SDL_Surface *image_free = SDL_LoadBMP("resources/free.bmp");
+  SDL_Surface *image_wall = SDL_LoadBMP("resources/wall.bmp");
+  SDL_Surface *image_destr = SDL_LoadBMP("resources/destructible.bmp");
+  SDL_Surface *image_misc = SDL_LoadBMP("resources/misc.bmp");
+
+  SDL_Surface *image_char0 = SDL_LoadBMP("resources/char0.bmp");
+  SDL_Surface *image_char1 = SDL_LoadBMP("resources/char1.bmp");
+  SDL_Surface *image_char2 = SDL_LoadBMP("resources/char2.bmp");
+  SDL_Surface *image_char3 = SDL_LoadBMP("resources/char3.bmp");
+
+  SDL_Surface *image_bomb0 = SDL_LoadBMP("resources/bomb0.bmp");
+  SDL_Surface *image_bomb1 = SDL_LoadBMP("resources/bomb1.bmp");
+  SDL_Surface *image_bomb2 = SDL_LoadBMP("resources/bomb2.bmp");
+  SDL_Surface *image_bomb3 = SDL_LoadBMP("resources/bomb2b.bmp");
+
+  SDL_Surface *surfaceMono = TTF_RenderText_Solid(font, "Monojoueur", white);
+  SDL_Surface *surfaceMulti = TTF_RenderText_Solid(font, "Multijoueur", white);
+  SDL_Surface *surfaceQuit = TTF_RenderText_Solid(font, "Quitter", white);
+  SDL_Surface *surfaceSelectL = TTF_RenderText_Solid(font, ">", white);
+  SDL_Surface *surfaceSelectR = TTF_RenderText_Solid(font, "<", white);
+
+  text_terrain[0] = SDL_CreateTextureFromSurface(renderer, image_free);
+  text_terrain[1] = SDL_CreateTextureFromSurface(renderer, image_wall);
+  text_terrain[2] = SDL_CreateTextureFromSurface(renderer, image_destr);
+  text_terrain[3] = SDL_CreateTextureFromSurface(renderer, image_misc);
+
+  text_character[0] = SDL_CreateTextureFromSurface(renderer, image_char0);
+  text_character[1] = SDL_CreateTextureFromSurface(renderer, image_char1);
+  text_character[2] = SDL_CreateTextureFromSurface(renderer, image_char2);
+  text_character[3] = SDL_CreateTextureFromSurface(renderer, image_char3);
+
+  text_bomb[0] = SDL_CreateTextureFromSurface(renderer, image_bomb0);
+  text_bomb[1] = SDL_CreateTextureFromSurface(renderer, image_bomb1);
+  text_bomb[2] = SDL_CreateTextureFromSurface(renderer, image_bomb2);
+  text_bomb[3] = SDL_CreateTextureFromSurface(renderer, image_bomb3);
+
+  text_menu[0] = SDL_CreateTextureFromSurface(display->renderer, surfaceMono);
+  text_menu[1] = SDL_CreateTextureFromSurface(display->renderer, surfaceMulti);
+  text_menu[2] = SDL_CreateTextureFromSurface(display->renderer, surfaceQuit);
+  text_menu[3] = SDL_CreateTextureFromSurface(display->renderer, surfaceSelectL);
+  text_menu[4] = SDL_CreateTextureFromSurface(display->renderer, surfaceSelectR);
+
   display = malloc(sizeof(t_display));
   display->window = window;
   display->renderer = renderer;
+  display->text_bomb = text_bomb;
+  display->text_terrain = text_terrain;
+  display->text_character = text_character;
+  display->text_menu = text_menu;
+  display->font = font;
+  display->offset_x = 0;
+  display->offset_y = 0;
 
   return display;
 }
@@ -75,24 +129,27 @@ void display_menu(t_display *display, int selected) {
 
 }
 
+t_game_settings *random_settings() {
+  t_game_settings *game_settings = NULL;
+
+  game_settings = malloc(sizeof(t_game_settings));
+
+  int width = (rand() % (64 - 4 + 1)) + 4;
+  int height = (rand() % (48 - 4 + 1)) + 4;
+  int proba_destr_wall = (rand() % (100 - 0 + 1)) + 0;
+  int proba_empty = (rand() % (100 - proba_destr_wall + 1)) + proba_destr_wall;
+
+  game_settings->width = width;
+  game_settings->height = height;
+  game_settings->proba_destr_wall = proba_destr_wall;
+  game_settings->proba_empty = proba_empty;
+
+  return game_settings;
+}
+
 void go_to_selected(t_display *display, int selected) {
   if (selected == MENU_MONOPLAYER) {
-
-    t_game_settings *game_settings = NULL;
-
-    game_settings = malloc(sizeof(t_game_settings));
-
-    int width = (rand() % (64 - 4 + 1)) + 4;
-    int height = (rand() % (48 - 4 + 1)) + 4;
-    int proba_destr_wall = (rand() % (100 - 0 + 1)) + 0;
-    int proba_empty = (rand() % (100 - proba_destr_wall + 1)) + proba_destr_wall;
-
-    game_settings->width = width;
-    game_settings->height = height;
-    game_settings->proba_destr_wall = proba_destr_wall;
-    game_settings->proba_empty = proba_empty;
-
-    launch_game(display, game_settings);
+    launch_game(display, random_settings());
   }
 }
 
@@ -100,36 +157,6 @@ int main(int argc, char **argv) {
 
   t_display *display = NULL;
   display = init_window();
-
-  TTF_Init();
-  TTF_Font *font = NULL;
-
-  font = TTF_OpenFont("./resources/fonts/OpenSans-Light.ttf", 100); //this opens a font style and sets a size
-
-  if(!font) {
-    printf("TTF_OpenFont: %s\n", TTF_GetError());
-   // handle error
-}
-
-  display->font = font;
-
-  SDL_Color white = {255, 255, 255};
-
-  SDL_Surface *surfaceMono = TTF_RenderText_Solid(font, "Monojoueur", white); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
-  SDL_Surface *surfaceMulti = TTF_RenderText_Solid(font, "Multijoueur", white); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
-  SDL_Surface *surfaceQuit = TTF_RenderText_Solid(font, "Quitter", white); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
-  SDL_Surface *surfaceSelectL = TTF_RenderText_Solid(font, ">", white); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
-  SDL_Surface *surfaceSelectR = TTF_RenderText_Solid(font, "<", white); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
-
-  SDL_Texture *textMenu[5];
-
-  textMenu[0] = SDL_CreateTextureFromSurface(display->renderer, surfaceMono); //now you can convert it into a texture
-  textMenu[1] = SDL_CreateTextureFromSurface(display->renderer, surfaceMulti); //now you can convert it into a texture
-  textMenu[2] = SDL_CreateTextureFromSurface(display->renderer, surfaceQuit); //now you can convert it into a texture
-  textMenu[3] = SDL_CreateTextureFromSurface(display->renderer, surfaceSelectL); //now you can convert it into a texture
-  textMenu[4] = SDL_CreateTextureFromSurface(display->renderer, surfaceSelectR); //now you can convert it into a texture
-
-  display->text_menu = textMenu;
 
 
   int is_running = YES;
@@ -162,12 +189,11 @@ int main(int argc, char **argv) {
 
       SDL_RenderClear(display->renderer);
       display_menu(display, selected);
-
       SDL_RenderPresent(display->renderer);
 
   }
 
-  SDL_RenderPresent(display->renderer);
+  //SDL_RenderPresent(display->renderer);
 
 
   SDL_DestroyWindow(display->window);

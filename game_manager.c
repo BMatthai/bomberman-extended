@@ -40,78 +40,29 @@
 #include <SDL2/SDL_ttf.h>
 
 
-t_display *init_display(t_level *level) {
-  t_display *display;
-
-  SDL_Init(SDL_INIT_VIDEO);
-
-  // *police = NULL; //initialisation de la police
-  //TTF_Init(); //initialisation de ttf
-  // police = TTF_OpenFont("ta_police.ttf", 15); //déclare la police
-  // TTF_SetFontStyle(police, TTF_STYLE_BOLD); //On gère la police
-  // SDL_Color couleurBlanc = {255, 255, 255}; //La couleur
-  // SDL_Surface *texte = {NULL}; //la surface de la police
-  // SDL_Rect position_texte = {NULL}; //La position de la police
-  // texte = TTF_RenderText_Solid(police, "Hello", couleurBlanc); //on dit le texte
-  // SDL_BlitSurface(texte, NULL, ecran, &position_texte); // On blite la surface
-  // SDL_FreeSurface(texte); //libère la surface du texte
-  // TTF_CloseFont(police); //libère la police
-  // TTF_Quit(); //on quitte sdl_ttf
-
-  SDL_Window *window = SDL_CreateWindow("Bomberman",
-      SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, STANDARD_WIN_WIDTH, STANDARD_WIN_HEIGHT, 0);
-
-  Uint32 render_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
-
-  int offset_x = ((STANDARD_WIN_WIDTH / 2) - ((level->width * STANDARD_TILE_WIDTH) / 2));
-  int offset_y = STANDARD_WIN_HEIGHT - (level->height * STANDARD_TILE_HEIGHT);
-  SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, render_flags);
-
-  SDL_Texture **text_terrain = malloc(4 * sizeof(SDL_Texture *));
-  SDL_Texture **text_bomb = malloc(4 * sizeof(SDL_Texture *));
-  SDL_Texture **text_character = malloc(1 * sizeof(SDL_Texture *));
-
-  SDL_Surface *image_free = SDL_LoadBMP("resources/free.bmp");
-  SDL_Surface *image_wall = SDL_LoadBMP("resources/wall.bmp");
-  SDL_Surface *image_destr = SDL_LoadBMP("resources/destructible.bmp");
-  SDL_Surface *image_misc = SDL_LoadBMP("resources/misc.bmp");
-
-  SDL_Surface *image_char0 = SDL_LoadBMP("resources/char0.bmp");
-  SDL_Surface *image_char1 = SDL_LoadBMP("resources/char1.bmp");
-  SDL_Surface *image_char2 = SDL_LoadBMP("resources/char2.bmp");
-  SDL_Surface *image_char3 = SDL_LoadBMP("resources/char3.bmp");
-
-  SDL_Surface *image_bomb0 = SDL_LoadBMP("resources/bomb0.bmp");
-  SDL_Surface *image_bomb1 = SDL_LoadBMP("resources/bomb1.bmp");
-  SDL_Surface *image_bomb2 = SDL_LoadBMP("resources/bomb2.bmp");
-  SDL_Surface *image_bomb3 = SDL_LoadBMP("resources/bomb2b.bmp");
-
-  text_terrain[0] = SDL_CreateTextureFromSurface(renderer, image_free);
-  text_terrain[1] = SDL_CreateTextureFromSurface(renderer, image_wall);
-  text_terrain[2] = SDL_CreateTextureFromSurface(renderer, image_destr);
-  text_terrain[3] = SDL_CreateTextureFromSurface(renderer, image_misc);
-
-  text_character[0] = SDL_CreateTextureFromSurface(renderer, image_char0);
-  text_character[1] = SDL_CreateTextureFromSurface(renderer, image_char1);
-  text_character[2] = SDL_CreateTextureFromSurface(renderer, image_char2);
-  text_character[3] = SDL_CreateTextureFromSurface(renderer, image_char3);
-
-  text_bomb[0] = SDL_CreateTextureFromSurface(renderer, image_bomb0);
-  text_bomb[1] = SDL_CreateTextureFromSurface(renderer, image_bomb1);
-  text_bomb[2] = SDL_CreateTextureFromSurface(renderer, image_bomb2);
-  text_bomb[3] = SDL_CreateTextureFromSurface(renderer, image_bomb3);
-
-  display = malloc(sizeof(t_display));
-  display->window = window;
-  display->renderer = renderer;
-  display->offset_x = offset_x;
-  display->offset_y = offset_y;
-  display->text_bomb = text_bomb;
-  display->text_terrain = text_terrain;
-  display->text_character = text_character;
-
-  return display;
-}
+// t_display *init_display(t_level *level) {
+//   t_display *display;
+//
+//   SDL_Init(SDL_INIT_VIDEO);
+//
+//   // *police = NULL; //initialisation de la police
+//   //TTF_Init(); //initialisation de ttf
+//   // police = TTF_OpenFont("ta_police.ttf", 15); //déclare la police
+//   // TTF_SetFontStyle(police, TTF_STYLE_BOLD); //On gère la police
+//   // SDL_Color couleurBlanc = {255, 255, 255}; //La couleur
+//   // SDL_Surface *texte = {NULL}; //la surface de la police
+//   // SDL_Rect position_texte = {NULL}; //La position de la police
+//   // texte = TTF_RenderText_Solid(police, "Hello", couleurBlanc); //on dit le texte
+//   // SDL_BlitSurface(texte, NULL, ecran, &position_texte); // On blite la surface
+//   // SDL_FreeSurface(texte); //libère la surface du texte
+//   // TTF_CloseFont(police); //libère la police
+//   // TTF_Quit(); //on quitte sdl_ttf
+//
+//
+//
+//
+//   return display;
+// }
 
 void display_map(t_level *level, t_display *display) {
   SDL_Rect location;
@@ -283,7 +234,6 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
   if (game_data == NULL) {
    return -1;
   }
-
   int width = game_settings->width;
   int height = game_settings->height;
 
@@ -299,10 +249,16 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
   int offset_x = ((STANDARD_WIN_WIDTH / 2) - ((width * STANDARD_TILE_WIDTH) / 2));
   int offset_y = STANDARD_WIN_HEIGHT - (height * STANDARD_TILE_HEIGHT);
 
+  display->offset_x = offset_x;
+  display->offset_y = offset_y;
+
+
   //t_display *display = init_display(level);
   while (is_running)
   {
+
     while (SDL_PollEvent(&event)) {
+
       switch (event.type) {
         case SDL_QUIT:
           is_running = NO;
@@ -322,16 +278,15 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
       }
 
       SDL_RenderClear(display->renderer);
-      //  display_map(level, display);
+      //display_map(level, display);
 
-      //LES DISPLAY DECLENCHENT SEGFAULT, VOIR POURQUOI !
-      display_characters(level, display);
-
-      display_bombs(level, display);
+      // display_characters(level, display);
+      //
+      // display_bombs(level, display);
 
       SDL_RenderPresent(display->renderer);
-
-      check_bombs_timer(level);
+      //
+      // check_bombs_timer(level);
     }
   }
   SDL_DestroyTexture(display->text_terrain[0]);
