@@ -179,7 +179,7 @@ void display_settings_menu(t_display *display, t_game_settings *settings, int se
   location.h = height;
   SDL_RenderCopy(display->renderer, display->text_main_menu[3], NULL, &location);
 
-  location.x = (STANDARD_WIN_WIDTH / 2) + 100;
+  location.x = (STANDARD_WIN_WIDTH / 2) + 150;
   location.y = (STANDARD_WIN_HEIGHT / 2) - ((3 * height) / 2) + (selected * height);
   location.w = height;
   location.h = height;
