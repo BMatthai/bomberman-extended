@@ -134,8 +134,8 @@ void display_settings_menu(t_display *display, t_game_settings *settings, int se
 
   char str_width[3];
   char str_height[3];
-  char str_prob_destr[3];
-  char str_prob_empty[3];
+  char str_prob_destr[4];
+  char str_prob_empty[4];
 
   sprintf(str_width, "%d", settings->width);
   sprintf(str_height, "%d", settings->height);
@@ -165,7 +165,7 @@ void display_settings_menu(t_display *display, t_game_settings *settings, int se
 
     location.x = (STANDARD_WIN_WIDTH / 2);
     location.y = (STANDARD_WIN_HEIGHT / 2) - ((3 * height) / 2) + (i * height);
-    location.w = 100;
+    location.w = 150;
     location.h = height;
     SDL_RenderCopy(display->renderer, text_values[i], NULL, &location); /* Blit du texte */
 
@@ -239,21 +239,21 @@ void decrease(t_game_settings *settings, int selected) {
   switch (selected)
   {
     case 0:
-      if (settings->width >= 0) {
+      if (settings->width > 0) {
           settings->width--;
       }
       break;
     case 1:
-      if (settings->height >= 0)
+      if (settings->height > 0)
         settings->height--;
       break;
     case 2:
-      if (settings->proba_destr_wall >= 0)
-        settings->proba_destr_wall--;
+      if (settings->proba_destr_wall >= 5)
+        settings->proba_destr_wall -= 5;
       break;
     case 3:
-      if (settings->proba_empty >= 0)
-        settings->proba_empty--;
+      if (settings->proba_empty >= 5)
+        settings->proba_empty -= 5;
       break;
     }
 }
@@ -270,12 +270,12 @@ void increase(t_game_settings *settings, int selected) {
         settings->height++;
       break;
     case 2:
-      if (settings->proba_destr_wall < 100)
-        settings->proba_destr_wall++;
+      if (settings->proba_destr_wall <= 95)
+        settings->proba_destr_wall += 5;
       break;
     case 3:
-      if (settings->proba_empty < 100)
-        settings->proba_empty++;
+      if (settings->proba_empty <= 95)
+        settings->proba_empty += 5;
       break;
     }
 }
@@ -285,10 +285,10 @@ void game_settings_menu_loop(t_display *display) {
   t_game_settings *settings = NULL;
 
   settings = malloc(sizeof(settings));
-  settings->width = 64;
-  settings->height =40;
-  settings->proba_destr_wall = 40;
-  settings->proba_empty = 40;
+  settings->width = 24;
+  settings->height = 20;
+  settings->proba_destr_wall = 0;
+  settings->proba_empty = 0;
 
   int is_running = YES;
   SDL_Event event;
