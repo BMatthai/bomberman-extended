@@ -112,7 +112,7 @@ void display_misc(t_level *level, t_display *display) {
 
   font = TTF_OpenFont("Arial.ttf", 50); //this opens a font style and sets a size
 
-  SDL_Color White = {255, 34, 34};  // this is the color in rgb format, maxing out all would give you the color white, and it will be your text's color
+  SDL_Color White = {255, 255, 255};  // this is the color in rgb format, maxing out all would give you the color white, and it will be your text's color
 
   SDL_Surface* surfaceMessage = TTF_RenderText_Solid(font, "put your text here", White); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
 
