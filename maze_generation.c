@@ -424,9 +424,9 @@ void set_wall_content(char **maze, int wall_index, t_game_settings *settings) {
   proba_empty = settings->proba_empty;
   rand_number = (rand() % (100 - 0 + 1));
 
-  if (rand_number < proba_empty)
+  if (rand_number <= proba_empty)
     maze[cur_col][cur_row] = ' ';
-  else if (rand_number < proba_destr_wall)
+  else if (rand_number <= proba_destr_wall)
     maze[cur_col][cur_row] = '1';
 }
 
