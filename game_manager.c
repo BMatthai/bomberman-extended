@@ -279,27 +279,30 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
                 // action(level, playable_character, ACTION_DOWN);
             }
           break;
-        // case SDL_KEYUP:
-        //   switch (event.key.keysym.sym)
-        //   {
-        //     case SDLK_LEFT:  set_velocity_character(playable_character, 0, 0); break;
-        //     case SDLK_RIGHT:  set_velocity_character(playable_character, 0, 0); break;
-        //     case SDLK_UP:     set_velocity_character(playable_character, 0, 0); break;
-        //     case SDLK_DOWN:  set_velocity_character(playable_character, 0, 0); break;
-        //   }
+        case SDL_KEYUP:
+          switch (event.key.keysym.sym)
+          {
+            case SDLK_LEFT:  set_velocity_character(playable_character, 0, 0); break;
+            case SDLK_RIGHT:  set_velocity_character(playable_character, 0, 0); break;
+            case SDLK_UP:     set_velocity_character(playable_character, 0, 0); break;
+            case SDLK_DOWN:  set_velocity_character(playable_character, 0, 0); break;
+          }
       }
 
-      adjust_char(level, playable_character);
 
-      SDL_RenderClear(display->renderer);
-      display_map(level, display);
-      display_characters(level, display);
-      //display_bombs(level, display);
-
-      SDL_RenderPresent(display->renderer);
       //
       // check_bombs_timer(level);
     }
+    adjust_char(level, playable_character);
+    move_char(level, playable_character);
+
+    SDL_RenderClear(display->renderer);
+
+    display_map(level, display);
+    display_characters(level, display);
+    //display_bombs(level, display);
+
+    SDL_RenderPresent(display->renderer);
 
   }
   SDL_DestroyTexture(display->text_terrain[0]);

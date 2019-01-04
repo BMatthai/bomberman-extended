@@ -57,7 +57,6 @@ void reset_character_state(t_character *character) {
   }
 }
 
-
 void pick_item(t_level *level, t_character *character) {
   int position_x;
   int position_y;

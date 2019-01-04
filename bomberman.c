@@ -285,10 +285,10 @@ void game_settings_menu_loop(t_display *display) {
   t_game_settings *settings = NULL;
 
   settings = malloc(sizeof(settings));
-  settings->width = 24;
-  settings->height = 20;
-  settings->proba_destr_wall = 0;
-  settings->proba_empty = 0;
+  settings->width = 63;
+  settings->height = 39;
+  settings->proba_destr_wall = 50;
+  settings->proba_empty = 50;
 
   int is_running = YES;
   SDL_Event event;

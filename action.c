@@ -33,9 +33,10 @@ void move(t_level *level, t_character *character, int direction) {
       character->position_y = new_position_y;
       b_log("Action : UP\n");
     }
-    // else {
-    //   adjust_char(level, character);
-    // }
+    else {
+      set_velocity_character(character, 0, 0);
+      adjust_char(level, character);
+    }
   }
   else if (direction == ACTION_DOWN) {
     new_position_y = character->position_y + MOVE_DISTANCE;
@@ -43,9 +44,10 @@ void move(t_level *level, t_character *character, int direction) {
       character->position_y = new_position_y;
       b_log("Action : DOWN\n");
     }
-    // else {
-    //   adjust_char(level, character);
-    // }
+    else {
+      set_velocity_character(character, 0, 0);
+      adjust_char(level, character);
+    }
   }
   else if (direction == ACTION_LEFT) {
     new_position_x = character->position_x - MOVE_DISTANCE;
@@ -54,9 +56,10 @@ void move(t_level *level, t_character *character, int direction) {
       b_log("Action : LEFT\n");
 
     }
-    // else {
-    //   adjust_char(level, character);
-    // }
+    else {
+      set_velocity_character(character, 0, 0);
+      adjust_char(level, character);
+    }
   }
   else if (direction == ACTION_RIGHT) {
     new_position_x = character->position_x + MOVE_DISTANCE;
@@ -64,9 +67,10 @@ void move(t_level *level, t_character *character, int direction) {
       character->position_x = new_position_x;
       b_log("Action : RIGHT\n");
     }
-    // else {
-    //   adjust_char(level, character);
-    // }
+    else {
+      set_velocity_character(character, 0, 0);
+      adjust_char(level, character);
+    }
   }
   pick_item(level, character);
 }
@@ -138,29 +142,66 @@ void set_velocity_character(t_character *character, int velocity_x, int velocity
 }
 
 void adjust_char(t_level *level, t_character *character) {
+  float position_x = character->position_x;
+  float position_y = character->position_y;
+
+  if (character->velocity_y == 0 && (position_y - (int)position_y < 0.1))
+    character->position_y = (int) position_y;
+  if (character->velocity_y == 0 && (position_y - (int)position_y > 0.9))
+    character->position_y = (int) position_y + 1;
+  // if (character->velocity_y == 0 && (position_y - (int)position_y < 0.5))
+  //   move(level, character, ACTION_UP);
+  // else if (character->velocity_y == 0 && (position_y - (int)position_y >= 0.5))
+  //   move(level, character, ACTION_DOWN);
+  //
+  if (character->velocity_x == 0 && (position_x - (int)position_x < 0.1))
+    character->position_x = (int) position_x;
+  if (character->velocity_x == 0 && (position_x - (int)position_x > 0.9))
+    character->position_x = (int) position_x + 1;
+
+  // if(character->velocity_x == 0 && (position_x - (int)position_x < 0.5))
+  //   move(level, character, ACTION_LEFT);
+  // else if(character->velocity_x == 0 && (position_x - (int)position_x >= 0.5))
+  //   move(level, character, ACTION_RIGHT);
+
+    // if (position_x - (int)position_x < 0.33) {
+    //   character->position_x = (int) position_x;
+    // }
+    // else {
+    //   character->position_x = (int) position_x + 1;
+    // }
+    //
+    // if (position_y - (int)position_y < 0.33) {
+    //   character->position_y = (int) position_y;
+    // }
+    // else {
+    //   character->position_y = (int) position_y + 1;
+    // }
+}
+
+
+
+void move_char(t_level *level, t_character *character) {
+  float position_x = character->position_x;
+  float position_y = character->position_y;
+
   if (character->velocity_y == -1)
     move(level, character, ACTION_UP);
-  if (character->velocity_y == 1)
+  else if (character->velocity_y == 1)
     move(level, character, ACTION_DOWN);
-  if(character->velocity_x == -1)
+  else if(character->velocity_x == -1)
     move(level, character, ACTION_LEFT);
-  if(character->velocity_x == 1)
+  else if(character->velocity_x == 1)
     move(level, character, ACTION_RIGHT);
 
-  // float position_x = character->position_x;
-  // float position_y = character->position_y;
-  //
-  // if (position_x - (int)position_x < 0.33) {
-  //   character->position_x = (int) position_x;
-  // }
-  // else {
-  //   character->position_x = (int) position_x + 1;
-  // }
-  //
-  // if (position_y - (int)position_y < 0.33) {
-  //   character->position_y = (int) position_y;
-  // }
-  // else {
-  //   character->position_y = (int) position_y + 1;
-  // }
+  // if (character->velocity_y == 0 && (position_y - (int)position_y < 0.5))
+  //   move(level, character, ACTION_UP);
+  // else if (character->velocity_y == 0 && (position_y - (int)position_y >= 0.5))
+  //   move(level, character, ACTION_DOWN);
+  // if(character->velocity_x == 0 && (position_x - (int)position_x < 0.5))
+  //   move(level, character, ACTION_LEFT);
+  // else if(character->velocity_x == 0 && (position_x - (int)position_x >= 0.5))
+  //   move(level, character, ACTION_RIGHT);
+
+
 }
