@@ -13,6 +13,8 @@
 #include "struct_game_data.h"
 #endif
 
+#include "struct_game_settings.h"
+
 #include "game_constants.h"
 #include "game_manager.h"
 // #include "level_generation.h"
@@ -35,66 +37,32 @@
 #include <termios.h>
 #include <stdlib.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
-t_display *init_display(t_level *level) {
-  t_display *display;
 
-  SDL_Init(SDL_INIT_VIDEO);
-
-  SDL_Window *window = SDL_CreateWindow("Bomberman",
-      SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, STANDARD_WIN_WIDTH, STANDARD_WIN_HEIGHT, 0);
-
-  Uint32 render_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
-
-  int offset_x = ((STANDARD_WIN_WIDTH / 2) - ((level->columns * STANDARD_TILE_WIDTH) / 2));
-  int offset_y = STANDARD_WIN_HEIGHT - (level->lines * STANDARD_TILE_HEIGHT);
-  SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, render_flags);
-
-  SDL_Texture **text_terrain = malloc(4 * sizeof(SDL_Texture *));
-  SDL_Texture **text_bomb = malloc(4 * sizeof(SDL_Texture *));
-  SDL_Texture **text_character = malloc(1 * sizeof(SDL_Texture *));
-
-  SDL_Surface *image_free = SDL_LoadBMP("resources/free.bmp");
-  SDL_Surface *image_wall = SDL_LoadBMP("resources/wall.bmp");
-  SDL_Surface *image_destr = SDL_LoadBMP("resources/destructible.bmp");
-  SDL_Surface *image_misc = SDL_LoadBMP("resources/misc.bmp");
-
-  SDL_Surface *image_char0 = SDL_LoadBMP("resources/char0.bmp");
-  SDL_Surface *image_char1 = SDL_LoadBMP("resources/char1.bmp");
-  SDL_Surface *image_char2 = SDL_LoadBMP("resources/char2.bmp");
-  SDL_Surface *image_char3 = SDL_LoadBMP("resources/char3.bmp");
-
-  SDL_Surface *image_bomb0 = SDL_LoadBMP("resources/bomb0.bmp");
-  SDL_Surface *image_bomb1 = SDL_LoadBMP("resources/bomb1.bmp");
-  SDL_Surface *image_bomb2 = SDL_LoadBMP("resources/bomb2.bmp");
-  SDL_Surface *image_bomb3 = SDL_LoadBMP("resources/bomb2b.bmp");
-
-  text_terrain[0] = SDL_CreateTextureFromSurface(renderer, image_free);
-  text_terrain[1] = SDL_CreateTextureFromSurface(renderer, image_wall);
-  text_terrain[2] = SDL_CreateTextureFromSurface(renderer, image_destr);
-  text_terrain[3] = SDL_CreateTextureFromSurface(renderer, image_misc);
-
-  text_character[0] = SDL_CreateTextureFromSurface(renderer, image_char0);
-  text_character[1] = SDL_CreateTextureFromSurface(renderer, image_char1);
-  text_character[2] = SDL_CreateTextureFromSurface(renderer, image_char2);
-  text_character[3] = SDL_CreateTextureFromSurface(renderer, image_char3);
-
-  text_bomb[0] = SDL_CreateTextureFromSurface(renderer, image_bomb0);
-  text_bomb[1] = SDL_CreateTextureFromSurface(renderer, image_bomb1);
-  text_bomb[2] = SDL_CreateTextureFromSurface(renderer, image_bomb2);
-  text_bomb[3] = SDL_CreateTextureFromSurface(renderer, image_bomb3);
-
-  display = malloc(sizeof(t_display));
-  display->window = window;
-  display->renderer = renderer;
-  display->offset_x = offset_x;
-  display->offset_y = offset_y;
-  display->text_bomb = text_bomb;
-  display->text_terrain = text_terrain;
-  display->text_character = text_character;
-
-  return display;
-}
+// t_display *init_display(t_level *level) {
+//   t_display *display;
+//
+//   SDL_Init(SDL_INIT_VIDEO);
+//
+//   // *police = NULL; //initialisation de la police
+//   //TTF_Init(); //initialisation de ttf
+//   // police = TTF_OpenFont("ta_police.ttf", 15); //déclare la police
+//   // TTF_SetFontStyle(police, TTF_STYLE_BOLD); //On gère la police
+//   // SDL_Color couleurBlanc = {255, 255, 255}; //La couleur
+//   // SDL_Surface *texte = {NULL}; //la surface de la police
+//   // SDL_Rect position_texte = {NULL}; //La position de la police
+//   // texte = TTF_RenderText_Solid(police, "Hello", couleurBlanc); //on dit le texte
+//   // SDL_BlitSurface(texte, NULL, ecran, &position_texte); // On blite la surface
+//   // SDL_FreeSurface(texte); //libère la surface du texte
+//   // TTF_CloseFont(police); //libère la police
+//   // TTF_Quit(); //on quitte sdl_ttf
+//
+//
+//
+//
+//   return display;
+// }
 
 void display_map(t_level *level, t_display *display) {
   SDL_Rect location;
@@ -103,8 +71,8 @@ void display_map(t_level *level, t_display *display) {
 
   terrain = level->terrain;
 
-  for (int i = 0; i < level->lines; i++) {
-    for (int j = 0; j < level->columns; j++) {
+  for (int i = 0; i < level->height; i++) {
+    for (int j = 0; j < level->width; j++) {
         location.h = STANDARD_TILE_HEIGHT;
         location.w = STANDARD_TILE_WIDTH;
         location.x = STANDARD_TILE_WIDTH * j + display->offset_x;
@@ -137,6 +105,34 @@ void display_characters(t_level *level, t_display *display) {
     SDL_RenderCopy(display->renderer, display->text_character[i], NULL, &location);
   }
 }
+
+void display_misc(t_level *level, t_display *display) {
+
+  TTF_Font *font = NULL;
+
+  font = TTF_OpenFont("Arial.ttf", 50); //this opens a font style and sets a size
+
+  SDL_Color White = {255, 255, 255};  // this is the color in rgb format, maxing out all would give you the color white, and it will be your text's color
+
+  SDL_Surface* surfaceMessage = TTF_RenderText_Solid(font, "put your text here", White); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
+
+  SDL_Texture* Message = SDL_CreateTextureFromSurface(display->renderer, surfaceMessage); //now you can convert it into a texture
+
+  SDL_Rect Message_rect; //create a rect
+  Message_rect.x = 0;  //controls the rect's x coordinate
+  Message_rect.y = 0; // controls the rect's y coordinte
+  Message_rect.w = 100; // controls the width of the rect
+  Message_rect.h = 100; // controls the height of the rect
+
+  // Mind you that (0,0) is on the top left of the window/screen, think a rect as the text's box, that way it would be very simple to understance
+
+  // Now since it's a texture, you have to put RenderCopy in your game loop area, the area where the whole code executes
+
+ SDL_RenderCopy(display->renderer, Message, NULL, &Message_rect); //you put the renderer's name first, the Message, the crop size(you can ignore this if you don't want to dabble with cropping), and the rect which is the size and coordinate of your texture
+
+  // Don't forget too free your surface and texture
+}
+
 
 void display_bombs(t_level *level, t_display *display) {
   SDL_Rect location;
@@ -229,7 +225,7 @@ int game_state(t_game_data *game_data) {
   return GAME_IS_RUNNING;
 }
 
-int launch_game_SDL() {
+int launch_game(t_display *display, t_game_settings *game_settings) {
 
   SDL_Event event;
 
@@ -238,57 +234,60 @@ int launch_game_SDL() {
   if (game_data == NULL) {
    return -1;
   }
+  int width = game_settings->width;
+  int height = game_settings->height;
 
-  game_data->level = generate_maze_level(9, 5);
+
+  game_data->level = generate_maze_level(game_settings);
 
   game_data->playable_character = &game_data->level->characters[0];
   t_character *playable_character = game_data->playable_character;
 
   t_level *level = game_data->level;
-  int lines = level->lines;
-  int columns = level->columns;
 
   int is_running = YES;
-  int offset_x = ((STANDARD_WIN_WIDTH / 2) - ((columns * STANDARD_TILE_WIDTH) / 2));
-  int offset_y = STANDARD_WIN_HEIGHT - (lines * STANDARD_TILE_HEIGHT);
+  int offset_x = ((STANDARD_WIN_WIDTH / 2) - ((width * STANDARD_TILE_WIDTH) / 2));
+  int offset_y = ((STANDARD_WIN_HEIGHT / 2) - ((height * STANDARD_TILE_HEIGHT) / 2));
+  // int offset_y = STANDARD_WIN_HEIGHT - (height * STANDARD_TILE_HEIGHT);
 
-  int time_to_reload = get_time();
+  display->offset_x = offset_x;
+  display->offset_y = offset_y;
 
-  t_display *display = init_display(level);
 
+  //t_display *display = init_display(level);
   while (is_running)
   {
-    SDL_PollEvent(&event);
 
-    switch (event.type)
-    {
-      case SDL_QUIT:
-        is_running = NO;
-        break;
-      case SDL_KEYDOWN:
-          switch (event.key.keysym.sym)
-          {
-              case SDLK_LEFT:  action(level, playable_character, ACTION_LEFT); break;
-              case SDLK_RIGHT: action(level, playable_character, ACTION_RIGHT); break;
-              case SDLK_UP:    action(level, playable_character, ACTION_UP); break;
-              case SDLK_DOWN:  action(level, playable_character, ACTION_DOWN); break;
-              case SDLK_c:  action(level, playable_character, ACTION_BOMB); break;
-              case SDLK_ESCAPE: is_running = NO; break;
-          }
-        break;
-      case SDL_KEYUP: adjust_char(level, playable_character); break;
+    while (SDL_PollEvent(&event)) {
+
+      switch (event.type) {
+        case SDL_QUIT:
+          is_running = NO;
+          break;
+        case SDL_KEYDOWN:
+            switch (event.key.keysym.sym)
+            {
+                case SDLK_LEFT:  action(level, playable_character, ACTION_LEFT); break;
+                case SDLK_RIGHT: action(level, playable_character, ACTION_RIGHT); break;
+                case SDLK_UP:    action(level, playable_character, ACTION_UP); break;
+                case SDLK_DOWN:  action(level, playable_character, ACTION_DOWN); break;
+                case SDLK_c:  action(level, playable_character, ACTION_BOMB); break;
+                case SDLK_ESCAPE: is_running = NO; break;
+            }
+          break;
+        case SDL_KEYUP: adjust_char(level, playable_character); break;
+      }
+
+      SDL_RenderClear(display->renderer);
+      display_map(level, display);
+      display_characters(level, display);
+      //display_bombs(level, display);
+
+      SDL_RenderPresent(display->renderer);
+      //
+      // check_bombs_timer(level);
     }
-
-    SDL_RenderClear(display->renderer);
-    display_map(level, display);
-    display_characters(level, display);
-    display_bombs(level, display);
-    SDL_RenderPresent(display->renderer);
-
-    check_bombs_timer(level);
-
   }
-
   SDL_DestroyTexture(display->text_terrain[0]);
   SDL_DestroyTexture(display->text_terrain[1]);
 
