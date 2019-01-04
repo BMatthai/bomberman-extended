@@ -15,7 +15,7 @@ Projet de bomberman en ASCII !!! C'était plutôt stylé même si l'interface pa
 - [ ] Amélioration du Makefile : factoriser le fichier. Séparer les fichiers .o .h et .c dans des dossiers build, inc et src.
 
 - [ ] Implémenter réseau 
-- [ ] Créer le menu de jeu 
+- [x] Créer le menu de jeu __(A améliorer en continu)__
 - [ ] Créer une boucle de jeu qui ne dépend pas du CPU
 
 - [ ] ~~Vérifier le retours des mallocs et gérer les erreurs~~ __(Pas prio)__
