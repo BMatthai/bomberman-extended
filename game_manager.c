@@ -293,9 +293,9 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
       //
       // check_bombs_timer(level);
     }
-    adjust_char(level, playable_character);
+    //adjust_char(level, playable_character);
+    motion_char(level, playable_character);
     move_char(level, playable_character);
-
     SDL_RenderClear(display->renderer);
 
     display_map(level, display);

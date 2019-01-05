@@ -32,6 +32,18 @@ void check_bombs_timer(t_level *level) {
   }
 }
 
+t_bomb *get_last_bomb(t_level *level) {
+  t_bomb *cur_bomb;
+
+  if ((cur_bomb = level->first_bomb) != NULL) {
+    while (cur_bomb->next_bomb != NULL) {
+      cur_bomb = cur_bomb->next_bomb;
+    }
+    return cur_bomb;
+  }
+  return NULL;
+}
+
 void set_bomb_unstable(t_level *level, t_bomb *bomb) {
     bomb->state = BOMB_IS_UNSTABLE;
     bomb->time_state_has_changed = get_time();
