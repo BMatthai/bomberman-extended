@@ -267,26 +267,43 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym)
             {
-                case SDLK_LEFT:  action(level, playable_character, ACTION_LEFT); break;
-                case SDLK_RIGHT: action(level, playable_character, ACTION_RIGHT); break;
-                case SDLK_UP:    action(level, playable_character, ACTION_UP); break;
-                case SDLK_DOWN:  action(level, playable_character, ACTION_DOWN); break;
+                case SDLK_LEFT:  set_velocity_character(playable_character, -1, 0); break;
+                case SDLK_RIGHT:  set_velocity_character(playable_character, 1, 0); break;
+                case SDLK_UP:     set_velocity_character(playable_character, 0, -1); break;
+                case SDLK_DOWN:  set_velocity_character(playable_character, 0,  1); break;
                 case SDLK_c:  action(level, playable_character, ACTION_BOMB); break;
                 case SDLK_ESCAPE: is_running = NO; break;
+                // action(level, playable_character, ACTION_LEFT);
+                // action(level, playable_character, ACTION_RIGHT);
+                // action(level, playable_character, ACTION_UP);
+                // action(level, playable_character, ACTION_DOWN);
             }
           break;
-        case SDL_KEYUP: adjust_char(level, playable_character); break;
+        case SDL_KEYUP:
+          switch (event.key.keysym.sym)
+          {
+            case SDLK_LEFT:  set_velocity_character(playable_character, 0, 0); break;
+            case SDLK_RIGHT:  set_velocity_character(playable_character, 0, 0); break;
+            case SDLK_UP:     set_velocity_character(playable_character, 0, 0); break;
+            case SDLK_DOWN:  set_velocity_character(playable_character, 0, 0); break;
+          }
       }
 
-      SDL_RenderClear(display->renderer);
-      display_map(level, display);
-      display_characters(level, display);
-      //display_bombs(level, display);
 
-      SDL_RenderPresent(display->renderer);
       //
       // check_bombs_timer(level);
     }
+    //adjust_char(level, playable_character);
+    motion_char(level, playable_character);
+    move_char(level, playable_character);
+    SDL_RenderClear(display->renderer);
+
+    display_map(level, display);
+    display_characters(level, display);
+    //display_bombs(level, display);
+
+    SDL_RenderPresent(display->renderer);
+
   }
   SDL_DestroyTexture(display->text_terrain[0]);
   SDL_DestroyTexture(display->text_terrain[1]);

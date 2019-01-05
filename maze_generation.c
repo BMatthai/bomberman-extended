@@ -424,10 +424,10 @@ void set_wall_content(char **maze, int wall_index, t_game_settings *settings) {
   proba_empty = settings->proba_empty;
   rand_number = (rand() % (100 - 0 + 1));
 
-  if (rand_number < proba_empty)
-    maze[cur_col][cur_row] = ' ';
-  else if (rand_number < proba_destr_wall)
+  if (rand_number <= proba_destr_wall)
     maze[cur_col][cur_row] = '1';
+  else if (rand_number <= proba_destr_wall + proba_empty)
+    maze[cur_col][cur_row] = ' ';
 }
 
 int is_a_cell(int value, int width, int height) {
@@ -588,8 +588,8 @@ t_level *generate_maze_level(t_game_settings *settings) {
   level->height = height;
 
   level->terrain = generate_maze_layer(settings);
-  level->bonus = generate_bomb_layer(settings);
-  level->bomb = generate_bonus_layer(settings);
+  level->bomb = generate_bomb_layer(settings);
+  level->bonus = generate_bonus_layer(settings);
 
   level->number_characters = 4;
   level->characters = get_level_characters(level);

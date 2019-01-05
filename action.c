@@ -20,7 +20,7 @@
 
 #include <stdlib.h>
 #include <unistd.h>
-
+#include <stdio.h>
 
 void move(t_level *level, t_character *character, int direction) {
 
@@ -31,9 +31,9 @@ void move(t_level *level, t_character *character, int direction) {
     new_position_y = character->position_y - MOVE_DISTANCE;
     if (is_tile_free(level, new_position_x, new_position_y) == YES) {
       character->position_y = new_position_y;
-      b_log("Action : UP\n");
     }
     else {
+      //set_velocity_character(character, 0, 0);
       adjust_char(level, character);
     }
   }
@@ -41,9 +41,9 @@ void move(t_level *level, t_character *character, int direction) {
     new_position_y = character->position_y + MOVE_DISTANCE;
     if (is_tile_free(level, new_position_x, new_position_y + 1) == YES) {
       character->position_y = new_position_y;
-      b_log("Action : DOWN\n");
     }
     else {
+      //set_velocity_character(character, 0, 0);
       adjust_char(level, character);
     }
   }
@@ -51,20 +51,20 @@ void move(t_level *level, t_character *character, int direction) {
     new_position_x = character->position_x - MOVE_DISTANCE;
     if (is_tile_free(level, new_position_x, new_position_y) == YES) {
       character->position_x = new_position_x;
-      b_log("Action : LEFT\n");
-
     }
     else {
+      // set_velocity_character(character, 0, 0);
       adjust_char(level, character);
+
     }
   }
   else if (direction == ACTION_RIGHT) {
     new_position_x = character->position_x + MOVE_DISTANCE;
     if (is_tile_free(level, new_position_x + 1, new_position_y) == YES) {
       character->position_x = new_position_x;
-      b_log("Action : RIGHT\n");
     }
     else {
+      // set_velocity_character(character, 0, 0);
       adjust_char(level, character);
     }
   }
@@ -79,17 +79,16 @@ void put_bomb(t_level *level, t_character *character) {
   position_y = character->position_y;
 
 
-  if (level->terrain[position_y][position_x] != TILE_WITH_BOMB) {
-    t_bomb *new_bomb;
+  if (level->terrain[position_x][position_y] != TILE_WITH_BOMB) {
+    t_bomb *new_bomb = NULL;
 
-    new_bomb = NULL;
     new_bomb = malloc(sizeof(t_bomb));
 
     if (new_bomb == NULL) {
       return;
     }
 
-    level->bomb[position_y][position_x] = '@';
+    level->bomb[position_x][position_y] = '@';
 
     new_bomb->state = BOMB_IS_PLACED_ON_GROUND;
     new_bomb->position_x = position_x;
@@ -99,20 +98,17 @@ void put_bomb(t_level *level, t_character *character) {
     new_bomb->range = character->bomb_range;
     new_bomb->next_bomb = NULL;
 
-    if (level->first_bomb == NULL) {
+    t_bomb *cur_bomb = NULL;
+
+    cur_bomb = get_last_bomb(level);
+
+    if (cur_bomb == NULL) {
       level->first_bomb = new_bomb;
       new_bomb->prev_bomb = NULL;
     }
     else {
-      t_bomb *cur_bomb;
-      cur_bomb = level->first_bomb;
-      while (cur_bomb->next_bomb != NULL) {
-        cur_bomb = cur_bomb->next_bomb;
-      }
       new_bomb->prev_bomb = cur_bomb;
-      cur_bomb->next_bomb = new_bomb;
     }
-    b_log("Action : BOMB PLANTED\n");
   }
 }
 
@@ -132,21 +128,93 @@ void action(t_level *level, t_character *character, int touch_action) {
 
 }
 
+void set_velocity_character(t_character *character, int velocity_x, int velocity_y) {
+  character->velocity_x = velocity_x;
+  character->velocity_y = velocity_y;
+}
+
+// void adjust_char(t_level *level, t_character *character) {
+//   float position_x = character->position_x;
+//   float position_y = character->position_y;
+//   float scale_x = position_x - (int)position_x;
+//   float scale_y = position_y - (int)position_y;
+//
+//
+//
+//   // if (character->velocity_x == 0 && scale_x > MOVE_DISTANCE && scale_x < 0.5)
+//   //   move(level, character, ACTION_LEFT);
+//   // else if (character->velocity_x == 0 && scale_x >= 0.5 && scale_x < 1)
+//   //   move(level, character, ACTION_RIGHT);
+//   //
+//   // if (character->velocity_y == 0 && scale_y > MOVE_DISTANCE && scale_y < 1 - MOVE_DISTANCE)
+//   //   move(level, character, ACTION_UP);
+//   // else if (character->velocity_y == 0 && scale_y >= 0.5 && scale_y < 1 - MOVE_DISTANCE)
+//   //   move(level, character, ACTION_DOWN);
+//
+//
+//
+//
+// }
+
 void adjust_char(t_level *level, t_character *character) {
   float position_x = character->position_x;
   float position_y = character->position_y;
 
-  if (position_x - (int)position_x < 0.33) {
-    character->position_x = (int) position_x;
-  }
-  else {
-    character->position_x = (int) position_x + 1;
-  }
+  float scale_x = position_x - (int)position_x;
+  float scale_y = position_y - (int)position_y;
 
-  if (position_y - (int)position_y < 0.33) {
+  if (scale_y < 0.1)
     character->position_y = (int) position_y;
-  }
-  else {
+  else if (scale_y > 0.9)
     character->position_y = (int) position_y + 1;
-  }
+
+  if (scale_x < 0.1)
+    character->position_x = (int) position_x;
+  else if (scale_x > 0.9)
+    character->position_x = (int) position_x + 1;
+}
+
+void motion_char(t_level *level, t_character *character) {
+  float position_x = character->position_x;
+  float position_y = character->position_y;
+
+  float scale_x = position_x - (int)position_x;
+  float scale_y = position_y - (int)position_y;
+
+  // if (scale_y < 0.1)
+  //   character->position_y = (int) position_y;
+  // else if (scale_y > 0.9)
+  //   character->position_y = (int) position_y + 1;
+  //
+  // if (scale_x < 0.1)
+  //   character->position_x = (int) position_x;
+  // else if (scale_x > 0.9)
+  //   character->position_x = (int) position_x + 1;
+
+    if (character->velocity_y == 0 && scale_y > 0.1 && scale_y < 0.5)
+      move(level, character, ACTION_UP);
+    else if (character->velocity_y == 0 && scale_y >= 0.5 && scale_y <= 1)
+      move(level, character, ACTION_DOWN);
+    else if(character->velocity_x == 0  && scale_x > 0.1 && scale_x < 0.5)
+      move(level, character, ACTION_LEFT);
+    else if(character->velocity_x == 0 && scale_x >= 0.5 && scale_x <= 1)
+      move(level, character, ACTION_RIGHT);
+
+
+}
+
+
+
+void move_char(t_level *level, t_character *character) {
+  float position_x = character->position_x;
+  float position_y = character->position_y;
+
+  if (character->velocity_y == -1)
+    move(level, character, ACTION_UP);
+  else if (character->velocity_y == 1)
+    move(level, character, ACTION_DOWN);
+  else if(character->velocity_x == -1)
+    move(level, character, ACTION_LEFT);
+  else if(character->velocity_x == 1)
+    move(level, character, ACTION_RIGHT);
 }

@@ -7,6 +7,10 @@ typedef struct s_character {
   int time_to_bomb_explode_millis;
   float position_x;
   float position_y;
+  
+  int velocity_x;
+  int velocity_y;
+
   int state;
   int time_state_has_changed;
 }   t_character;

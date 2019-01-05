@@ -121,37 +121,36 @@ t_display *init_window() {
 
 void display_settings_menu(t_display *display, t_game_settings *settings, int selected) {
 
-  SDL_Surface **surface_values = NULL;
-  SDL_Texture **text_values = NULL;
-
-  surface_values = malloc(sizeof(SDL_Surface *) * 4);
-  text_values = malloc(sizeof(SDL_Texture *) * 4);
-
-  SDL_Color white = {255, 255, 255};
-
-  TTF_Font *font = NULL;
-  font = TTF_OpenFont("./resources/fonts/OpenSans-Light.ttf", 100);
-
-  char str_width[3];
-  char str_height[3];
-  char str_prob_destr[4];
-  char str_prob_empty[4];
-
-  sprintf(str_width, "%d", settings->width);
-  sprintf(str_height, "%d", settings->height);
-  sprintf(str_prob_destr, "%d", settings->proba_destr_wall);
-  sprintf(str_prob_empty, "%d", settings->proba_empty);
-
-  surface_values[0] = TTF_RenderText_Blended(font, str_width, white);
-  surface_values[1] = TTF_RenderText_Blended(font, str_height, white);
-  surface_values[2] = TTF_RenderText_Blended(font, str_prob_destr, white);
-  surface_values[3] = TTF_RenderText_Blended(font, str_prob_empty, white);
-
-  text_values[0] = SDL_CreateTextureFromSurface(display->renderer, surface_values[0]);
-  text_values[1] = SDL_CreateTextureFromSurface(display->renderer, surface_values[1]);
-  text_values[2] = SDL_CreateTextureFromSurface(display->renderer, surface_values[2]);
-  text_values[3] = SDL_CreateTextureFromSurface(display->renderer, surface_values[3]);
-
+  // SDL_Surface **surface_values = NULL;
+  // SDL_Texture **text_values = NULL;
+  //
+  // surface_values = malloc(sizeof(SDL_Surface *) * 4);
+  // text_values = malloc(sizeof(SDL_Texture *) * 4);
+  //
+  // SDL_Color white = {255, 255, 255};
+  //
+  // TTF_Font *font = NULL;
+  // font = TTF_OpenFont("./resources/fonts/OpenSans-Light.ttf", 100);
+  //
+  // char str_width[3];
+  // char str_height[3];
+  // char str_prob_destr[4];
+  // char str_prob_empty[4];
+  //
+  // sprintf(str_width, "%d", settings->width);
+  // sprintf(str_height, "%d", settings->height);
+  // sprintf(str_prob_destr, "%d", settings->proba_destr_wall);
+  // sprintf(str_prob_empty, "%d", settings->proba_empty);
+  //
+  // surface_values[0] = TTF_RenderText_Blended(font, str_width, white);
+  // surface_values[1] = TTF_RenderText_Blended(font, str_height, white);
+  // surface_values[2] = TTF_RenderText_Blended(font, str_prob_destr, white);
+  // surface_values[3] = TTF_RenderText_Blended(font, str_prob_empty, white);
+  //
+  // text_values[0] = SDL_CreateTextureFromSurface(display->renderer, surface_values[0]);
+  // text_values[1] = SDL_CreateTextureFromSurface(display->renderer, surface_values[1]);
+  // text_values[2] = SDL_CreateTextureFromSurface(display->renderer, surface_values[2]);
+  // text_values[3] = SDL_CreateTextureFromSurface(display->renderer, surface_values[3]);
 
   SDL_Rect location;
   int width = 400;
@@ -163,14 +162,14 @@ void display_settings_menu(t_display *display, t_game_settings *settings, int se
     location.h = height;
     SDL_RenderCopy(display->renderer, display->text_settings_menu[i], NULL, &location);
 
-    location.x = (STANDARD_WIN_WIDTH / 2);
-    location.y = (STANDARD_WIN_HEIGHT / 2) - ((3 * height) / 2) + (i * height);
-    location.w = 150;
-    location.h = height;
-    SDL_RenderCopy(display->renderer, text_values[i], NULL, &location); /* Blit du texte */
-
-    SDL_DestroyTexture(text_values[i]);
-    SDL_FreeSurface(surface_values[i]);
+    // location.x = (STANDARD_WIN_WIDTH / 2);
+    // location.y = (STANDARD_WIN_HEIGHT / 2) - ((3 * height) / 2) + (i * height);
+    // location.w = 150;
+    // location.h = height;
+    // SDL_RenderCopy(display->renderer, text_values[i], NULL, &location); /* Blit du texte */
+    //
+    // SDL_DestroyTexture(text_values[i]);
+    // SDL_FreeSurface(surface_values[i]);
   }
 
   location.x = (STANDARD_WIN_WIDTH / 2) - (width) - 100;
@@ -185,10 +184,6 @@ void display_settings_menu(t_display *display, t_game_settings *settings, int se
   location.h = height;
   SDL_RenderCopy(display->renderer, display->text_main_menu[4], NULL, &location);
 }
-
-
-
-
 
 void display_main_menu(t_display *display, int selected) {
 
@@ -283,19 +278,24 @@ void increase(t_game_settings *settings, int selected) {
 void game_settings_menu_loop(t_display *display) {
 
   t_game_settings *settings = NULL;
-
   settings = malloc(sizeof(settings));
-  settings->width = 24;
-  settings->height = 20;
-  settings->proba_destr_wall = 0;
-  settings->proba_empty = 0;
+  settings->width = DEFAULT_LEVEL_WIDTH;
+  settings->height = DEFAULT_LEVEL_HEIGHT;
+  settings->proba_destr_wall = DEFAULT_PROBA_DEST;
+  settings->proba_empty = DEFAULT_EMPTY;
 
   int is_running = YES;
   SDL_Event event;
   int selected = 0;
 
   while (is_running) {
+
+    SDL_RenderClear(display->renderer);
+    display_settings_menu(display, settings, selected);
+    SDL_RenderPresent(display->renderer);
+
       while (SDL_PollEvent(&event)) {
+
         switch (event.type)
         {
           case SDL_QUIT:
@@ -317,13 +317,9 @@ void game_settings_menu_loop(t_display *display) {
             break;
         }
       }
-
-
-      SDL_RenderClear(display->renderer);
-      display_settings_menu(display, settings, selected);
-      SDL_RenderPresent(display->renderer);
 }
 }
+
 void go_to_selected(t_display *display, int selected) {
   if (selected == MENU_MONOPLAYER) {
     game_settings_menu_loop(display);
