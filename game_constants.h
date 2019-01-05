@@ -90,4 +90,9 @@
 #define MENU_MULTIPLAYER 1
 #define MENU_QUIT 2
 
+#define DEFAULT_LEVEL_WIDTH 64
+#define DEFAULT_LEVEL_HEIGHT 48
+#define DEFAULT_PROBA_DEST 0
+#define DEFAULT_EMPTY 0
+
 #define PATH_LEVEL = "./level/"

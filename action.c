@@ -102,7 +102,6 @@ void put_bomb(t_level *level, t_character *character) {
 
     cur_bomb = get_last_bomb(level);
 
-    printf("COKIKOUCAKC\n");
     if (cur_bomb == NULL) {
       level->first_bomb = new_bomb;
       new_bomb->prev_bomb = NULL;

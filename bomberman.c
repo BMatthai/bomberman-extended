@@ -279,10 +279,10 @@ void game_settings_menu_loop(t_display *display) {
 
   t_game_settings *settings = NULL;
   settings = malloc(sizeof(settings));
-  settings->width = 63;
-  settings->height = 39;
-  settings->proba_destr_wall = 90;
-  settings->proba_empty = 0;
+  settings->width = DEFAULT_LEVEL_WIDTH;
+  settings->height = DEFAULT_LEVEL_HEIGHT;
+  settings->proba_destr_wall = DEFAULT_PROBA_DEST;
+  settings->proba_empty = DEFAULT_EMPTY;
 
   int is_running = YES;
   SDL_Event event;
@@ -317,10 +317,9 @@ void game_settings_menu_loop(t_display *display) {
             break;
         }
       }
-
-
 }
 }
+
 void go_to_selected(t_display *display, int selected) {
   if (selected == MENU_MONOPLAYER) {
     game_settings_menu_loop(display);
