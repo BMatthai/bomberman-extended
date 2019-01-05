@@ -5,7 +5,6 @@
 
 #define MOVE_DISTANCE 0.02
 
-
 #define ACTION_UP 1
 #define ACTION_DOWN 2
 #define ACTION_LEFT 3
@@ -92,7 +91,8 @@
 
 #define DEFAULT_LEVEL_WIDTH 64
 #define DEFAULT_LEVEL_HEIGHT 48
-#define DEFAULT_PROBA_DEST 0
-#define DEFAULT_EMPTY 0
+#define DEFAULT_PROBA_DEST 20
+#define DEFAULT_EMPTY 100
+#define DEFAULT_BLIZZARD_COOLDOWN 200
 
 #define PATH_LEVEL = "./level/"

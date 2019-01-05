@@ -106,31 +106,35 @@ void display_characters(t_level *level, t_display *display) {
   }
 }
 
-void display_misc(t_level *level, t_display *display) {
+void display_misc(t_game_data *game_data, t_display *display) {
+  Uint32 game_duration = game_data->elapsed_time / DEFAULT_BLIZZARD_COOLDOWN;
 
-  TTF_Font *font = NULL;
+  SDL_Rect location;
 
-  font = TTF_OpenFont("Arial.ttf", 50); //this opens a font style and sets a size
+  location.h = STANDARD_WIN_HEIGHT;
+  location.w = STANDARD_WIN_WIDTH;
 
-  SDL_Color White = {255, 255, 255};  // this is the color in rgb format, maxing out all would give you the color white, and it will be your text's color
+  location.x = -STANDARD_WIN_WIDTH + game_duration;
+  location.y = 0;
 
-  SDL_Surface* surfaceMessage = TTF_RenderText_Solid(font, "put your text here", White); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
+  SDL_RenderCopy(display->renderer, display->text_blizzard, NULL, &location);
 
-  SDL_Texture* Message = SDL_CreateTextureFromSurface(display->renderer, surfaceMessage); //now you can convert it into a texture
+  location.x = STANDARD_WIN_WIDTH - game_duration;
+  location.y = 0;
 
-  SDL_Rect Message_rect; //create a rect
-  Message_rect.x = 0;  //controls the rect's x coordinate
-  Message_rect.y = 0; // controls the rect's y coordinte
-  Message_rect.w = 100; // controls the width of the rect
-  Message_rect.h = 100; // controls the height of the rect
+  SDL_RenderCopy(display->renderer, display->text_blizzard, NULL, &location);
 
-  // Mind you that (0,0) is on the top left of the window/screen, think a rect as the text's box, that way it would be very simple to understance
+  location.x = 0;
+  location.y = - STANDARD_WIN_HEIGHT + game_duration;
 
-  // Now since it's a texture, you have to put RenderCopy in your game loop area, the area where the whole code executes
+  SDL_RenderCopy(display->renderer, display->text_blizzard, NULL, &location);
 
- SDL_RenderCopy(display->renderer, Message, NULL, &Message_rect); //you put the renderer's name first, the Message, the crop size(you can ignore this if you don't want to dabble with cropping), and the rect which is the size and coordinate of your texture
+  location.x = 0;
+  location.y = STANDARD_WIN_HEIGHT - game_duration;
 
-  // Don't forget too free your surface and texture
+  SDL_RenderCopy(display->renderer, display->text_blizzard, NULL, &location);
+
+
 }
 
 
@@ -255,6 +259,8 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
 
 
   //t_display *display = init_display(level);
+  Uint32 time_start = get_time();
+
   while (is_running)
   {
 
@@ -273,10 +279,6 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
                 case SDLK_DOWN:  set_velocity_character(playable_character, 0,  1); break;
                 case SDLK_c:  action(level, playable_character, ACTION_BOMB); break;
                 case SDLK_ESCAPE: is_running = NO; break;
-                // action(level, playable_character, ACTION_LEFT);
-                // action(level, playable_character, ACTION_RIGHT);
-                // action(level, playable_character, ACTION_UP);
-                // action(level, playable_character, ACTION_DOWN);
             }
           break;
         case SDL_KEYUP:
@@ -294,12 +296,15 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
       // check_bombs_timer(level);
     }
     //adjust_char(level, playable_character);
+    game_data->elapsed_time = get_time() - time_start;
     motion_char(level, playable_character);
     move_char(level, playable_character);
     SDL_RenderClear(display->renderer);
 
     display_map(level, display);
     display_characters(level, display);
+    display_misc(game_data, display);
+
     //display_bombs(level, display);
 
     SDL_RenderPresent(display->renderer);

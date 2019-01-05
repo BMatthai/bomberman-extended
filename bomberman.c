@@ -42,6 +42,7 @@ t_display *init_window() {
   SDL_Texture **text_character = malloc(4 * sizeof(SDL_Texture *));
   SDL_Texture **text_main_menu = malloc(5 * sizeof(SDL_Texture *));
   SDL_Texture **text_settings_menu = malloc(4 * sizeof(SDL_Texture *));
+  SDL_Texture *text_blizzard = malloc(sizeof(SDL_Texture *));
 
 
   SDL_Surface *image_free = SDL_LoadBMP("resources/free.bmp");
@@ -70,6 +71,7 @@ t_display *init_window() {
   SDL_Surface *surfaceProbaDestrWall = TTF_RenderText_Solid(font, "% de cases destructible : ", white);
   SDL_Surface *surfaceProbaEmpty = TTF_RenderText_Solid(font, "% de cases libres libre : ", white);
 
+  SDL_Surface *surfaceBlizzard = SDL_CreateRGBSurface(0, 1024, 768, 4, 123, 34, 23, 127);
 
   text_terrain[0] = SDL_CreateTextureFromSurface(renderer, image_free);
   text_terrain[1] = SDL_CreateTextureFromSurface(renderer, image_wall);
@@ -97,10 +99,7 @@ t_display *init_window() {
   text_settings_menu[2] = SDL_CreateTextureFromSurface(renderer, surfaceProbaDestrWall);
   text_settings_menu[3] = SDL_CreateTextureFromSurface(renderer, surfaceProbaEmpty);
 
-  // *surfaceWidth = TTF_RenderText_Solid(font, "Largeur map", white);
-  // SDL_Surface *surfaceHeight = TTF_RenderText_Solid(font, "Hauteur map", white);
-  // SDL_Surface *surfaceProbaDestrWall = TTF_RenderText_Solid(font, "Probabilité de mur destructible", white);
-  // SDL_Surface *surfaceProbaEmpty = TT
+  text_blizzard = SDL_CreateTextureFromSurface(renderer, surfaceBlizzard);
 
   t_display *display = NULL;
 
@@ -112,45 +111,14 @@ t_display *init_window() {
   display->text_character = text_character;
   display->text_main_menu = text_main_menu;
   display->text_settings_menu = text_settings_menu;
+  display->text_blizzard = text_blizzard;
   display->font = font;
-  // display->offset_x = 0;
-  // display->offset_y = 0;
 
   return display;
 }
 
 void display_settings_menu(t_display *display, t_game_settings *settings, int selected) {
 
-  // SDL_Surface **surface_values = NULL;
-  // SDL_Texture **text_values = NULL;
-  //
-  // surface_values = malloc(sizeof(SDL_Surface *) * 4);
-  // text_values = malloc(sizeof(SDL_Texture *) * 4);
-  //
-  // SDL_Color white = {255, 255, 255};
-  //
-  // TTF_Font *font = NULL;
-  // font = TTF_OpenFont("./resources/fonts/OpenSans-Light.ttf", 100);
-  //
-  // char str_width[3];
-  // char str_height[3];
-  // char str_prob_destr[4];
-  // char str_prob_empty[4];
-  //
-  // sprintf(str_width, "%d", settings->width);
-  // sprintf(str_height, "%d", settings->height);
-  // sprintf(str_prob_destr, "%d", settings->proba_destr_wall);
-  // sprintf(str_prob_empty, "%d", settings->proba_empty);
-  //
-  // surface_values[0] = TTF_RenderText_Blended(font, str_width, white);
-  // surface_values[1] = TTF_RenderText_Blended(font, str_height, white);
-  // surface_values[2] = TTF_RenderText_Blended(font, str_prob_destr, white);
-  // surface_values[3] = TTF_RenderText_Blended(font, str_prob_empty, white);
-  //
-  // text_values[0] = SDL_CreateTextureFromSurface(display->renderer, surface_values[0]);
-  // text_values[1] = SDL_CreateTextureFromSurface(display->renderer, surface_values[1]);
-  // text_values[2] = SDL_CreateTextureFromSurface(display->renderer, surface_values[2]);
-  // text_values[3] = SDL_CreateTextureFromSurface(display->renderer, surface_values[3]);
 
   SDL_Rect location;
   int width = 400;
@@ -161,15 +129,6 @@ void display_settings_menu(t_display *display, t_game_settings *settings, int se
     location.w = width;
     location.h = height;
     SDL_RenderCopy(display->renderer, display->text_settings_menu[i], NULL, &location);
-
-    // location.x = (STANDARD_WIN_WIDTH / 2);
-    // location.y = (STANDARD_WIN_HEIGHT / 2) - ((3 * height) / 2) + (i * height);
-    // location.w = 150;
-    // location.h = height;
-    // SDL_RenderCopy(display->renderer, text_values[i], NULL, &location); /* Blit du texte */
-    //
-    // SDL_DestroyTexture(text_values[i]);
-    // SDL_FreeSurface(surface_values[i]);
   }
 
   location.x = (STANDARD_WIN_WIDTH / 2) - (width) - 100;
@@ -346,7 +305,6 @@ void main_menu_loop(t_display *display) {
                 case SDLK_RETURN: {
                   is_running = NO;
                   game_settings_menu_loop(display);
-                  //go_to_selected(display, selected);
                   break;
                 }
             }
@@ -368,71 +326,7 @@ int main(int argc, char **argv) {
 
   main_menu_loop(display);
 
-
-  //SDL_RenderPresent(display->renderer);
-
-
   SDL_DestroyWindow(display->window);
   SDL_Quit();
   return 0;
 }
-
-//launch_game_SDL();
-
-  //
-  // SDL_Window *window;                    // Declare a pointer
-  //
-  // SDL_Init(SDL_INIT_VIDEO);              // Initialize SDL2
-  //
-  // // Create an application window with the following settings:
-  // window = SDL_CreateWindow(
-  //     "An SDL2 window",                  // window title
-  //     SDL_WINDOWPOS_UNDEFINED,           // initial x position
-  //     SDL_WINDOWPOS_UNDEFINED,           // initial y position
-  //     640,                               // width, in pixels
-  //     480,                               // height, in pixels
-  //     SDL_WINDOW_OPENGL                  // flags - see below
-  // );
-  //
-  // // Check that the window was successfully created
-  // if (window == NULL) {
-  //     // In the case that the window could not be made...
-  //     printf("Could not create window: %s\n", SDL_GetError());
-  //     return 1;
-  // }
-  //
-  // SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
-  //
-  // SDL_Surface *free_image = SDL_LoadBMP("resources/free.bmp");
-  //
-  // SDL_Texture *free_texture = SDL_CreateTextureFromSurface(renderer, free_image);
-  //
-  // SDL_FreeSurface(free_image);
-  //
-  // SDL_Rect dstrect = { 5, 5, 320, 240 };
-  //
-  // SDL_RenderCopy(renderer, free_texture, NULL,  &dstrect);
-  // //SDL_RenderCopy(renderer, free_texture, NULL,  NULL);
-  //
-  //
-  //
-  // // A basic main loop to prevent blocking
-  // int is_running = YES;
-  // SDL_Event event;
-  // while (is_running) {
-  //     while (SDL_PollEvent(&event)) {
-  //         if (event.type == SDL_QUIT) {
-  //             is_running = NO;
-  //         }
-  //     }
-  //     SDL_RenderClear(renderer);
-  //     SDL_RenderPresent(renderer);
-  //     SDL_Delay(16);
-  // }
-  //
-  // // Close and destroy the window
-  // SDL_DestroyWindow(window);
-  //
-  // // Clean up
-  // SDL_Quit();
-  // return 0;
