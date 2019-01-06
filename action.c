@@ -75,6 +75,17 @@ void put_bomb(t_level *level, t_character *character) {
 
   if (level->terrain[position_x][position_y] != TILE_WITH_BOMB) {
     t_bomb *new_bomb = NULL;
+    t_bomb *last_bomb = NULL;
+
+
+    t_bomb *cur_bomb;
+
+    last_bomb = level->first_bomb;
+
+    while(last_bomb->next_bomb != NULL) {
+
+      last_bomb = last_bomb->next_bomb;
+    }
 
     new_bomb = malloc(sizeof(t_bomb));
 
@@ -91,18 +102,17 @@ void put_bomb(t_level *level, t_character *character) {
     new_bomb->time_to_explode_millis = character->time_to_bomb_explode_millis;
     new_bomb->range = character->bomb_range;
     new_bomb->next_bomb = NULL;
+    new_bomb->prev_bomb = last_bomb;
 
-    t_bomb *cur_bomb = NULL;
-
-    cur_bomb = get_last_bomb(level);
-
-    if (cur_bomb == NULL) {
-      level->first_bomb = new_bomb;
-      new_bomb->prev_bomb = NULL;
-    }
-    else {
-      new_bomb->prev_bomb = cur_bomb;
-    }
+    last_bomb->next_bomb = new_bomb;
+    //
+    // if (cur_bomb == NULL) {
+    //   level->first_bomb = new_bomb;
+    //   new_bomb->prev_bomb = NULL;
+    // }
+    // else {
+    //   new_bomb->prev_bomb = cur_bomb;
+    // }
   }
 }
 

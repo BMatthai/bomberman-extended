@@ -160,7 +160,6 @@ int tile_content(t_level *level, int x, int y) {
 }
 
 int is_tile_defined(t_level *level, int x, int y) {
-
   if (x < 0)
     return NO;
   if (y < 0)

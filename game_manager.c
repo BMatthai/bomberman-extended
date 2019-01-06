@@ -107,34 +107,38 @@ void display_characters(t_level *level, t_display *display) {
 }
 
 void display_misc(t_game_data *game_data, t_display *display) {
-  Uint32 game_duration = game_data->elapsed_time / DEFAULT_BLIZZARD_COOLDOWN;
+  Uint32 elapsed_time = (game_data->elapsed_time / DEFAULT_BLIZZARD_COOLDOWN) - DEFAULT_BLIZZARD_START;
+
+  if (elapsed_time < 0) {
+    return;
+  }
+
+  float ratio_wh = ((float) game_data->level->height / (float) game_data->level->width);
 
   SDL_Rect location;
 
   location.h = STANDARD_WIN_HEIGHT;
   location.w = STANDARD_WIN_WIDTH;
 
-  location.x = -STANDARD_WIN_WIDTH + game_duration;
+  location.x = -STANDARD_WIN_WIDTH + display->offset_x + elapsed_time;
   location.y = 0;
 
   SDL_RenderCopy(display->renderer, display->text_blizzard, NULL, &location);
 
-  location.x = STANDARD_WIN_WIDTH - game_duration;
+  location.x = STANDARD_WIN_WIDTH - display->offset_x - elapsed_time;
   location.y = 0;
 
   SDL_RenderCopy(display->renderer, display->text_blizzard, NULL, &location);
 
   location.x = 0;
-  location.y = - STANDARD_WIN_HEIGHT + game_duration;
+  location.y = -STANDARD_WIN_HEIGHT + display->offset_y + (elapsed_time * ratio_wh);
 
   SDL_RenderCopy(display->renderer, display->text_blizzard, NULL, &location);
 
   location.x = 0;
-  location.y = STANDARD_WIN_HEIGHT - game_duration;
+  location.y = STANDARD_WIN_HEIGHT - display->offset_y - (elapsed_time * ratio_wh);
 
   SDL_RenderCopy(display->renderer, display->text_blizzard, NULL, &location);
-
-
 }
 
 
@@ -241,7 +245,6 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
   int width = game_settings->width;
   int height = game_settings->height;
 
-
   game_data->level = generate_maze_level(game_settings);
 
   game_data->playable_character = &game_data->level->characters[0];
@@ -252,13 +255,10 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
   int is_running = YES;
   int offset_x = ((STANDARD_WIN_WIDTH / 2) - ((width * STANDARD_TILE_WIDTH) / 2));
   int offset_y = ((STANDARD_WIN_HEIGHT / 2) - ((height * STANDARD_TILE_HEIGHT) / 2));
-  // int offset_y = STANDARD_WIN_HEIGHT - (height * STANDARD_TILE_HEIGHT);
 
   display->offset_x = offset_x;
   display->offset_y = offset_y;
 
-
-  //t_display *display = init_display(level);
   Uint32 time_start = get_time();
 
   while (is_running)
@@ -290,25 +290,18 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
             case SDLK_DOWN:  set_velocity_character(playable_character, 0, 0); break;
           }
       }
-
-
-      //
-      // check_bombs_timer(level);
     }
-    //adjust_char(level, playable_character);
     game_data->elapsed_time = get_time() - time_start;
+
     motion_char(level, playable_character);
     move_char(level, playable_character);
     SDL_RenderClear(display->renderer);
 
     display_map(level, display);
     display_characters(level, display);
-    display_misc(game_data, display);
-
-    //display_bombs(level, display);
+    //display_misc(game_data, display);
 
     SDL_RenderPresent(display->renderer);
-
   }
   SDL_DestroyTexture(display->text_terrain[0]);
   SDL_DestroyTexture(display->text_terrain[1]);

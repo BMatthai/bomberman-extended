@@ -20,6 +20,7 @@
 #include "time_manager.h"
 #include "bomb_manager.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 void check_bombs_timer(t_level *level) {
   t_bomb *cur_bomb;
@@ -33,15 +34,19 @@ void check_bombs_timer(t_level *level) {
 }
 
 t_bomb *get_last_bomb(t_level *level) {
+
   t_bomb *cur_bomb;
 
-  if ((cur_bomb = level->first_bomb) != NULL) {
-    while (cur_bomb->next_bomb != NULL) {
-      cur_bomb = cur_bomb->next_bomb;
-    }
-    return cur_bomb;
+  cur_bomb = level->first_bomb;
+  if (cur_bomb == NULL) {
+    return (NULL);
   }
-  return NULL;
+  
+  while(cur_bomb->next_bomb != NULL) {
+    cur_bomb = cur_bomb->next_bomb;
+  }
+  return (cur_bomb);
+
 }
 
 void set_bomb_unstable(t_level *level, t_bomb *bomb) {
