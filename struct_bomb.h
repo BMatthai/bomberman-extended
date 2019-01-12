@@ -1,6 +1,5 @@
 typedef struct s_bomb {
   int state;
-  char symbol;
   int range;
   int position_x;
   int position_y;

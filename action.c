@@ -66,6 +66,24 @@ void move(t_level *level, t_character *character, int direction) {
   pick_item(level, character);
 }
 
+
+
+
+
+// void put_bomb(t_level *level, t_character *character) {
+//
+//   if (is_tile_bomb_planted(level, character->position_x, character->position_y) == YES) {
+//     return;
+//   }
+//
+//   t_bomb *last_bomb = get_last_bomb(level);
+//   t_bomb *new_bomb = create_bomb(level, character);
+//
+//   last_bomb->next_bomb = new_bomb;
+//   new_bomb->prev_bomb = last_bomb;
+//
+// }
+
 void put_bomb(t_level *level, t_character *character) {
   int position_x;
   int position_y;
@@ -73,48 +91,38 @@ void put_bomb(t_level *level, t_character *character) {
   position_x = character->position_x;
   position_y = character->position_y;
 
-  if (level->terrain[position_x][position_y] != TILE_WITH_BOMB) {
-    t_bomb *new_bomb = NULL;
-    t_bomb *last_bomb = NULL;
 
+  if (level->terrain[position_y][position_x] != TILE_WITH_BOMB) {
+    t_bomb *new_bomb;
 
-    t_bomb *cur_bomb;
-
-    last_bomb = level->first_bomb;
-
-    while(last_bomb->next_bomb != NULL) {
-
-      last_bomb = last_bomb->next_bomb;
-    }
-
+    new_bomb = NULL;
     new_bomb = malloc(sizeof(t_bomb));
 
     if (new_bomb == NULL) {
       return;
     }
 
-    level->bomb[position_x][position_y] = '@';
+    level->bomb[position_y][position_x] = '@';
 
-    new_bomb->state = BOMB_IS_PLACED_ON_GROUND;
-    new_bomb->position_x = position_x;
-    new_bomb->position_y = position_y;
-    new_bomb->time_state_has_changed = get_time();
-    new_bomb->time_to_explode_millis = character->time_to_bomb_explode_millis;
-    new_bomb->range = character->bomb_range;
-    new_bomb->next_bomb = NULL;
-    new_bomb->prev_bomb = last_bomb;
+    new_bomb = create_bomb(level, character);
 
-    last_bomb->next_bomb = new_bomb;
-    //
-    // if (cur_bomb == NULL) {
-    //   level->first_bomb = new_bomb;
-    //   new_bomb->prev_bomb = NULL;
-    // }
-    // else {
-    //   new_bomb->prev_bomb = cur_bomb;
-    // }
+    if (level->first_bomb == NULL) {
+      level->first_bomb = new_bomb;
+      new_bomb->prev_bomb = NULL;
+    }
+    else {
+      t_bomb *cur_bomb;
+      cur_bomb = level->first_bomb;
+      while (cur_bomb->next_bomb != NULL) {
+        cur_bomb = cur_bomb->next_bomb;
+      }
+      new_bomb->prev_bomb = cur_bomb;
+      cur_bomb->next_bomb = new_bomb;
+    }
   }
 }
+
+
 
 void action(t_level *level, t_character *character, int touch_action) {
   if(touch_action == ACTION_UP)
@@ -158,12 +166,15 @@ void motion_char(t_level *level, t_character *character) {
 
   float scale_x = position_x - (int)position_x;
   float scale_y = position_y - (int)position_y;
-
-  if (character->velocity_y == 0 && scale_y > 0 && scale_y < 0.5)
+  if (character->velocity_y == 0 && scale_y > 0 && scale_y < 0.1)
+    character->position_y = (int) position_y;
+  if (character->velocity_y == 0 && scale_y >= 0.1 && scale_y < 0.5)
     move(level, character, ACTION_UP);
   else if (character->velocity_y == 0 && scale_y >= 0.5 && scale_y < 1)
     move(level, character, ACTION_DOWN);
-  else if(character->velocity_x == 0  && scale_x > 0 && scale_x < 0.5)
+  else if(character->velocity_x == 0  && scale_x > 0 && scale_x < 0.1)
+    character->position_x = (int) position_x;
+  else if(character->velocity_x == 0  && scale_x >= 0.1 && scale_x < 0.5)
     move(level, character, ACTION_LEFT);
   else if(character->velocity_x == 0 && scale_x >= 0.5 && scale_x < 1)
     move(level, character, ACTION_RIGHT);

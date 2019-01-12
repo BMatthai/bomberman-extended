@@ -233,6 +233,15 @@ int game_state(t_game_data *game_data) {
   return GAME_IS_RUNNING;
 }
 
+void refresh(t_level *level, t_display *display, t_character *playable_character) {
+  SDL_RenderClear(display->renderer);
+  display_map(level, display);
+  display_characters(level, display);
+  display_bombs(level, display);
+  //display_misc(game_data, display);
+  SDL_RenderPresent(display->renderer);
+}
+
 int launch_game(t_display *display, t_game_settings *game_settings) {
 
   SDL_Event event;
@@ -260,7 +269,7 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
   display->offset_y = offset_y;
 
   Uint32 time_start = get_time();
-
+  Uint32 last_refresh = get_time();
   while (is_running)
   {
 
@@ -291,18 +300,15 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
           }
       }
     }
+
     game_data->elapsed_time = get_time() - time_start;
-
-    motion_char(level, playable_character);
+    check_bombs_timer(level);
     move_char(level, playable_character);
-    SDL_RenderClear(display->renderer);
+    motion_char(level, playable_character);
+    refresh(level, display, playable_character);
 
-    display_map(level, display);
-    display_characters(level, display);
-    //display_misc(game_data, display);
-
-    SDL_RenderPresent(display->renderer);
   }
+
   SDL_DestroyTexture(display->text_terrain[0]);
   SDL_DestroyTexture(display->text_terrain[1]);
 
