@@ -1,9 +1,7 @@
-
 #ifndef T_LEVEL
 #define T_LEVEL
 #include "../include/struct_level.h"
 #endif
-
 
 #ifndef T_CHARACTER
 #define T_CHARACTER
@@ -65,20 +63,6 @@ void move(t_level *level, t_character *character, int direction) {
   }
   pick_item(level, character);
 }
-
-// void put_bomb(t_level *level, t_character *character) {
-//
-//   if (is_tile_bomb_planted(level, character->position_x, character->position_y) == YES) {
-//     return;
-//   }
-//
-//   t_bomb *last_bomb = get_last_bomb(level);
-//   t_bomb *new_bomb = create_bomb(level, character);
-//
-//   last_bomb->next_bomb = new_bomb;
-//   new_bomb->prev_bomb = last_bomb;
-//
-// }
 
 void put_bomb(t_level *level, t_character *character) {
   int position_x;

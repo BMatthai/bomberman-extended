@@ -156,7 +156,7 @@ void display_bombs(t_level *level, t_display *display) {
           location.x = STANDARD_TILE_WIDTH * (pos_x - i) + display->offset_x;
           location.y = STANDARD_TILE_HEIGHT * pos_y + display->offset_y;
           if (i < cur_bomb->range) {
-            SDL_RenderCopy(display->renderer, display->text_bomb[2], NULL, &location);
+            SDL_RenderCopyEx(display->renderer, display->text_bomb[2], NULL, &location, 0, 0, SDL_FLIP_NONE);
           }
           else {
             SDL_RenderCopyEx(display->renderer, display->text_bomb[3], NULL, &location, 0, 0, SDL_FLIP_NONE);
@@ -168,7 +168,7 @@ void display_bombs(t_level *level, t_display *display) {
           location.x = STANDARD_TILE_WIDTH * (pos_x + i) + display->offset_x;
           location.y = STANDARD_TILE_HEIGHT * pos_y + display->offset_y;
           if (i < cur_bomb->range) {
-            SDL_RenderCopy(display->renderer, display->text_bomb[2], NULL, &location);
+            SDL_RenderCopyEx(display->renderer, display->text_bomb[2], NULL, &location, 180, 0, SDL_FLIP_NONE);
           }
           else {
             SDL_RenderCopyEx(display->renderer, display->text_bomb[3], NULL, &location, 180, 0, SDL_FLIP_NONE);
@@ -180,7 +180,7 @@ void display_bombs(t_level *level, t_display *display) {
           location.x = STANDARD_TILE_WIDTH * pos_x + display->offset_x;
           location.y = STANDARD_TILE_HEIGHT * (pos_y - i) + display->offset_y;
           if (i < cur_bomb->range) {
-            SDL_RenderCopy(display->renderer, display->text_bomb[2], NULL, &location);
+            SDL_RenderCopyEx(display->renderer, display->text_bomb[2], NULL, &location, 90, 0, SDL_FLIP_NONE);
           }
           else {
             SDL_RenderCopyEx(display->renderer, display->text_bomb[3], NULL, &location, 90, 0, SDL_FLIP_NONE);
@@ -192,7 +192,7 @@ void display_bombs(t_level *level, t_display *display) {
           location.x = STANDARD_TILE_WIDTH * pos_x + display->offset_x;
           location.y = STANDARD_TILE_HEIGHT * (pos_y + i) + display->offset_y;
           if (i < cur_bomb->range) {
-            SDL_RenderCopy(display->renderer, display->text_bomb[2], NULL, &location);
+            SDL_RenderCopyEx(display->renderer, display->text_bomb[2], NULL, &location, 270, 0, SDL_FLIP_NONE);
           }
           else {
             SDL_RenderCopyEx(display->renderer, display->text_bomb[3], NULL, &location, 270, 0, SDL_FLIP_NONE);

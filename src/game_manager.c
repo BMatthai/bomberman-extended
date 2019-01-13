@@ -82,7 +82,7 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
 
   int is_running = YES;
   int offset_x = ((STANDARD_WIN_WIDTH / 2) - ((width * STANDARD_TILE_WIDTH) / 2));
-  int offset_y = ((STANDARD_WIN_HEIGHT / 2) - ((height * STANDARD_TILE_HEIGHT) / 2)) + STANDARD_HUD_HEIGHT;
+  int offset_y = ((STANDARD_WIN_HEIGHT / 2) - ((height * STANDARD_TILE_HEIGHT) / 2)) + STANDARD_HUD_HEIGHT + (STANDARD_TILE_HEIGHT / 2);
   // int offset_y = STANDARD_WIN_HEIGHT - (height * STANDARD_TILE_HEIGHT);
 
   display->offset_x = offset_x;
