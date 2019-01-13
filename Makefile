@@ -9,8 +9,8 @@ SOURCE_DIR=.
 
 all: $(EXEC)
 
-bomberman: bomberman.o level_generation.o character_creation.o action.o bomb_manager.o time_manager.o tile_manager.o game_manager.o log_manager.o maze_generation.o
-	$(CC) -o bomberman bomberman.o level_generation.o character_creation.o action.o bomb_manager.o time_manager.o tile_manager.o game_manager.o log_manager.o maze_generation.o $(LDFLAGS)
+bomberman: bomberman.o level_generation.o character_creation.o action.o bomb_manager.o time_manager.o tile_manager.o game_manager.o log_manager.o maze_generation.o display_game.o
+	$(CC) -o bomberman bomberman.o level_generation.o character_creation.o action.o bomb_manager.o time_manager.o tile_manager.o game_manager.o log_manager.o maze_generation.o display_game.o $(LDFLAGS)
 
 maze_generation.o: $(SOURCE_DIR)/maze_generation.c
 	$(CC) -o $(BUILD_DIR)/maze_generation.o -c $(SOURCE_DIR)/maze_generation.c $(CFLAGS)
@@ -41,6 +41,9 @@ game_manager.o: $(SOURCE_DIR)/game_manager.c
 
 log_manager.o: $(SOURCE_DIR)/log_manager.c
 	$(CC) -o $(BUILD_DIR)/log_manager.o -c $(SOURCE_DIR)/log_manager.c $(CFLAGS)
+
+display_game.o: $(SOURCE_DIR)/display_game.c
+	$(CC) -o $(BUILD_DIR)/display_game.o -c $(SOURCE_DIR)/display_game.c $(CFLAGS)
 
 clean:
 	rm -rf $(BUILD_DIR)/*.o
