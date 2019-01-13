@@ -39,31 +39,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
-
-// t_display *init_display(t_level *level) {
-//   t_display *display;
-//
-//   SDL_Init(SDL_INIT_VIDEO);
-//
-//   // *police = NULL; //initialisation de la police
-//   //TTF_Init(); //initialisation de ttf
-//   // police = TTF_OpenFont("ta_police.ttf", 15); //déclare la police
-//   // TTF_SetFontStyle(police, TTF_STYLE_BOLD); //On gère la police
-//   // SDL_Color couleurBlanc = {255, 255, 255}; //La couleur
-//   // SDL_Surface *texte = {NULL}; //la surface de la police
-//   // SDL_Rect position_texte = {NULL}; //La position de la police
-//   // texte = TTF_RenderText_Solid(police, "Hello", couleurBlanc); //on dit le texte
-//   // SDL_BlitSurface(texte, NULL, ecran, &position_texte); // On blite la surface
-//   // SDL_FreeSurface(texte); //libère la surface du texte
-//   // TTF_CloseFont(police); //libère la police
-//   // TTF_Quit(); //on quitte sdl_ttf
-//
-//
-//
-//
-//   return display;
-// }
-
 void display_map(t_level *level, t_display *display) {
   SDL_Rect location;
   char cur_tile;
@@ -115,7 +90,7 @@ void display_hud(t_game_data *game_data, t_display *display) {
   location.h = STANDARD_LIFE_GAUGE_HEIGHT;
   location.w = game_data->playable_character->heal_points * (STANDARD_LIFE_GAUGE_WIDTH / CHARACTER_HEAL_POINT);
   location.x = (STANDARD_WIN_WIDTH / 2) - (STANDARD_LIFE_GAUGE_WIDTH / 2);
-  location.y = STANDARD_TILE_WIDTH * 2;
+  location.y = (STANDARD_HUD_HEIGHT / 2) - (STANDARD_LIFE_GAUGE_HEIGHT / 2);
 
   SDL_RenderCopy(display->renderer, display->text_red, NULL, &location);
 }
@@ -280,8 +255,8 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
 
   int is_running = YES;
   int offset_x = ((STANDARD_WIN_WIDTH / 2) - ((width * STANDARD_TILE_WIDTH) / 2));
-  // int offset_y = ((STANDARD_WIN_HEIGHT / 2) - ((height * STANDARD_TILE_HEIGHT) / 2));
-  int offset_y = STANDARD_WIN_HEIGHT - (height * STANDARD_TILE_HEIGHT);
+  int offset_y = ((STANDARD_WIN_HEIGHT / 2) - ((height * STANDARD_TILE_HEIGHT) / 2)) + STANDARD_HUD_HEIGHT;
+  // int offset_y = STANDARD_WIN_HEIGHT - (height * STANDARD_TILE_HEIGHT);
 
   display->offset_x = offset_x;
   display->offset_y = offset_y;

@@ -102,11 +102,10 @@ t_display *init_window() {
   text_settings_menu[3] = SDL_CreateTextureFromSurface(renderer, surfaceProbaEmpty);
 
   SDL_FillRect(surfaceBlizzard, NULL, SDL_MapRGBA(surfaceBlizzard->format, 0, 0, 255, 0));
-  SDL_FillRect(surfaceRed, NULL, SDL_MapRGBA(surfaceRed->format, 0, 255, 0, 0));
+  SDL_FillRect(surfaceRed, NULL, SDL_MapRGBA(surfaceRed->format, 255, 0, 0, 0));
 
-  text_red = SDL_CreateTextureFromSurface(renderer, surfaceBlizzard);
+  text_red = SDL_CreateTextureFromSurface(renderer, surfaceRed);
   text_blizzard = SDL_CreateTextureFromSurface(renderer, surfaceBlizzard);
-
 
   t_display *display = NULL;
 
