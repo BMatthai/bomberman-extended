@@ -88,6 +88,8 @@ int is_tile_bomb_exploding(t_level *level, int x, int y) {
 }
 
 int is_tile_free(t_level *level, float x, float y) {
+  if (is_tile_bomb_planted(level, (int)x, (int)y))
+    return NO;
   if (is_tile_wall(level, (int)x, (int)y))
     return NO;
   if (is_tile_defined(level, (int)x, (int)y) == NO)
@@ -160,7 +162,6 @@ int tile_content(t_level *level, int x, int y) {
 }
 
 int is_tile_defined(t_level *level, int x, int y) {
-
   if (x < 0)
     return NO;
   if (y < 0)

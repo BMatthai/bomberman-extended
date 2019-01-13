@@ -590,6 +590,7 @@ t_level *generate_maze_level(t_game_settings *settings) {
   level->terrain = generate_maze_layer(settings);
   level->bomb = generate_bomb_layer(settings);
   level->bonus = generate_bonus_layer(settings);
+  level->first_bomb = NULL;
 
   level->number_characters = 4;
   level->characters = get_level_characters(level);

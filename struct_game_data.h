@@ -13,4 +13,5 @@
 typedef struct s_game_data {
   t_character *playable_character;
   t_level *level;
+  Uint32 elapsed_time;
 } t_game_data;
