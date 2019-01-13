@@ -1,3 +1,3 @@
-typedef unsigned int Uint32;
-
-Uint32 get_time();
+// typedef unsigned int Uint32;
+// typedef uint32_t Uint32;
+unsigned int get_time();

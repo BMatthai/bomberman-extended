@@ -1,22 +1,22 @@
 
 #ifndef T_LEVEL
 #define T_LEVEL
-#include "struct_level.h"
+#include "../include/struct_level.h"
 #endif
 
 
 #ifndef T_CHARACTER
 #define T_CHARACTER
-#include "struct_character.h"
+#include "../include/struct_character.h"
 #endif
 
-#include "action.h"
-#include "log_manager.h"
-#include "game_constants.h"
-#include "bomb_manager.h"
-#include "tile_manager.h"
-#include "character_creation.h"
-#include "time_manager.h"
+#include "../include/action.h"
+#include "../include/log_manager.h"
+#include "../include/game_constants.h"
+#include "../include/bomb_manager.h"
+#include "../include/tile_manager.h"
+#include "../include/character_creation.h"
+#include "../include/time_manager.h"
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -33,7 +33,7 @@ void move(t_level *level, t_character *character, int direction) {
       character->position_y = new_position_y;
     }
     else {
-      adjust_char(level, character);
+      adjust_char(character);
     }
   }
   else if (direction == ACTION_DOWN) {
@@ -42,7 +42,7 @@ void move(t_level *level, t_character *character, int direction) {
       character->position_y = new_position_y;
     }
     else {
-      adjust_char(level, character);
+      adjust_char(character);
     }
   }
   else if (direction == ACTION_LEFT) {
@@ -51,7 +51,7 @@ void move(t_level *level, t_character *character, int direction) {
       character->position_x = new_position_x;
     }
     else {
-      adjust_char(level, character);
+      adjust_char(character);
     }
   }
   else if (direction == ACTION_RIGHT) {
@@ -60,7 +60,7 @@ void move(t_level *level, t_character *character, int direction) {
       character->position_x = new_position_x;
     }
     else {
-      adjust_char(level, character);
+      adjust_char(character);
     }
   }
   pick_item(level, character);
@@ -136,7 +136,7 @@ void set_velocity_character(t_character *character, int velocity_x, int velocity
   character->velocity_y = velocity_y;
 }
 
-void adjust_char(t_level *level, t_character *character) {
+void adjust_char(t_character *character) {
   float position_x = character->position_x;
   float position_y = character->position_y;
 
@@ -176,9 +176,6 @@ void motion_char(t_level *level, t_character *character) {
 }
 
 void move_char(t_level *level, t_character *character) {
-  float position_x = character->position_x;
-  float position_y = character->position_y;
-
   if (character->velocity_y == -1)
     move(level, character, ACTION_UP);
   else if (character->velocity_y == 1)

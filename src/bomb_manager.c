@@ -1,24 +1,25 @@
 #ifndef T_LEVEL
 #define T_LEVEL
-#include "struct_level.h"
+#include "../include/struct_level.h"
 #endif
 
 
 #ifndef T_CHARACTER
 #define T_CHARACTER
-#include "struct_character.h"
+#include "../include/struct_character.h"
 #endif
 
 #ifndef T_BOMB
 #define T_BOMB
-#include "struct_bomb.h"
+#include "../include/struct_bomb.h"
 #endif
 
-#include "log_manager.h"
-#include "tile_manager.h"
-#include "game_constants.h"
-#include "time_manager.h"
-#include "bomb_manager.h"
+#include "../include/log_manager.h"
+#include "../include/tile_manager.h"
+#include "../include/game_constants.h"
+#include "../include/time_manager.h"
+#include "../include/bomb_manager.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -65,7 +66,7 @@ t_bomb *create_bomb(t_level *level, t_character *character) {
 }
 
 
-void set_bomb_unstable(t_level *level, t_bomb *bomb) {
+void set_bomb_unstable(t_bomb *bomb) {
     bomb->state = BOMB_IS_UNSTABLE;
     bomb->time_state_has_changed = get_time();
 }
@@ -73,7 +74,7 @@ void set_bomb_unstable(t_level *level, t_bomb *bomb) {
 void set_exploding_routine(t_level *level, t_bomb *bomb) {
   if (bomb->state == BOMB_IS_PLACED_ON_GROUND) {
     if ((get_time() - bomb->time_state_has_changed) > bomb->time_to_explode_millis) {
-      set_bomb_unstable(level, bomb);
+      set_bomb_unstable(bomb);
       return;
     }
   }
@@ -91,7 +92,7 @@ void set_exploding_routine(t_level *level, t_bomb *bomb) {
   }
 }
 
-int is_in_bomb_range(t_level *level, t_bomb *bomb, int position_x, int position_y) {
+int is_in_bomb_range(t_bomb *bomb, int position_x, int position_y) {
   int bomb_position_x = bomb->position_x;
   int bomb_position_y = bomb->position_y;
 
@@ -132,7 +133,7 @@ int is_position_in_any_bomb_range(t_level *level, int position_x, int position_y
   }
 
   while (cur_bomb != NULL) {
-    if (is_in_bomb_range(level, cur_bomb, position_x, position_y) == IS_IN_BOMB_RANGE){
+    if (is_in_bomb_range(cur_bomb, position_x, position_y) == IS_IN_BOMB_RANGE){
       if (cur_bomb->state == BOMB_IS_PLACED_ON_GROUND)
         return IS_IN_BOMB_RANGE;
     }
@@ -234,7 +235,7 @@ void damage_tile(t_level *level, int position_x, int position_y) {
   t_bomb *bomb = bomb_at_pos(level, position_x, position_y);
   if (bomb != NULL) {
     if (bomb->state == BOMB_IS_PLACED_ON_GROUND) {
-      set_bomb_unstable(level, bomb);
+      set_bomb_unstable(bomb);
     }
   }
 }

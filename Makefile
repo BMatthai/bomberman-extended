@@ -1,23 +1,20 @@
 CC=gcc
-CFLAGS=
+CFLAGS=-W -Wall -Werror -pedantic -std=c99
 #CFLAGSE=-W -Wall -Werror -pedantic -std=c99
 LDFLAGS=-I./include -lSDL2_ttf -lSDL2
 EXEC=bomberman
 BUILD_DIR=.
-BIN_DIR=.
+BIN_DIR=
 SOURCE_DIR=./src
 
 all: $(EXEC)
 
-bomberman: bomberman.o level_generation.o character_creation.o action.o bomb_manager.o time_manager.o tile_manager.o game_manager.o log_manager.o maze_generation.o display_game.o
-	$(CC) -o bomberman bomberman.o level_generation.o character_creation.o action.o bomb_manager.o time_manager.o tile_manager.o game_manager.o log_manager.o maze_generation.o display_game.o $(LDFLAGS)
+bomberman: bomberman.o character_creation.o action.o bomb_manager.o time_manager.o tile_manager.o game_manager.o log_manager.o maze_generation.o display_game.o
+	$(CC) -o bomberman bomberman.o character_creation.o action.o bomb_manager.o time_manager.o tile_manager.o game_manager.o log_manager.o maze_generation.o display_game.o $(LDFLAGS)
 
 maze_generation.o: $(SOURCE_DIR)/maze_generation.c
 	$(CC) -o $(BUILD_DIR)/maze_generation.o -c $(SOURCE_DIR)/maze_generation.c $(CFLAGS)
-
-level_generation.o: $(SOURCE_DIR)/level_generation.c
-	$(CC) -o $(BUILD_DIR)/level_generation.o -c $(SOURCE_DIR)/level_generation.c $(CFLAGS)
-
+	
 character_creation.o: $(SOURCE_DIR)/character_creation.c
 	$(CC) -o $(BUILD_DIR)/character_creation.o -c $(SOURCE_DIR)/character_creation.c $(CFLAGS)
 

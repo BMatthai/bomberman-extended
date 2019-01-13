@@ -1,21 +1,21 @@
 #ifndef T_LEVEL
 #define T_LEVEL
-#include "struct_level.h"
+#include "../include/struct_level.h"
 #endif
 
 #ifndef T_DISPLAY
 #define T_DISPLAY
-#include "struct_display.h"
+#include "../include/struct_display.h"
 #endif
 
 #ifndef T_GAME_DATA
 #define T_GAME_DATA
-#include "struct_game_data.h"
+#include "../include/struct_game_data.h"
 #endif
 
-#include "display_game.h"
-#include "game_constants.h"
-#include "tile_manager.h"
+#include "../include/display_game.h"
+#include "../include/game_constants.h"
+#include "../include/tile_manager.h"
 
 void display_map(t_level *level, t_display *display) {
   SDL_Rect location;
@@ -42,7 +42,7 @@ void display_map(t_level *level, t_display *display) {
   }
 }
 
-void display_background(t_level *level, t_display *display) {
+void display_background(t_display *display) {
   SDL_Rect location;
 
   for (int i = 0; i < STANDARD_WIN_HEIGHT / STANDARD_TILE_HEIGHT; i++) {

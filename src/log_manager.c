@@ -1,4 +1,4 @@
-#include "log_manager.h"
+#include "../include/log_manager.h"
 
 #include <stdio.h>
 

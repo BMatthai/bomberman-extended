@@ -1,15 +1,15 @@
 
 #ifndef T_LEVEL
 #define T_LEVEL
-#include "struct_level.h"
+#include "../include/struct_level.h"
 #endif
 
 #include <stdlib.h>
 
 
-#include "game_constants.h"
-#include "tile_manager.h"
-#include "bomb_manager.h"
+#include "../include/game_constants.h"
+#include "../include/tile_manager.h"
+#include "../include/bomb_manager.h"
 
 int is_tile_wall(t_level *level, int x, int y) {
   if (level->terrain[x][y] >= TILE_WITH_WALL_ZERO && level->terrain[x][y] <= TILE_WITH_WALL_NINE)

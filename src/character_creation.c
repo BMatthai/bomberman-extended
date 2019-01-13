@@ -1,18 +1,18 @@
 #ifndef T_LEVEL
 #define T_LEVEL
-#include "struct_level.h"
+#include "../include/struct_level.h"
 #endif
 
 #ifndef T_CHARACTER
 #define T_CHARACTER
-#include "struct_character.h"
+#include "../include/struct_character.h"
 #endif
 
-#include "character_creation.h"
-#include "stdio.h"
-#include "game_constants.h"
-#include "bomb_manager.h"
-#include "time_manager.h"
+#include "../include/character_creation.h"
+#include "../include/stdio.h"
+#include "../include/game_constants.h"
+#include "../include/bomb_manager.h"
+#include "../include/time_manager.h"
 
 int is_character_in_bomb_range(t_level *level, t_character *character) {
   t_bomb *cur_bomb = NULL;
@@ -22,7 +22,7 @@ int is_character_in_bomb_range(t_level *level, t_character *character) {
   }
 
   while(cur_bomb != NULL) {
-    if (is_in_bomb_range(level, cur_bomb, character->position_x, character->position_y) == IS_IN_BOMB_RANGE){
+    if (is_in_bomb_range(cur_bomb, character->position_x, character->position_y) == IS_IN_BOMB_RANGE){
       return NO;
     }
     cur_bomb = cur_bomb->next_bomb;

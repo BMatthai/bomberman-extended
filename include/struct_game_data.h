@@ -1,11 +1,11 @@
 #ifndef T_LEVEL
 #define T_LEVEL
-#include "struct_level.h"
+#include "../include/struct_level.h"
 #endif
 
 #ifndef T_CHARACTER
 #define T_CHARACTER
-#include "struct_character.h"
+#include "../include/struct_character.h"
 #endif
 
 

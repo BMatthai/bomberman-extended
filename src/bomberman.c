@@ -1,14 +1,14 @@
 
 #ifndef T_DISPLAY
 #define T_DISPLAY
-#include "struct_display.h"
+#include "../include/struct_display.h"
 #endif
 
-#include "struct_game_settings.h"
+#include "../include/struct_game_settings.h"
 
 
-#include "game_constants.h"
-#include "game_manager.h"
+#include "../include/game_constants.h"
+#include "../include/game_manager.h"
 
 #include <string.h>
 #include <signal.h>
@@ -35,7 +35,7 @@ t_display *init_window() {
     printf("TTF_OpenFont: %s\n", TTF_GetError());
   }
 
-  SDL_Color white = {255, 255, 255};
+  SDL_Color white = {255, 255, 255, 255};
 
   SDL_Texture **text_terrain = malloc(4 * sizeof(SDL_Texture *));
   SDL_Texture **text_bomb = malloc(4 * sizeof(SDL_Texture *));
@@ -124,9 +124,7 @@ t_display *init_window() {
   return display;
 }
 
-void display_settings_menu(t_display *display, t_game_settings *settings, int selected) {
-
-
+void display_settings_menu(t_display *display, int selected) {
   SDL_Rect location;
   int width = 400;
   int height = 100;
@@ -257,7 +255,7 @@ void game_settings_menu_loop(t_display *display) {
   while (is_running) {
 
     SDL_RenderClear(display->renderer);
-    display_settings_menu(display, settings, selected);
+    display_settings_menu(display, selected);
     SDL_RenderPresent(display->renderer);
 
       while (SDL_PollEvent(&event)) {
@@ -326,7 +324,7 @@ void main_menu_loop(t_display *display) {
 
 }
 
-int main(int argc, char **argv) {
+int main() {
 
   t_display *display = NULL;
   display = init_window();

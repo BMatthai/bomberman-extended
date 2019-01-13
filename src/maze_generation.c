@@ -1,12 +1,12 @@
 #ifndef T_LEVEL
 #define T_LEVEL
-#include "struct_level.h"
+#include "../include/struct_level.h"
 #endif
 
-#include "struct_game_settings.h"
+#include "../include/struct_game_settings.h"
 
-#include "character_creation.h"
-#include "game_constants.h"
+#include "../include/character_creation.h"
+#include "../include/game_constants.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -87,10 +87,6 @@ int *list_walls(int width, int height) {
 int *list_cells(int width, int height) {
   int size = count_cells(width, height);
   int *cells = malloc(sizeof(int) * size);
-
-  int cur_row;
-  int cur_col;
-  int value;
 
   int k = 0;
   for (int i = 0; i < height; i++) {
@@ -335,21 +331,21 @@ col = wall_index % width;
   return YES;
 }
 
-int init_cell(int width, int height, int i) {
+int init_cell(int width, int i) {
   int cur_row;
-  //int cur_col;
   int value;
+
+  //voir curRow
 
   if (width % 2 == 0) {
     cur_row = (2 * i) / width;
     value = ((2 * i + 1) % width) + (2 * cur_row * width);
   }
   else {
+    //voir currow ici
+    cur_row = (2 * i) / width;
     value = ((2 * i + 1) % width) + (2 * cur_row * width);
-
   }
-
-
 
   return value;
 }
@@ -400,7 +396,7 @@ char **generate_empty_layer(int width, int height) {
   return maze;
 }
 
-void remove_wall(char **maze, int width, int height, int value) {
+void remove_wall(char **maze, int width, int value) {
   int i;
   int j;
 
@@ -455,8 +451,6 @@ t_set *set_from_value(t_set *sets, int value, int width, int height) {
 
   cur_set = sets;
 
-  t_element *first = NULL;
-
   while (cur_set != NULL) {
 
     cur_elt = get_head(cur_set);
@@ -490,12 +484,8 @@ void dig_walls(char **maze, int *cells, t_game_settings *settings) {
   nb_walls = count_walls(width, height);
   sets = init_sets(cells, width, height);
 
-  // list_all_sets(sets);
-
   int is_cur_row_even;
-  int is_separator;
   int wall_index;
-
   shuffle(walls, nb_walls);
 
   for (int i = 0; i < nb_walls; i++) {
@@ -521,7 +511,7 @@ void dig_walls(char **maze, int *cells, t_game_settings *settings) {
 
     if (set1 != NULL && set2 != NULL) {
       if (is_same_set(set1, set2) == NO) {
-        remove_wall(maze, width, height, wall_index);
+        remove_wall(maze, width, wall_index);
         merge_sets(set1, set2);
       }
       else {

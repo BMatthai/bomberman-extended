@@ -1,36 +1,34 @@
 #ifndef T_DISPLAY
 #define T_DISPLAY
-#include "struct_display.h"
+#include "../include/struct_display.h"
 #endif
 
 #ifndef T_LEVEL
 #define T_LEVEL
-#include "struct_level.h"
+#include "../include/struct_level.h"
 #endif
 
 #ifndef T_GAME_DATA
 #define T_GAME_DATA
-#include "struct_game_data.h"
+#include "../include/struct_game_data.h"
 #endif
 
-#include "struct_game_settings.h"
+#include "../include/struct_game_settings.h"
 
-#include "game_constants.h"
-#include "game_manager.h"
-// #include "level_generation.h"
-#include "time_manager.h"
-#include "action.h"
-#include "level_generation.h"
-#include "action.h"
-#include "game_constants.h"
-#include "bomb_manager.h"
-#include "game_manager.h"
-#include "character_creation.h"
-#include "tile_manager.h"
-#include "time_manager.h"
-#include "log_manager.h"
-#include "maze_generation.h"
-#include "display_game.h"
+#include "../include/game_constants.h"
+#include "../include/game_manager.h"
+#include "../include/time_manager.h"
+#include "../include/action.h"
+#include "../include/action.h"
+#include "../include/game_constants.h"
+#include "../include/bomb_manager.h"
+#include "../include/game_manager.h"
+#include "../include/character_creation.h"
+#include "../include/tile_manager.h"
+#include "../include/time_manager.h"
+#include "../include/log_manager.h"
+#include "../include/maze_generation.h"
+#include "../include/display_game.h"
 
 #include <poll.h>
 #include <stdio.h>
@@ -50,7 +48,7 @@ int game_state(t_game_data *game_data) {
   return GAME_IS_RUNNING;
 }
 
-void refresh(t_game_data *game_data, t_display *display, t_character *playable_character) {
+void refresh(t_game_data *game_data, t_display *display) {
   t_level *level = game_data->level;
 
   SDL_RenderClear(display->renderer);
@@ -90,8 +88,8 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
   display->offset_x = offset_x;
   display->offset_y = offset_y;
 
-  Uint32 time_start = get_time();
-  Uint32 last_refresh = get_time();
+  unsigned int time_start = get_time();
+  //unsigned int last_refresh = get_time();
 
   while (is_running)
   {
@@ -125,7 +123,7 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
     check_bombs_timer(level);
     move_char(level, character);
     motion_char(level, character);
-    refresh(game_data, display, character);
+    refresh(game_data, display);
   }
   SDL_DestroyTexture(display->text_terrain[0]);
   SDL_DestroyTexture(display->text_terrain[1]);
