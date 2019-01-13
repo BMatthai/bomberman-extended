@@ -5,7 +5,7 @@ LDFLAGS=-I./include -lSDL2_ttf -lSDL2
 EXEC=bomberman
 BUILD_DIR=.
 BIN_DIR=.
-SOURCE_DIR=.
+SOURCE_DIR=./src
 
 all: $(EXEC)
 
