@@ -48,8 +48,8 @@ t_bomb *get_last_bomb(t_level *level) {
 t_bomb *create_bomb(t_level *level, t_character *character) {
   t_bomb *bomb = malloc(sizeof(t_bomb));
 
-  int position_x = character->position_x;
-  int position_y = character->position_y;
+  int position_x = character->position_x - character->velocity_x;
+  int position_y = character->position_y - character->velocity_y;
 
   level->bomb[position_x][position_y] = '@';
 

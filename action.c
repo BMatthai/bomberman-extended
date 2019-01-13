@@ -66,10 +66,6 @@ void move(t_level *level, t_character *character, int direction) {
   pick_item(level, character);
 }
 
-
-
-
-
 // void put_bomb(t_level *level, t_character *character) {
 //
 //   if (is_tile_bomb_planted(level, character->position_x, character->position_y) == YES) {
@@ -122,8 +118,6 @@ void put_bomb(t_level *level, t_character *character) {
   }
 }
 
-
-
 void action(t_level *level, t_character *character, int touch_action) {
   if(touch_action == ACTION_UP)
     move(level, character, ACTION_UP);
@@ -168,11 +162,12 @@ void motion_char(t_level *level, t_character *character) {
   float scale_y = position_y - (int)position_y;
   if (character->velocity_y == 0 && scale_y > 0 && scale_y < 0.1)
     character->position_y = (int) position_y;
-  if (character->velocity_y == 0 && scale_y >= 0.1 && scale_y < 0.5)
+  else if (character->velocity_y == 0 && scale_y >= 0.1 && scale_y < 0.5)
     move(level, character, ACTION_UP);
   else if (character->velocity_y == 0 && scale_y >= 0.5 && scale_y < 1)
     move(level, character, ACTION_DOWN);
-  else if(character->velocity_x == 0  && scale_x > 0 && scale_x < 0.1)
+
+  if(character->velocity_x == 0  && scale_x > 0 && scale_x < 0.1)
     character->position_x = (int) position_x;
   else if(character->velocity_x == 0  && scale_x >= 0.1 && scale_x < 0.5)
     move(level, character, ACTION_LEFT);
@@ -188,7 +183,7 @@ void move_char(t_level *level, t_character *character) {
     move(level, character, ACTION_UP);
   else if (character->velocity_y == 1)
     move(level, character, ACTION_DOWN);
-  else if(character->velocity_x == -1)
+  if(character->velocity_x == -1)
     move(level, character, ACTION_LEFT);
   else if(character->velocity_x == 1)
     move(level, character, ACTION_RIGHT);

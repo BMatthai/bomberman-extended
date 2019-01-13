@@ -15,7 +15,7 @@ typedef struct s_display {
   SDL_Texture **text_main_menu;
   SDL_Texture **text_settings_menu;
   SDL_Texture *text_blizzard;
-  
+  SDL_Texture *text_red;
   TTF_Font *font;
   int offset_x;
   int offset_y;

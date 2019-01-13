@@ -97,13 +97,27 @@ void display_characters(t_level *level, t_display *display) {
   for (int i = 0; i < 4; i++) {
     character = level->characters[i];
 
-    location.h = STANDARD_TILE_HEIGHT;
-    location.w = STANDARD_TILE_WIDTH;
-    location.x = STANDARD_TILE_WIDTH * character.position_x + display->offset_x;
-    location.y = STANDARD_TILE_HEIGHT * character.position_y + display->offset_y;
+    if (character.state != CHARACTER_DEAD) {
+      location.h = STANDARD_TILE_HEIGHT;
+      location.w = STANDARD_TILE_WIDTH;
+      location.x = STANDARD_TILE_WIDTH * character.position_x + display->offset_x;
+      location.y = STANDARD_TILE_HEIGHT * character.position_y + display->offset_y;
 
-    SDL_RenderCopy(display->renderer, display->text_character[i], NULL, &location);
+      SDL_RenderCopy(display->renderer, display->text_character[i], NULL, &location);
+    }
+
   }
+}
+
+void display_hud(t_game_data *game_data, t_display *display) {
+  SDL_Rect location;
+
+  location.h = STANDARD_LIFE_GAUGE_HEIGHT;
+  location.w = game_data->playable_character->heal_points * (STANDARD_LIFE_GAUGE_WIDTH / CHARACTER_HEAL_POINT);
+  location.x = (STANDARD_WIN_WIDTH / 2) - (STANDARD_LIFE_GAUGE_WIDTH / 2);
+  location.y = STANDARD_TILE_WIDTH * 2;
+
+  SDL_RenderCopy(display->renderer, display->text_red, NULL, &location);
 }
 
 void display_misc(t_game_data *game_data, t_display *display) {
@@ -233,11 +247,14 @@ int game_state(t_game_data *game_data) {
   return GAME_IS_RUNNING;
 }
 
-void refresh(t_level *level, t_display *display, t_character *playable_character) {
+void refresh(t_game_data *game_data, t_display *display, t_character *playable_character) {
+  t_level *level = game_data->level;
+
   SDL_RenderClear(display->renderer);
   display_map(level, display);
   display_characters(level, display);
   display_bombs(level, display);
+  display_hud(game_data, display);
   //display_misc(game_data, display);
   SDL_RenderPresent(display->renderer);
 }
@@ -257,13 +274,14 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
   game_data->level = generate_maze_level(game_settings);
 
   game_data->playable_character = &game_data->level->characters[0];
-  t_character *playable_character = game_data->playable_character;
+  t_character *character = game_data->playable_character;
 
   t_level *level = game_data->level;
 
   int is_running = YES;
   int offset_x = ((STANDARD_WIN_WIDTH / 2) - ((width * STANDARD_TILE_WIDTH) / 2));
-  int offset_y = ((STANDARD_WIN_HEIGHT / 2) - ((height * STANDARD_TILE_HEIGHT) / 2));
+  // int offset_y = ((STANDARD_WIN_HEIGHT / 2) - ((height * STANDARD_TILE_HEIGHT) / 2));
+  int offset_y = STANDARD_WIN_HEIGHT - (height * STANDARD_TILE_HEIGHT);
 
   display->offset_x = offset_x;
   display->offset_y = offset_y;
@@ -272,9 +290,7 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
   Uint32 last_refresh = get_time();
   while (is_running)
   {
-
     while (SDL_PollEvent(&event)) {
-
       switch (event.type) {
         case SDL_QUIT:
           is_running = NO;
@@ -282,30 +298,31 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym)
             {
-                case SDLK_LEFT:  set_velocity_character(playable_character, -1, 0); break;
-                case SDLK_RIGHT:  set_velocity_character(playable_character, 1, 0); break;
-                case SDLK_UP:     set_velocity_character(playable_character, 0, -1); break;
-                case SDLK_DOWN:  set_velocity_character(playable_character, 0,  1); break;
-                case SDLK_c:  action(level, playable_character, ACTION_BOMB); break;
+                case SDLK_LEFT: set_velocity_character(character, -1, 0); break;
+                case SDLK_RIGHT: set_velocity_character(character, 1, 0); break;
+                case SDLK_UP: set_velocity_character(character, 0, -1); break;
+                case SDLK_DOWN: set_velocity_character(character, 0,  1); break;
+                case SDLK_c: action(level, character, ACTION_BOMB); break;
                 case SDLK_ESCAPE: is_running = NO; break;
             }
           break;
         case SDL_KEYUP:
           switch (event.key.keysym.sym)
           {
-            case SDLK_LEFT:  set_velocity_character(playable_character, 0, 0); break;
-            case SDLK_RIGHT:  set_velocity_character(playable_character, 0, 0); break;
-            case SDLK_UP:     set_velocity_character(playable_character, 0, 0); break;
-            case SDLK_DOWN:  set_velocity_character(playable_character, 0, 0); break;
+            case SDLK_LEFT: set_velocity_character(character, 0, 0); break;
+            case SDLK_RIGHT: set_velocity_character(character, 0, 0); break;
+            case SDLK_UP: set_velocity_character(character, 0, 0); break;
+            case SDLK_DOWN: set_velocity_character(character, 0, 0); break;
           }
       }
     }
 
     game_data->elapsed_time = get_time() - time_start;
     check_bombs_timer(level);
-    move_char(level, playable_character);
-    motion_char(level, playable_character);
-    refresh(level, display, playable_character);
+    move_char(level, character);
+    motion_char(level, character);
+
+    refresh(game_data, display, character);
 
   }
 

@@ -43,6 +43,7 @@ t_display *init_window() {
   SDL_Texture **text_main_menu = malloc(5 * sizeof(SDL_Texture *));
   SDL_Texture **text_settings_menu = malloc(4 * sizeof(SDL_Texture *));
   SDL_Texture *text_blizzard = malloc(sizeof(SDL_Texture *));
+  SDL_Texture *text_red = malloc(sizeof(SDL_Texture *));
 
 
   SDL_Surface *image_free = SDL_LoadBMP("resources/free.bmp");
@@ -71,7 +72,8 @@ t_display *init_window() {
   SDL_Surface *surfaceProbaDestrWall = TTF_RenderText_Solid(font, "% de cases destructible : ", white);
   SDL_Surface *surfaceProbaEmpty = TTF_RenderText_Solid(font, "% de cases libres libre : ", white);
 
-  SDL_Surface *surfaceBlizzard =  SDL_CreateRGBSurface(0, STANDARD_WIN_WIDTH, STANDARD_WIN_HEIGHT, 32, 0, 9, 0, 0);
+  SDL_Surface *surfaceBlizzard =  SDL_CreateRGBSurface(0, STANDARD_WIN_WIDTH, STANDARD_WIN_HEIGHT, 32, 0, 0, 0, 0);
+  SDL_Surface *surfaceRed =  SDL_CreateRGBSurface(0, STANDARD_LIFE_GAUGE_WIDTH, STANDARD_LIFE_GAUGE_WIDTH, 32, 0, 0, 0, 0);
 
   text_terrain[0] = SDL_CreateTextureFromSurface(renderer, image_free);
   text_terrain[1] = SDL_CreateTextureFromSurface(renderer, image_wall);
@@ -100,7 +102,9 @@ t_display *init_window() {
   text_settings_menu[3] = SDL_CreateTextureFromSurface(renderer, surfaceProbaEmpty);
 
   SDL_FillRect(surfaceBlizzard, NULL, SDL_MapRGBA(surfaceBlizzard->format, 0, 0, 255, 0));
+  SDL_FillRect(surfaceRed, NULL, SDL_MapRGBA(surfaceRed->format, 0, 255, 0, 0));
 
+  text_red = SDL_CreateTextureFromSurface(renderer, surfaceBlizzard);
   text_blizzard = SDL_CreateTextureFromSurface(renderer, surfaceBlizzard);
 
 
@@ -115,6 +119,7 @@ t_display *init_window() {
   display->text_main_menu = text_main_menu;
   display->text_settings_menu = text_settings_menu;
   display->text_blizzard = text_blizzard;
+  display->text_red = text_red;
   display->font = font;
 
   return display;
