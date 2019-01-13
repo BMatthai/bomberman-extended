@@ -45,7 +45,6 @@ t_display *init_window() {
   SDL_Texture *text_blizzard = malloc(sizeof(SDL_Texture *));
   SDL_Texture *text_red = malloc(sizeof(SDL_Texture *));
 
-
   SDL_Surface *image_free = SDL_LoadBMP("resources/free.bmp");
   SDL_Surface *image_wall = SDL_LoadBMP("resources/wall.bmp");
   SDL_Surface *image_destr = SDL_LoadBMP("resources/destructible.bmp");
