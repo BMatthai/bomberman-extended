@@ -16,6 +16,71 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
+t_text_display *create_text_display(t_display *display, char *str) {
+  t_text_display *text = NULL;
+
+  SDL_Color white = {255, 255, 255, 255};
+
+  text = malloc(sizeof(t_text_display));
+  TTF_SizeText(display->font, str, &text->recommended_w, &text->recommended_h);
+
+  SDL_Surface *surface= TTF_RenderText_Solid(display->font, str, white);
+  text->texture = SDL_CreateTextureFromSurface(display->renderer, surface);
+
+  return text;
+}
+
+t_text_display *create_graphic_display(t_display *display, char *path) {
+  t_text_display *text = NULL;
+  text = malloc(sizeof(t_text_display));
+
+  SDL_Surface *surface = SDL_LoadBMP(path);
+  text->texture = SDL_CreateTextureFromSurface(display->renderer, surface);
+}
+
+
+void init_default_theme(t_display *display) {
+  s_theme_display *theme = NULL;
+
+  theme = malloc(sizeof(t_theme_display));
+
+  t_text_display **text_main_menu = NULL;
+
+  *text_main_menu = malloc(sizeof(t_text_display *) * 3);
+
+  text_main_menu[MENU_MONOPLAYER] = create_text_display(display, "Monojoueur");
+  text_main_menu[MENU_MULTIPLAYER] = create_text_display(display, "Multijoueur");
+  text_main_menu[MENU_QUIT] = create_text_display(display, "Quitter");
+
+  // text_main_menu[3] = create_text_display(display, ">");
+  // text_main_menu[4] = create_text_display(display, "<");
+
+  // text_settings_menu[0] = create_text_display(display, "Largeur map : ");
+  // text_settings_menu[1] = create_text_display(display, "Hauteur map : ");
+  // text_settings_menu[2] = create_text_display(display, "% de cases destructible : ");
+  // text_settings_menu[3] = create_text_display(display, "% de cases libres libre : ");
+
+  // create_graphic_display("resources/wall.bmp");
+  // SDL_Surface *image_wall = SDL_LoadBMP();
+  // SDL_Surface *image_destr = SDL_LoadBMP("resources/destructible.bmp");
+  // SDL_Surface *image_misc = SDL_LoadBMP("resources/misc.bmp");
+  //
+  // SDL_Surface *image_char0 = SDL_LoadBMP("resources/char0.bmp");
+  // SDL_Surface *image_char1 = SDL_LoadBMP("resources/char1.bmp");
+  // SDL_Surface *image_char2 = SDL_LoadBMP("resources/char2.bmp");
+  // SDL_Surface *image_char3 = SDL_LoadBMP("resources/char3.bmp");
+  //
+  // SDL_Surface *image_bomb0 = SDL_LoadBMP("resources/bomb0.bmp");
+  // SDL_Surface *image_bomb1 = SDL_LoadBMP("resources/bomb1.bmp");
+  // SDL_Surface *image_bomb2 = SDL_LoadBMP("resources/bomb2.bmp");
+  // SDL_Surface *image_bomb3 = SDL_LoadBMP("resources/bomb2b.bmp");
+
+
+
+  display->text_main_menu = text_main_menu;
+  display->text_settings_menu = text_settings_menu;
+}
+
 t_display *init_window() {
 
   SDL_Init(SDL_INIT_VIDEO);
@@ -37,39 +102,18 @@ t_display *init_window() {
 
   SDL_Color white = {255, 255, 255, 255};
 
-  SDL_Texture **text_terrain = malloc(4 * sizeof(SDL_Texture *));
-  SDL_Texture **text_bomb = malloc(4 * sizeof(SDL_Texture *));
-  SDL_Texture **text_character = malloc(4 * sizeof(SDL_Texture *));
-  SDL_Texture **text_main_menu = malloc(5 * sizeof(SDL_Texture *));
-  SDL_Texture **text_settings_menu = malloc(4 * sizeof(SDL_Texture *));
-  SDL_Texture *text_blizzard = malloc(sizeof(SDL_Texture *));
-  SDL_Texture *text_red = malloc(sizeof(SDL_Texture *));
+  // SDL_Texture **text_terrain = malloc(4 * sizeof(SDL_Texture *));
+  // SDL_Texture **text_bomb = malloc(4 * sizeof(SDL_Texture *));
+  // SDL_Texture **text_character = malloc(4 * sizeof(SDL_Texture *));
+  //
+  // SDL_Texture *text_blizzard = malloc(sizeof(SDL_Texture *));
+  // SDL_Texture *text_red = malloc(sizeof(SDL_Texture *));
+  //
+  // t_text_display **text_main_menu = malloc(5 * sizeof(t_text_display *));
+  // t_text_display **text_settings_menu = malloc(4 * sizeof(t_text_display *));
+  //
 
-  SDL_Surface *image_free = SDL_LoadBMP("resources/free.bmp");
-  SDL_Surface *image_wall = SDL_LoadBMP("resources/wall.bmp");
-  SDL_Surface *image_destr = SDL_LoadBMP("resources/destructible.bmp");
-  SDL_Surface *image_misc = SDL_LoadBMP("resources/misc.bmp");
 
-  SDL_Surface *image_char0 = SDL_LoadBMP("resources/char0.bmp");
-  SDL_Surface *image_char1 = SDL_LoadBMP("resources/char1.bmp");
-  SDL_Surface *image_char2 = SDL_LoadBMP("resources/char2.bmp");
-  SDL_Surface *image_char3 = SDL_LoadBMP("resources/char3.bmp");
-
-  SDL_Surface *image_bomb0 = SDL_LoadBMP("resources/bomb0.bmp");
-  SDL_Surface *image_bomb1 = SDL_LoadBMP("resources/bomb1.bmp");
-  SDL_Surface *image_bomb2 = SDL_LoadBMP("resources/bomb2.bmp");
-  SDL_Surface *image_bomb3 = SDL_LoadBMP("resources/bomb2b.bmp");
-
-  SDL_Surface *surfaceMono = TTF_RenderText_Solid(font, "Monojoueur", white);
-  SDL_Surface *surfaceMulti = TTF_RenderText_Solid(font, "Multijoueur", white);
-  SDL_Surface *surfaceQuit = TTF_RenderText_Solid(font, "Quitter", white);
-  SDL_Surface *surfaceSelectL = TTF_RenderText_Solid(font, ">", white);
-  SDL_Surface *surfaceSelectR = TTF_RenderText_Solid(font, "<", white);
-
-  SDL_Surface *surfaceWidth = TTF_RenderText_Solid(font, "Largeur map : ", white);
-  SDL_Surface *surfaceHeight = TTF_RenderText_Solid(font, "Hauteur map : ", white);
-  SDL_Surface *surfaceProbaDestrWall = TTF_RenderText_Solid(font, "% de cases destructible : ", white);
-  SDL_Surface *surfaceProbaEmpty = TTF_RenderText_Solid(font, "% de cases libres libre : ", white);
 
   SDL_Surface *surfaceBlizzard =  SDL_CreateRGBSurface(0, STANDARD_WIN_WIDTH, STANDARD_WIN_HEIGHT, 32, 0, 0, 0, 0);
   SDL_Surface *surfaceRed =  SDL_CreateRGBSurface(0, STANDARD_LIFE_GAUGE_WIDTH, STANDARD_LIFE_GAUGE_WIDTH, 32, 0, 0, 0, 0);
@@ -89,16 +133,8 @@ t_display *init_window() {
   text_bomb[2] = SDL_CreateTextureFromSurface(renderer, image_bomb2);
   text_bomb[3] = SDL_CreateTextureFromSurface(renderer, image_bomb3);
 
-  text_main_menu[0] = SDL_CreateTextureFromSurface(renderer, surfaceMono);
-  text_main_menu[1] = SDL_CreateTextureFromSurface(renderer, surfaceMulti);
-  text_main_menu[2] = SDL_CreateTextureFromSurface(renderer, surfaceQuit);
-  text_main_menu[3] = SDL_CreateTextureFromSurface(renderer, surfaceSelectL);
-  text_main_menu[4] = SDL_CreateTextureFromSurface(renderer, surfaceSelectR);
-
-  text_settings_menu[0] = SDL_CreateTextureFromSurface(renderer, surfaceWidth);
-  text_settings_menu[1] = SDL_CreateTextureFromSurface(renderer, surfaceHeight);
-  text_settings_menu[2] = SDL_CreateTextureFromSurface(renderer, surfaceProbaDestrWall);
-  text_settings_menu[3] = SDL_CreateTextureFromSurface(renderer, surfaceProbaEmpty);
+  t_text_display **text_main_menu;
+  t_text_display **text_settings_menu;
 
   SDL_FillRect(surfaceBlizzard, NULL, SDL_MapRGBA(surfaceBlizzard->format, 0, 0, 255, 0));
   SDL_FillRect(surfaceRed, NULL, SDL_MapRGBA(surfaceRed->format, 255, 0, 0, 0));
@@ -114,14 +150,15 @@ t_display *init_window() {
   display->text_bomb = text_bomb;
   display->text_terrain = text_terrain;
   display->text_character = text_character;
-  display->text_main_menu = text_main_menu;
-  display->text_settings_menu = text_settings_menu;
   display->text_blizzard = text_blizzard;
   display->text_red = text_red;
   display->font = font;
 
   return display;
 }
+
+
+
 
 void display_settings_menu(t_display *display, t_game_settings *settings, int selected) {
 
@@ -157,12 +194,9 @@ void display_settings_menu(t_display *display, t_game_settings *settings, int se
   text_values[2] = SDL_CreateTextureFromSurface(display->renderer, surface_values[2]);
   text_values[3] = SDL_CreateTextureFromSurface(display->renderer, surface_values[3]);
 
-
   SDL_Rect location;
   int width = 400;
   int height = STANDARD_MENU_LETTERING_SIZE;
-
-
 
   for (int i = 0; i < 4; i++) {
     location.x = (STANDARD_WIN_WIDTH / 2) - (width);
