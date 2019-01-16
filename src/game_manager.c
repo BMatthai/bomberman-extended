@@ -48,18 +48,18 @@ int game_state(t_game_data *game_data) {
   return GAME_IS_RUNNING;
 }
 
-void refresh(t_game_data *game_data, t_display *display) {
-  t_level *level = game_data->level;
-
-  SDL_RenderClear(display->renderer);
-
-  display_map(level, display);
-  display_characters(level, display);
-  display_bombs(level, display);
-  display_hud(game_data, display);
-  //display_misc(game_data, display);
-  SDL_RenderPresent(display->renderer);
-}
+// void refresh(t_game_data *game_data, t_display *display) {
+// //  t_level *level = game_data->level;
+//
+//   SDL_RenderClear(display->renderer);
+//
+//   // display_map(level, display);
+//   // display_characters(level, display);
+//   // display_bombs(level, display);
+//   // display_hud(game_data, display);
+//   //display_misc(game_data, display);
+//   SDL_RenderPresent(display->renderer);
+// }
 
 int launch_game(t_display *display, t_game_settings *game_settings) {
 
@@ -123,10 +123,10 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
     check_bombs_timer(level);
     move_char(level, character);
     motion_char(level, character);
-    refresh(game_data, display);
+    //refresh(game_data, display);
   }
-  SDL_DestroyTexture(display->text_terrain[0]);
-  SDL_DestroyTexture(display->text_terrain[1]);
+  // SDL_DestroyTexture(display->text_terrain[0]);
+  // SDL_DestroyTexture(display->text_terrain[1]);
   SDL_DestroyRenderer(display->renderer);
   SDL_DestroyWindow(display->window);
   SDL_Quit();

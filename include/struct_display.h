@@ -11,12 +11,12 @@ typedef struct s_text_display {
 } t_text_display;
 
 typedef struct s_theme_display {
-  t_text_display **text_menu;
-  t_text_display **text_terrain;
-  t_text_display **text_bomb;
-  t_text_display **text_character;
-  t_text_display **text_blizzard;
-  t_text_display **text_red;
+  struct s_text_display **text_menu;
+  struct s_text_display **text_terrain;
+  struct s_text_display **text_bomb;
+  struct s_text_display **text_character;
+  struct s_text_display **text_blizzard;
+  struct s_text_display **text_red;
 } t_theme_display;
 
 typedef struct s_display {
@@ -25,5 +25,5 @@ typedef struct s_display {
   TTF_Font *font;
   int offset_x;
   int offset_y;
-  t_theme_display *theme;
+  struct s_theme_display *theme;
 }   t_display;
