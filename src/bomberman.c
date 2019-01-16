@@ -38,6 +38,25 @@ t_text_display *create_graphic_display(t_display *display, char *path) {
   text->texture = SDL_CreateTextureFromSurface(display->renderer, surface);
 }
 
+void init_menu(t_display *display) {
+  t_text_display **text_menu = NULL;
+
+  *text_menu = malloc(sizeof(t_text_display *) * 13);
+
+  text_menu[TEXT_MENU_MONOPLAYER] = create_text_display(display, "Monojoueur");
+  text_menu[TEXT_MENU_MULTIPLAYER] = create_text_display(display, "Multijoueur");
+  text_menu[TEXT_MENU_QUIT] = create_text_display(display, "Quitter");
+  text_menu[TEXT_MENU_SELECTOR_LEFT] = create_text_display(display, ">");
+  text_menu[TEXT_MENU_SELECTOR_RIGHT] = create_text_display(display, "<");
+  text_menu[TEXT_MENU_TILE_DESTRUCTIBLE_STR] = create_text_display(display, "% de cases destructible : ");
+  text_menu[TEXT_MENU_TILE_EMPTY_STR] = create_text_display(display, "% de cases libres libre : ");
+  text_menu[TEXT_MENU_MAP_WIDTH_STR] = create_text_display(display, "Largeur map : ");
+  text_menu[TEXT_MENU_MAP_HEIGHT_STR] = create_text_display(display, "Hauteur map : ");
+
+  display->theme->text_menu = text_menu;
+}
+
+
 
 void init_default_theme(t_display *display) {
   s_theme_display *theme = NULL;
@@ -46,18 +65,14 @@ void init_default_theme(t_display *display) {
 
   t_text_display **text_main_menu = NULL;
 
-  *text_main_menu = malloc(sizeof(t_text_display *) * 3);
 
-  text_main_menu[MENU_MONOPLAYER] = create_text_display(display, "Monojoueur");
-  text_main_menu[MENU_MULTIPLAYER] = create_text_display(display, "Multijoueur");
-  text_main_menu[MENU_QUIT] = create_text_display(display, "Quitter");
 
   // text_main_menu[3] = create_text_display(display, ">");
   // text_main_menu[4] = create_text_display(display, "<");
 
   // text_settings_menu[0] = create_text_display(display, "Largeur map : ");
   // text_settings_menu[1] = create_text_display(display, "Hauteur map : ");
-  // text_settings_menu[2] = create_text_display(display, "% de cases destructible : ");
+  // text_settings_menu[2] = create_text_display(display, "");
   // text_settings_menu[3] = create_text_display(display, "% de cases libres libre : ");
 
   // create_graphic_display("resources/wall.bmp");
@@ -147,12 +162,13 @@ t_display *init_window() {
   display = malloc(sizeof(t_display));
   display->window = window;
   display->renderer = renderer;
-  display->text_bomb = text_bomb;
-  display->text_terrain = text_terrain;
-  display->text_character = text_character;
-  display->text_blizzard = text_blizzard;
-  display->text_red = text_red;
   display->font = font;
+
+  // display->text_bomb = text_bomb;
+  // display->text_terrain = text_terrain;
+  // display->text_character = text_character;
+  // display->text_blizzard = text_blizzard;
+  // display->text_red = text_red;
 
   return display;
 }

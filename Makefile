@@ -1,6 +1,5 @@
 CC=gcc
 CFLAGS=-W -Wall -Werror -pedantic -std=c99
-#CFLAGSE=-W -Wall -Werror -pedantic -std=c99
 LDFLAGS=-I./include -lSDL2_ttf -lSDL2
 EXEC=bomberman
 BUILD_DIR=./build

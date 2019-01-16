@@ -11,13 +11,12 @@ typedef struct s_text_display {
 } t_text_display;
 
 typedef struct s_theme_display {
+  t_text_display **text_menu;
   t_text_display **text_terrain;
   t_text_display **text_bomb;
   t_text_display **text_character;
   t_text_display **text_blizzard;
   t_text_display **text_red;
-  t_text_display **text_main_menu;
-  t_text_display **text_settings_menu;
 } t_theme_display;
 
 typedef struct s_display {
