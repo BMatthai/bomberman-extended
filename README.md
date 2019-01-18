@@ -12,15 +12,16 @@ Projet de bomberman en ASCII !!! C'était plutôt stylé même si l'interface pa
 - [x] Implémenter un nouvel affichage en utilisant SDL (A améliorer)
 - [x] Séparer les fichiers .o .h et .c dans des dossiers build, include et src.
 - [x] Créer le menu de jeu (A améliorer)
-
 - [ ] Factoriser Makefile.
 - [ ] Faire en sorte que ça compile avec SDL sous Linux et Windows
-- [ ] Implémenter réseau 
 - [ ] Créer une boucle de jeu qui ne dépend pas du CPU
 
+- [ ] Faire un audit de performance CPU et/ou RAM, et optimiser (Bastien)
+- [ ] Analyse Portabilité : voir comment rendre le jeu compatible Windows sans enlever la compatibilité OSX (David)
+- [ ] Analyse Distribution : voir comment faire la distribution (Yassine)
+
+- [ ] ~~Implémenter réseau ~~ __(Pas prio)__
 - [ ] ~~Vérifier le retours des mallocs et gérer les erreurs~~ __(Pas prio)__
 - [ ] ~~Tester le retours des fonctions en général et gérer les erreurs~~ __(Pas prio)__
 - [ ] ~~Gérer les fuites de mémoires.~~ __(Pas prio)__
 - [ ] ~~Améliorer IA / Refactoriser complêtement~~ __(Pas prio)__
-
-
