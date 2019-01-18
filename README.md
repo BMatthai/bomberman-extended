@@ -20,7 +20,7 @@ Projet de bomberman en ASCII !!! C'était plutôt stylé même si l'interface pa
 - [ ] Analyse Portabilité : voir comment rendre le jeu compatible Windows sans enlever la compatibilité OSX (David)
 - [ ] Analyse Distribution : voir comment faire la distribution (Yassine)
 
-- [ ] ~~Implémenter réseau ~~ __(Pas prio)__
+- [ ] ~~Implémenter réseau~~ __(Pas prio)__
 - [ ] ~~Vérifier le retours des mallocs et gérer les erreurs~~ __(Pas prio)__
 - [ ] ~~Tester le retours des fonctions en général et gérer les erreurs~~ __(Pas prio)__
 - [ ] ~~Gérer les fuites de mémoires.~~ __(Pas prio)__
