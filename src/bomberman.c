@@ -53,17 +53,17 @@ void init_terrain(t_display *display) {
 
   text_terrain = malloc(sizeof(t_text_display *) * 11);
 
-  text_terrain[TEXT_GAME_WALL_0] = create_graphic_display(display, "./resources/env_wall_0.bmp");
-  text_terrain[TEXT_GAME_WALL_1] = create_graphic_display(display, "./resources/env_wall_1.bmp");
-  text_terrain[TEXT_GAME_WALL_2] = create_graphic_display(display, "./resources/env_wall_2.bmp");
-  text_terrain[TEXT_GAME_WALL_3] = create_graphic_display(display, "./resources/env_wall_3.bmp");
-  text_terrain[TEXT_GAME_WALL_4] = create_graphic_display(display, "./resources/env_wall_4.bmp");
-  text_terrain[TEXT_GAME_WALL_5] = create_graphic_display(display, "./resources/env_wall_5.bmp");
-  text_terrain[TEXT_GAME_WALL_6] = create_graphic_display(display, "./resources/env_wall_6.bmp");
-  text_terrain[TEXT_GAME_WALL_7] = create_graphic_display(display, "./resources/env_wall_7.bmp");
-  text_terrain[TEXT_GAME_WALL_8] = create_graphic_display(display, "./resources/env_wall_8.bmp");
-  text_terrain[TEXT_GAME_WALL_9] = create_graphic_display(display, "./resources/env_wall_9.bmp");
-  text_terrain[TEXT_GAME_WALL_EMPTY] = create_graphic_display(display, "./resources/env_free.bmp");
+  text_terrain[TEXT_TERRAIN_0] = create_graphic_display(display, "./resources/env_wall_0.bmp");
+  text_terrain[TEXT_TERRAIN_1] = create_graphic_display(display, "./resources/env_wall_1.bmp");
+  text_terrain[TEXT_TERRAIN_2] = create_graphic_display(display, "./resources/env_wall_2.bmp");
+  text_terrain[TEXT_TERRAIN_3] = create_graphic_display(display, "./resources/env_wall_3.bmp");
+  text_terrain[TEXT_TERRAIN_4] = create_graphic_display(display, "./resources/env_wall_4.bmp");
+  text_terrain[TEXT_TERRAIN_5] = create_graphic_display(display, "./resources/env_wall_5.bmp");
+  text_terrain[TEXT_TERRAIN_6] = create_graphic_display(display, "./resources/env_wall_6.bmp");
+  text_terrain[TEXT_TERRAIN_7] = create_graphic_display(display, "./resources/env_wall_7.bmp");
+  text_terrain[TEXT_TERRAIN_8] = create_graphic_display(display, "./resources/env_wall_8.bmp");
+  text_terrain[TEXT_TERRAIN_9] = create_graphic_display(display, "./resources/env_wall_9.bmp");
+  text_terrain[TEXT_TERRAIN_EMPTY] = create_graphic_display(display, "./resources/env_free.bmp");
 
   display->theme->text_terrain = text_terrain;
 
@@ -83,16 +83,16 @@ void init_characters(t_display *display) {
 }
 
 void init_bombs(t_display *display) {
-  t_text_display **text_character = NULL;
+  t_text_display **text_bomb = NULL;
 
-  text_character = malloc(sizeof(t_text_display *) * 11);
+  text_bomb = malloc(sizeof(t_text_display *) * 11);
 
-  text_character[TEXT_BOMB_PLANTED] = create_graphic_display(display, "./resources/bomb_planted.bmp");
-  text_character[TEXT_BOMB_UNSTABLE] = create_graphic_display(display, "./resources/bomb_unstable.bmp");
-  text_character[TEXT_BOMB_EXP_0] = create_graphic_display(display, "./resources/bomb_exp_0.bmp");
-  text_character[TEXT_BOMB_EXP_1] = create_graphic_display(display, "./resources/bomb_exp_1.bmp");
+  text_bomb[TEXT_BOMB_PLANTED] = create_graphic_display(display, "./resources/bomb_planted.bmp");
+  text_bomb[TEXT_BOMB_UNSTABLE] = create_graphic_display(display, "./resources/bomb_unstable.bmp");
+  text_bomb[TEXT_BOMB_EXP_0] = create_graphic_display(display, "./resources/bomb_exp_0.bmp");
+  text_bomb[TEXT_BOMB_EXP_1] = create_graphic_display(display, "./resources/bomb_exp_1.bmp");
 
-  display->theme->text_character = text_character;
+  display->theme->text_bomb = text_bomb;
 }
 
 
@@ -102,7 +102,9 @@ void init_default_theme(t_display *display) {
   theme = malloc(sizeof(t_theme_display));
 
   init_menu(display);
-
+  init_terrain(display);
+  init_characters(display);
+  init_bombs(display);
 }
 
 t_display *init_window() {
