@@ -396,14 +396,24 @@ char **generate_empty_layer(int width, int height) {
   return maze;
 }
 
-void remove_wall(char **maze, int width, int value) {
-  int i;
-  int j;
+void remove_wall(char **maze, int wall_index, t_game_settings *settings) {
+  int cur_row;
+  int cur_col;
+  int width = settings->width;
+  int proba_destr_wall;
+  int proba_empty;
+  int rand_number;
 
-  i = value / width;
-  j = value % width;
+  cur_row = wall_index / width;
+  cur_col = wall_index % width;
+  proba_destr_wall = settings->proba_destr_wall;
+  proba_empty = settings->proba_empty;
+  rand_number = (rand() % (101));
 
-  maze[j][i] = ' ';
+  if (rand_number <= proba_destr_wall)
+    maze[cur_col][cur_row] = '1';
+  else
+    maze[cur_col][cur_row] = ' ';
 }
 
 void set_wall_content(char **maze, int wall_index, t_game_settings *settings) {
@@ -418,11 +428,11 @@ void set_wall_content(char **maze, int wall_index, t_game_settings *settings) {
   cur_col = wall_index % width;
   proba_destr_wall = settings->proba_destr_wall;
   proba_empty = settings->proba_empty;
-  rand_number = (rand() % (100 - 0 + 1));
+  rand_number = (rand() % (101));
 
   if (rand_number <= proba_destr_wall)
     maze[cur_col][cur_row] = '1';
-  else if (rand_number <= proba_destr_wall + proba_empty)
+  else if (rand_number <= proba_empty + proba_destr_wall)
     maze[cur_col][cur_row] = ' ';
 }
 
@@ -511,7 +521,7 @@ void dig_walls(char **maze, int *cells, t_game_settings *settings) {
 
     if (set1 != NULL && set2 != NULL) {
       if (is_same_set(set1, set2) == NO) {
-        remove_wall(maze, width, wall_index);
+        remove_wall(maze, wall_index, settings);
         merge_sets(set1, set2);
       }
       else {

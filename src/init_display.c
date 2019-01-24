@@ -14,6 +14,7 @@
 #endif
 
 #include "../include/init_display.h"
+#include "../include/game_constants.h"
 
 t_text_display *create_text_display(t_display *display, char *str) {
   t_text_display *text = NULL;
@@ -34,6 +35,16 @@ t_text_display *create_graphic_display(t_display *display, char *path) {
   text = malloc(sizeof(t_text_display));
 
   SDL_Surface *surface = SDL_LoadBMP(path);
+  text->texture = SDL_CreateTextureFromSurface(display->renderer, surface);
+
+  return text;
+}
+
+t_text_display *create_color_display(t_display *display, SDL_Color color) {
+  t_text_display *text = NULL;
+  text = malloc(sizeof(t_text_display));
+  SDL_Surface *surface =  SDL_CreateRGBSurface(0, STANDARD_LIFE_GAUGE_WIDTH, STANDARD_LIFE_GAUGE_WIDTH, 32, 0, 0, 0, 0);
+  SDL_FillRect(surface, NULL, SDL_MapRGBA(surface->format, color.r, color.g, color.b, color.a));
   text->texture = SDL_CreateTextureFromSurface(display->renderer, surface);
 
   return text;

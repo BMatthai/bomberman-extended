@@ -58,8 +58,8 @@ void refresh(t_game_data *game_data, t_display *display) {
 
   display_characters(level, display);
   display_bombs(level, display);
-  // display_hud(game_data, display);
-  //display_misc(game_data, display);
+  display_hud(game_data, display);
+  // display_misc(game_data, display);
   SDL_RenderPresent(display->renderer);
 }
 
@@ -84,14 +84,17 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
 
   int is_running = YES;
   int offset_x = ((STANDARD_WIN_WIDTH / 2) - ((width * STANDARD_TILE_WIDTH) / 2));
-  int offset_y = ((STANDARD_WIN_HEIGHT / 2) - ((height * STANDARD_TILE_HEIGHT) / 2)) + STANDARD_HUD_HEIGHT + (STANDARD_TILE_HEIGHT / 2);
+  // int offset_y = ((STANDARD_WIN_HEIGHT / 2) - ((height * STANDARD_TILE_HEIGHT) / 2)) + STANDARD_HUD_HEIGHT + (STANDARD_TILE_HEIGHT / 2);
+  int offset_y = ((STANDARD_WIN_HEIGHT / 2) - ((height * STANDARD_TILE_HEIGHT) / 2));
   // int offset_y = STANDARD_WIN_HEIGHT - (height * STANDARD_TILE_HEIGHT);
 
   display->offset_x = offset_x;
   display->offset_y = offset_y;
 
   unsigned int time_start = get_time();
-  //unsigned int last_refresh = get_time();
+  // SDL_RenderClear(display->renderer);
+
+  // display_outside(display);
 
   while (is_running)
   {

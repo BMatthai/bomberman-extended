@@ -51,7 +51,7 @@ void init_menu(t_display *display) {
 void init_terrain(t_display *display) {
   t_text_display **text_terrain = NULL;
 
-  text_terrain = malloc(sizeof(t_text_display *) * 11);
+  text_terrain = malloc(sizeof(t_text_display *) * 14);
 
   text_terrain[TEXT_TERRAIN_0] = create_graphic_display(display, "./resources/env_wall_0.bmp");
   text_terrain[TEXT_TERRAIN_1] = create_graphic_display(display, "./resources/env_wall_1.bmp");
@@ -64,6 +64,11 @@ void init_terrain(t_display *display) {
   text_terrain[TEXT_TERRAIN_8] = create_graphic_display(display, "./resources/env_wall_8.bmp");
   text_terrain[TEXT_TERRAIN_9] = create_graphic_display(display, "./resources/env_wall_9.bmp");
   text_terrain[TEXT_TERRAIN_EMPTY] = create_graphic_display(display, "./resources/env_free.bmp");
+  text_terrain[TEXT_TERRAIN_OUTSIDE_0] = create_graphic_display(display, "./resources/env_outside_0.bmp");
+  text_terrain[TEXT_TERRAIN_OUTSIDE_1] = create_graphic_display(display, "./resources/env_outside_1.bmp");
+  text_terrain[TEXT_TERRAIN_OUTSIDE_2] = create_graphic_display(display, "./resources/env_outside_2.bmp");
+
+
 
   display->theme->text_terrain = text_terrain;
 
@@ -85,6 +90,7 @@ void init_characters(t_display *display) {
 void init_bombs(t_display *display) {
   t_text_display **text_bomb = NULL;
 
+  // 11 ?? Pourquoi pas 4 ?
   text_bomb = malloc(sizeof(t_text_display *) * 11);
 
   text_bomb[TEXT_BOMB_PLANTED] = create_graphic_display(display, "./resources/bomb_planted.bmp");
@@ -95,6 +101,18 @@ void init_bombs(t_display *display) {
   display->theme->text_bomb = text_bomb;
 }
 
+void init_misc(t_display *display) {
+
+  t_text_display **text_misc = NULL;
+
+  text_misc = malloc(sizeof(t_text_display *) * 4);
+
+  SDL_Color redColor = {255, 0, 0, 0};
+  text_misc[TEXT_MISC_LIFE_GAUGE] = create_color_display(display, redColor);
+
+  display->theme->text_misc = text_misc;
+
+}
 
 void init_default_theme(t_display *display) {
   t_theme_display *theme = NULL;
@@ -105,6 +123,8 @@ void init_default_theme(t_display *display) {
   init_terrain(display);
   init_characters(display);
   init_bombs(display);
+  init_misc(display);
+
 }
 
 t_display *init_window() {
@@ -140,7 +160,6 @@ t_display *init_window() {
   //
 
   // SDL_Surface *surfaceBlizzard =  SDL_CreateRGBSurface(0, STANDARD_WIN_WIDTH, STANDARD_WIN_HEIGHT, 32, 0, 0, 0, 0);
-  // SDL_Surface *surfaceRed =  SDL_CreateRGBSurface(0, STANDARD_LIFE_GAUGE_WIDTH, STANDARD_LIFE_GAUGE_WIDTH, 32, 0, 0, 0, 0);
 
   // text_terrain[0] = SDL_CreateTextureFromSurface(renderer, image_free);
   // text_terrain[1] = SDL_CreateTextureFromSurface(renderer, image_wall);
@@ -234,10 +253,16 @@ void increase(t_game_settings *settings, int selected) {
     case 2:
       if (settings->proba_destr_wall <= 95)
         settings->proba_destr_wall += 5;
+        if (settings->proba_empty + settings->proba_destr_wall > 100) {
+          settings->proba_empty -=5;
+        }
       break;
     case 3:
       if (settings->proba_empty <= 95)
         settings->proba_empty += 5;
+        if (settings->proba_empty + settings->proba_destr_wall > 100) {
+          settings->proba_destr_wall -=5;
+        }
       break;
     }
 }

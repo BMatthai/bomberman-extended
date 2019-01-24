@@ -59,7 +59,7 @@ void display_settings_menu(t_display *display, t_game_settings *settings, int se
   t_text_display *cur_text_display = NULL;
 
   for (int i = 0; i < 4; i++) {
-    cur_text_display = display->theme->text_menu[TEXT_MENU_TILE_DESTRUCTIBLE_STR + i];
+    cur_text_display = display->theme->text_menu[TEXT_MENU_MAP_WIDTH_STR + i];
 
     location.x = (STANDARD_WIN_WIDTH / 2) - (cur_text_display->recommended_w / 2);
     location.y = (STANDARD_WIN_HEIGHT / 2) - ((nb_menu * cur_text_display->recommended_h) / 2) + (i * cur_text_display->recommended_h);

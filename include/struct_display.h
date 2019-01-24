@@ -15,8 +15,10 @@ typedef struct s_theme_display {
   struct s_text_display **text_terrain;
   struct s_text_display **text_bomb;
   struct s_text_display **text_character;
-  struct s_text_display **text_blizzard;
-  struct s_text_display **text_red;
+  struct s_text_display **text_misc;
+  // struct s_text_display **text_blizzard;
+  // struct s_text_display **text_red;
+
 } t_theme_display;
 
 typedef struct s_display {

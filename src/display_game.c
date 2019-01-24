@@ -58,6 +58,22 @@ void display_map(t_level *level, t_display *display) {
 //   }
 // }
 
+void display_outside(t_display *display) {
+
+  SDL_Rect location;
+
+  for (int i = 0; i < STANDARD_WIN_HEIGHT / STANDARD_TILE_HEIGHT; i++) {
+    for (int j = 0; j < STANDARD_WIN_WIDTH / STANDARD_TILE_WIDTH; j++) {
+      location.h = STANDARD_TILE_HEIGHT;
+      location.w = STANDARD_TILE_WIDTH;
+      location.x = STANDARD_TILE_WIDTH * j;
+      location.y = STANDARD_TILE_HEIGHT * i;
+
+      SDL_RenderCopy(display->renderer, display->theme->text_terrain[TEXT_TERRAIN_OUTSIDE_0]->texture, NULL, &location);
+    }
+  }
+}
+
 void display_characters(t_level *level, t_display *display) {
   SDL_Rect location;
 
@@ -78,16 +94,16 @@ void display_characters(t_level *level, t_display *display) {
   }
 }
 
-// void display_hud(t_game_data *game_data, t_display *display) {
-//   SDL_Rect location;
-//
-//   location.h = STANDARD_LIFE_GAUGE_HEIGHT;
-//   location.w = game_data->playable_character->heal_points * (STANDARD_LIFE_GAUGE_WIDTH / CHARACTER_HEAL_POINT);
-//   location.x = (STANDARD_WIN_WIDTH / 2) - (STANDARD_LIFE_GAUGE_WIDTH / 2);
-//   location.y = (STANDARD_HUD_HEIGHT / 2) - (STANDARD_LIFE_GAUGE_HEIGHT / 2);
-//
-//   SDL_RenderCopy(display->renderer, display->text_red, NULL, &location);
-// }
+void display_hud(t_game_data *game_data, t_display *display) {
+  SDL_Rect location;
+
+  location.h = STANDARD_LIFE_GAUGE_HEIGHT;
+  location.w = game_data->playable_character->heal_points * (STANDARD_LIFE_GAUGE_WIDTH / CHARACTER_HEAL_POINT);
+  location.x = (STANDARD_WIN_WIDTH / 2) - (STANDARD_LIFE_GAUGE_WIDTH / 2);
+  location.y = (STANDARD_HUD_HEIGHT / 2) - (STANDARD_LIFE_GAUGE_HEIGHT / 2);
+
+  SDL_RenderCopy(display->renderer,  display->theme->text_misc[TEXT_MISC_LIFE_GAUGE]->texture, NULL, &location);
+}
 
 // void display_misc(t_game_data *game_data, t_display *display) {
 //   Uint32 elapsed_time = (game_data->elapsed_time / DEFAULT_BLIZZARD_COOLDOWN) - DEFAULT_BLIZZARD_START;
