@@ -77,8 +77,8 @@
 #define YES 1
 #define NO 0
 
-#define EVEN 1
-#define ODD 0
+#define EVEN 0
+#define ODD 1
 
 #define MOVE_POSSIBLE 1
 #define MOVE_IMPOSSIBLE 0
@@ -93,9 +93,9 @@
 #define MENU_MULTIPLAYER 1
 #define MENU_QUIT 2
 
-#define DEFAULT_LEVEL_WIDTH 15 //15
-#define DEFAULT_LEVEL_HEIGHT 13 //13
-#define DEFAULT_PROBA_DEST 100
+#define DEFAULT_LEVEL_WIDTH 21 //15
+#define DEFAULT_LEVEL_HEIGHT 26 //13
+#define DEFAULT_PROBA_DEST 0
 #define DEFAULT_EMPTY 0
 #define DEFAULT_BLIZZARD_COOLDOWN 100
 #define DEFAULT_BLIZZARD_START 3
