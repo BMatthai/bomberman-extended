@@ -31,10 +31,9 @@
 void init_menu(t_display *display) {
   t_text_display **text_menu = NULL;
 
-  text_menu = malloc(sizeof(t_text_display *) * 13);
+  text_menu = malloc(sizeof(t_text_display *) * 9);
 
   text_menu[TEXT_MENU_MONOPLAYER] = create_text_display(display, "Monojoueur");
-
   text_menu[TEXT_MENU_MULTIPLAYER] = create_text_display(display, "Multijoueur");
   text_menu[TEXT_MENU_QUIT] = create_text_display(display, "Quitter");
   text_menu[TEXT_MENU_SELECTOR_LEFT] = create_text_display(display, ">");
@@ -191,7 +190,6 @@ t_display *init_window() {
   display->window = window;
   display->renderer = renderer;
   display->font = font;
-
   init_default_theme(display);
 
   return display;
