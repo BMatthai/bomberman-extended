@@ -43,7 +43,6 @@ t_bomb *get_last_bomb(t_level *level) {
     cur_bomb = cur_bomb->next_bomb;
   }
   return cur_bomb;
-
 }
 
 t_bomb *create_bomb(t_level *level, t_character *character) {
