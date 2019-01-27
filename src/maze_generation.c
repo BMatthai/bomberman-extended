@@ -105,6 +105,7 @@ int *list_walls(int width, int height) {
     for (int j = begin_x; j < end_x; j++) {
         if ((i % 2 == 1 && j % 2 == 0) || (i % 2 == 0 && j % 2 == 1)) {
             walls[k] = i * width + j;
+            // printf("Index wall : %d\n", walls[k]);
             k++;
         }
       }
@@ -132,6 +133,7 @@ int *list_cells(int width, int height) {
     for (int j = begin_x; j < end_x; j++) {
       if (i % 2 == 1 && j % 2 == 1) {
           cells[k] = i * width + j;
+          // printf("Cells : %d\n", cells[k]);
           k++;
       }
     }
@@ -337,26 +339,45 @@ void fill_maze_default(char **maze, int *cells, int width, int height) {
 
   for (int i = 0; i < height; i++) {
     for (int j = 0; j < width; j++) {
-      if (i == 0 || i == height - 1 || j == 0 || j == width - 1) {
-        maze[j][i] = '0';
-      }
-      else if (i % 2 == 1 && j % 2 == 1) {
-        maze[j][i] = ' ';
-      }
-      else {
-        maze[j][i] = '0';
-      }
+      // printf("(%d;%d)\n", j, i);
+
+      maze[j][i] = '0';
+      // if (i == 0 || i == height - 1 || j == 0 || j == width - 1) {
+      //   maze[j][i] = '0';
+      // }
+      // if ((i % 2) == 1 && (j % 2) == 1) {
+      //   maze[j][i] = ' ';
+      // }
+      // else {
+      //   maze[j][i] = '0';
+      // }
     }
   }
 
   int line;
   for(int k = 0; k < size; k++) {
+    // printf("%d\n", k);
     line = cells[k];
 
     cur_row = line / width;
     cur_col = line % width;
 
+    maze[cur_col][cur_row] = ' ';
   }
+
+  if (width % 2 == EVEN) (
+    for (int i = 0; i < width; i++) {
+      if (i % 2 == ODD) {
+        
+      }
+    }
+  )
+
+  if (height % 2 == EVEN) (
+
+  )
+
+
 }
 
 int is_wall_separator(int wall_index, int width, int height) {
@@ -431,9 +452,10 @@ t_set *init_sets(int *cells, int width, int height) {
 }
 
 char **generate_empty_layer(int width, int height) {
+  // printf("Génération d'un level de (%d;%d)", width, height);
   char **maze = NULL;
 
-  maze = malloc(height * sizeof(char *));
+  maze = malloc(width * sizeof(char *));
   for (int i = 0; i < width; i++) {
     maze[i] = malloc(sizeof(char) * height);
   }
@@ -522,6 +544,7 @@ t_set *set_from_value(t_set *sets, int value, int width, int height) {
 
 
 void dig_walls(char **maze, int *cells, int *walls, t_game_settings *settings) {
+
   int nb_walls;
   int width;
   int height;
@@ -581,15 +604,12 @@ char **generate_maze_layer(t_game_settings *settings) {
 
   int width = settings->width;
   int height = settings->height;
-
   cells = list_cells(width, height);
-
   walls = list_walls(width, height);
-
   maze = generate_empty_layer(width, height);
-
   fill_maze_default(maze, cells, width, height);
   dig_walls(maze, cells, walls, settings);
+
   return maze;
 }
 

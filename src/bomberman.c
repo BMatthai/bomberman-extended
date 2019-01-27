@@ -18,6 +18,7 @@
 
 #include "../include/display_menu.h"
 #include  "../include/init_display.h"
+#include "../include/test.h"
 
 
 #include <string.h>
@@ -25,7 +26,6 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-
 
 
 void init_menu(t_display *display) {
@@ -360,8 +360,11 @@ void main_menu_loop(t_display *display) {
 
 }
 
+
+
 int main() {
 
+  // generate_mazes();
   t_display *display = NULL;
   display = init_window();
 

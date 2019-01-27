@@ -8,8 +8,8 @@ SOURCE_DIR=./src
 
 all: $(EXEC)
 
-bomberman: bomberman.o character_creation.o action.o bomb_manager.o time_manager.o tile_manager.o game_manager.o log_manager.o maze_generation.o display_game.o display_menu.o init_display.o
-	$(CC) -o bomberman $(BUILD_DIR)/bomberman.o $(BUILD_DIR)/character_creation.o $(BUILD_DIR)/action.o $(BUILD_DIR)/bomb_manager.o $(BUILD_DIR)/time_manager.o $(BUILD_DIR)/tile_manager.o $(BUILD_DIR)/game_manager.o $(BUILD_DIR)/log_manager.o $(BUILD_DIR)/maze_generation.o $(BUILD_DIR)/display_game.o $(BUILD_DIR)/display_menu.o $(BUILD_DIR)/init_display.o $(LDFLAGS)
+bomberman: bomberman.o character_creation.o action.o bomb_manager.o time_manager.o tile_manager.o game_manager.o log_manager.o maze_generation.o display_game.o display_menu.o init_display.o test.o
+	$(CC) -o bomberman $(BUILD_DIR)/bomberman.o $(BUILD_DIR)/character_creation.o $(BUILD_DIR)/action.o $(BUILD_DIR)/bomb_manager.o $(BUILD_DIR)/time_manager.o $(BUILD_DIR)/tile_manager.o $(BUILD_DIR)/game_manager.o $(BUILD_DIR)/log_manager.o $(BUILD_DIR)/maze_generation.o $(BUILD_DIR)/display_game.o $(BUILD_DIR)/display_menu.o $(BUILD_DIR)/init_display.o $(BUILD_DIR)/test.o $(LDFLAGS)
 
 maze_generation.o: $(SOURCE_DIR)/maze_generation.c
 	$(CC) -o $(BUILD_DIR)/maze_generation.o -c $(SOURCE_DIR)/maze_generation.c $(CFLAGS)
@@ -46,6 +46,9 @@ display_menu.o: $(SOURCE_DIR)/display_menu.c
 
 init_display.o: $(SOURCE_DIR)/init_display.c
 	$(CC) -o $(BUILD_DIR)/init_display.o -c $(SOURCE_DIR)/init_display.c $(CFLAGS)
+
+test.o: $(SOURCE_DIR)/test.c
+	$(CC) -o $(BUILD_DIR)/test.o -c $(SOURCE_DIR)/test.c $(CFLAGS)
 
 
 clean:
