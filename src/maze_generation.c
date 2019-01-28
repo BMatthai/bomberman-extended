@@ -3,7 +3,10 @@
 #include "../include/struct_level.h"
 #endif
 
+#ifndef T_SETTINGS
+#define T_SETTINGS
 #include "../include/struct_game_settings.h"
+#endif
 
 #include "../include/character_creation.h"
 #include "../include/game_constants.h"
@@ -365,17 +368,17 @@ void fill_maze_default(char **maze, int *cells, int width, int height) {
     maze[cur_col][cur_row] = ' ';
   }
 
-  if (width % 2 == EVEN) (
-    for (int i = 0; i < width; i++) {
-      if (i % 2 == ODD) {
-        
-      }
-    }
-  )
-
-  if (height % 2 == EVEN) (
-
-  )
+  // if (width % 2 == EVEN) (
+  //   for (int i = 0; i < width; i++) {
+  //     if (i % 2 == ODD) {
+  //
+  //     }
+  //   }
+  // )
+  //
+  // if (height % 2 == EVEN) (
+  //
+  // )
 
 
 }

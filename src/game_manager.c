@@ -13,7 +13,11 @@
 #include "../include/struct_game_data.h"
 #endif
 
+#ifndef T_SETTINGS
+#define T_SETTINGS
 #include "../include/struct_game_settings.h"
+#endif
+
 
 #include "../include/game_constants.h"
 #include "../include/game_manager.h"
@@ -29,6 +33,7 @@
 #include "../include/log_manager.h"
 #include "../include/maze_generation.h"
 #include "../include/display_game.h"
+#include "../include/menu_manager.h"
 
 #include <poll.h>
 #include <stdio.h>
@@ -47,6 +52,14 @@ int game_state(t_game_data *game_data) {
     return GAME_IS_WON;
   return GAME_IS_RUNNING;
 }
+
+// void free_game_memory(t_game_data *game_data) {
+//   free(game_data->playable_character);
+//   free(ga)
+//   t_level *level;
+//   Uint32 elapsed_time;
+//
+// }
 
 void refresh(t_game_data *game_data, t_display *display) {
  t_level *level = game_data->level;
@@ -72,6 +85,7 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
   if (game_data == NULL) {
    return -1;
   }
+
   int width = game_settings->width;
   int height = game_settings->height;
 
@@ -130,10 +144,13 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
     motion_char(level, character);
     refresh(game_data, display);
   }
-  // SDL_DestroyTexture(display->text_terrain[0]);
-  // SDL_DestroyTexture(display->text_terrain[1]);
-  SDL_DestroyRenderer(display->renderer);
-  SDL_DestroyWindow(display->window);
-  SDL_Quit();
+
+  //free_game_memory(game_data);
+  free(game_data);
+  launch_main_menu(display);
+
+// SDL_DestroyRenderer(display->renderer);
+//   SDL_DestroyWindow(display->window);
+  // SDL_Quit();
   return 0;
 }
