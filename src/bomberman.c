@@ -220,7 +220,7 @@ void go_to_selected(t_display *display, int selected) {
 
 int main() {
 
-  //generate_mazes();
+  // test_procedure();
   t_display *display = NULL;
   display = init_window();
 

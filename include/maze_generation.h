@@ -1,6 +1,8 @@
 void fill_array_with_wall(char **maze, int width, int height);
 int *list_walls(int width, int height);
-// int *list_cells(int width, int height);
+int *list_cells(int width, int height);
+int count_walls(int w, int h);
+int count_cells(int w, int h);
 char **generate_empty_layer(t_game_settings *settings);
 char **generate_maze_layer(t_game_settings *settings);
 char **generate_bomb_layer(t_game_settings *settings);

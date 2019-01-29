@@ -129,7 +129,7 @@ int *list_cells(int width, int height) {
   begin_x = 1;
   end_x = width - 2 + (width % 2);
   begin_y = 1;
-  end_y = height - 2 + (width % 2);
+  end_y = height - 2 + (height % 2);
   k = 0;
 
   for (int i = begin_y; i < end_y; i++) {
@@ -337,35 +337,26 @@ void merge_sets(t_set *set1, t_set *set2) {
 
 void fill_maze_default(char **maze, int *cells, int width, int height) {
   int size = count_cells(width, height);
-  int cur_row;
-  int cur_col;
+  int row;
+  int col;
 
   for (int i = 0; i < height; i++) {
     for (int j = 0; j < width; j++) {
-      // printf("(%d;%d)\n", j, i);
-
       maze[j][i] = '0';
-      // if (i == 0 || i == height - 1 || j == 0 || j == width - 1) {
-      //   maze[j][i] = '0';
-      // }
-      // if ((i % 2) == 1 && (j % 2) == 1) {
-      //   maze[j][i] = ' ';
-      // }
-      // else {
-      //   maze[j][i] = '0';
-      // }
     }
   }
 
+
   int line;
   for(int k = 0; k < size; k++) {
-    // printf("%d\n", k);
     line = cells[k];
 
-    cur_row = line / width;
-    cur_col = line % width;
+    row = line / width;
+    col = line % width;
 
-    maze[cur_col][cur_row] = ' ';
+    printf("(%d;%d)\n", row, col);
+
+    maze[col][row] = ' ';
   }
 
   // if (width % 2 == EVEN) (
