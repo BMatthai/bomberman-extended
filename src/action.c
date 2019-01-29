@@ -72,7 +72,7 @@ void put_bomb(t_level *level, t_character *character) {
   position_y = character->position_y;
 
 
-  if (level->terrain[position_y][position_x] != TILE_WITH_BOMB) {
+  if (level->terrain[position_x][position_y] != TILE_WITH_BOMB) {
     t_bomb *new_bomb;
 
     new_bomb = NULL;
@@ -82,7 +82,7 @@ void put_bomb(t_level *level, t_character *character) {
       return;
     }
 
-    level->bomb[position_y][position_x] = '@';
+    level->bomb[position_x][position_y] = '@';
 
     new_bomb = create_bomb(level, character);
 

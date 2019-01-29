@@ -64,12 +64,12 @@ void pick_item(t_level *level, t_character *character) {
   position_x = character->position_x;
   position_y = character->position_y;
 
-  if (level->bonus[position_y][position_x] == '+'){
-    level->bonus[position_y][position_x] = ' ';
+  if (level->bonus[position_x][position_y] == '+'){
+    level->bonus[position_x][position_y] = ' ';
     character->bomb_range += 1;
   }
-  else if (level->bonus[position_y][position_x] == '#'){
-    level->bonus[position_y][position_x] = ' ';
+  else if (level->bonus[position_x][position_y] == '#'){
+    level->bonus[position_x][position_y] = ' ';
     character->heal_points += 1;
   }
 }
