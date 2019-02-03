@@ -25,7 +25,7 @@
 #include  "../include/init_display.h"
 
 void display_settings_menu(t_display *display, t_game_settings *settings, int selected) {
-  int nb_menu = 4;
+  int nb_menu = 5;
   t_text_display **values = NULL;
 
   values = malloc(sizeof(t_text_display *) * nb_menu);
@@ -39,11 +39,13 @@ void display_settings_menu(t_display *display, t_game_settings *settings, int se
   char str_height[3];
   char str_prob_destr[4];
   char str_prob_empty[4];
+  char str_number_ai[5];
 
   sprintf(str_width, "%d", settings->width);
   sprintf(str_height, "%d", settings->height);
   sprintf(str_prob_destr, "%d", settings->proba_destr_wall);
   sprintf(str_prob_empty, "%d", settings->proba_empty);
+  sprintf(str_number_ai, "%d", settings->number_ai);
 
   // t_text_display *width_value = NULL;
   // t_text_display *height_value = NULL;
@@ -54,11 +56,12 @@ void display_settings_menu(t_display *display, t_game_settings *settings, int se
   values[1] = create_text_display(display, str_height);
   values[2] = create_text_display(display, str_prob_destr);
   values[3] = create_text_display(display, str_prob_empty);
+  values[4] = create_text_display(display, str_number_ai);
 
   SDL_Rect location;
   t_text_display *cur_text_display = NULL;
 
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 6; i++) {
     cur_text_display = display->theme->text_menu[TEXT_MENU_MAP_WIDTH_STR + i];
 
     location.x = (STANDARD_WIN_WIDTH / 2) - (cur_text_display->recommended_w / 2);
@@ -66,19 +69,17 @@ void display_settings_menu(t_display *display, t_game_settings *settings, int se
     location.w = cur_text_display->recommended_w;
     location.h = cur_text_display->recommended_h;
     SDL_RenderCopy(display->renderer, cur_text_display->texture, NULL, &location);
-
-    // cur_text_display = values[i];
-    //
-    // location.x = (STANDARD_WIN_WIDTH / 2) + 300;
-    // location.y = (STANDARD_WIN_HEIGHT / 2) - ((nb_menu * cur_text_display->recommended_h) / 2) + (i * cur_text_display->recommended_h);
-    // location.w = cur_text_display->recommended_w;
-    // location.h = cur_text_display->recommended_h;
-    // SDL_RenderCopy(display->renderer, cur_text_display->texture, NULL, &location);
-
-    // SDL_DestroyTexture(text_values[i]);
-    // SDL_FreeSurface(surface_values[i]);
   }
 
+  for (int j = 0; j < 5; j++) {
+    cur_text_display = values[j];
+
+    location.x = (STANDARD_WIN_WIDTH / 2) + 300;
+    location.y = (STANDARD_WIN_HEIGHT / 2) - ((nb_menu * cur_text_display->recommended_h) / 2) + (j * cur_text_display->recommended_h);
+    location.w = cur_text_display->recommended_w;
+    location.h = cur_text_display->recommended_h;
+    SDL_RenderCopy(display->renderer, cur_text_display->texture, NULL, &location);
+  }
 
   cur_text_display = display->theme->text_menu[TEXT_MENU_SELECTOR_LEFT];
 

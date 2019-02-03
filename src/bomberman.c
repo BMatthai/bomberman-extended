@@ -40,7 +40,7 @@ void init_menu(t_display *display) {
   text_menu[TEXT_MENU_TILE_EMPTY_STR] = create_text_display(display, "% de cases libres libre : ");
   text_menu[TEXT_MENU_MAP_WIDTH_STR] = create_text_display(display, "Largeur map : ");
   text_menu[TEXT_MENU_MAP_HEIGHT_STR] = create_text_display(display, "Hauteur map : ");
-  text_menu[TEXT_MENU_NUMBER_PLAYERS] = create_text_display(display, "Nombre de joueurs (ordinateur)");
+  text_menu[TEXT_MENU_NUMBER_PLAYERS] = create_text_display(display, "Nombre de joueurs (IA) : ");
   text_menu[TEXT_MENU_BACK] = create_text_display(display, "Retour");
 
   display->theme->text_menu = text_menu;

@@ -24,25 +24,30 @@ void update_values(t_game_settings *settings, int selected, int variation) {
   switch (selected)
   {
     case 0:
-      if (settings->width > 0) {
+      if ((settings->width >= 0 && variation < 0) || (settings->width < 64 && variation > 0))
           settings->width += variation;
-      }
       break;
     case 1:
-      if (settings->height > 0)
+      if ((settings->height >= 0 && variation < 0) || (settings->height < 48 && variation > 0))
         settings->height += variation;
       break;
     case 2:
-      if (settings->proba_destr_wall >= 5)
+      if ((settings->proba_destr_wall >= 5 && variation < 0) || (settings->proba_destr_wall < 100  && variation > 0))
         settings->proba_destr_wall += (5 * variation);
+        if (settings->proba_empty + settings->proba_destr_wall > 100) {
+          settings->proba_empty -=5;
+        }
       break;
     case 3:
-      if (settings->proba_empty >= 5)
+      if ((settings->proba_empty >= 5 && variation < 0) || (settings->proba_empty < 100 && variation > 0))
         settings->proba_empty += (5 * variation);
+        if (settings->proba_empty + settings->proba_destr_wall > 100) {
+          settings->proba_destr_wall -=5;
+        }
       break;
     case 4:
-      if (settings->number_ai >= 1)
-        settings->proba_empty += variation;
+      if ((settings->number_ai >= 1 && variation < 0) || (settings->number_ai < 16 && variation > 0))
+        settings->number_ai += variation;
       break;
     }
 }
@@ -144,7 +149,7 @@ void launch_settings_menu(t_display *display) {
                 case SDLK_RIGHT: update_values(&settings, selected, 1); break;
                 case SDLK_RETURN: {
                   is_running = NO;
-                  if (selected == 4) {
+                  if (selected == 5) {
                     launch_main_menu(display);
                   }
                   else {
@@ -154,7 +159,7 @@ void launch_settings_menu(t_display *display) {
                 }
             }
 
-            selected = (selected % 5+ 5) % 5;
+            selected = (selected % 6 + 6) % 6;
             refresh_settings_menu(display, &settings, selected);
             break;
         }
