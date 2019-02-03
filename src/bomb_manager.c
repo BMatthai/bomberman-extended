@@ -48,6 +48,10 @@ t_bomb *get_last_bomb(t_level *level) {
 t_bomb *create_bomb(t_level *level, t_character *character) {
   t_bomb *bomb = malloc(sizeof(t_bomb));
 
+  if (bomb == NULL) {
+    return NULL;
+  }
+
   int position_x = character->position_x - character->velocity_x;
   int position_y = character->position_y - character->velocity_y;
 
@@ -86,6 +90,7 @@ void set_exploding_routine(t_level *level, t_bomb *bomb) {
   if (bomb->state == BOMB_IS_EXPLODING){
     if ((get_time() - bomb->time_state_has_changed) > BOMB_TIME_BLAST_EXPLOSION) {
       bomb_has_exploded(level, bomb);
+      free(bomb);
       return;
     }
   }
@@ -254,7 +259,6 @@ void remove_bomb_from_list(t_level *level, t_bomb *bomb) {
     bomb->prev_bomb->next_bomb = bomb->next_bomb;
     bomb->next_bomb->prev_bomb = bomb->prev_bomb;
   }
-  free(bomb);
 }
 
 t_bomb *bomb_at_pos(t_level *level, int x, int y) {

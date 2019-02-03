@@ -10,8 +10,8 @@
 #include <stdio.h>
 
 void test_generate_mazes_exhaustive() {
-  t_game_settings *settings = NULL;
-  settings = malloc(sizeof(t_game_settings));
+  t_game_settings settings;
+  //settings = malloc(sizeof(t_game_settings));
 
   for(int i = 8; i < 64; i++) {
     printf("Tests maze largeur %d : ", i);
@@ -19,11 +19,11 @@ void test_generate_mazes_exhaustive() {
       printf("%d\n, ", j);
       for(int k = 0; k < 105; k+=5) {
         for(int l = 0; l < 105; l+=5) {
-          settings->width = i;
-          settings->height = j;
-          settings->proba_destr_wall = k;
-          settings->proba_empty = l;
-          generate_maze_level(settings);
+          settings.width = i;
+          settings.height = j;
+          settings.proba_destr_wall = k;
+          settings.proba_empty = l;
+          generate_maze_level(&settings);
         }
       }
     }
@@ -33,16 +33,15 @@ void test_generate_mazes_exhaustive() {
 
 void test_generate_mazes() {
 
-  t_game_settings *settings = NULL;
-  settings = malloc(sizeof(t_game_settings));
+  t_game_settings settings;
 
   for (int i = 0; i < 10000; i++) {
-    settings->width = (rand() % 60) + 5;
-    settings->height = (rand() % 44) + 5;
-    settings->proba_destr_wall = 5 * (rand() % 21);
-    settings->proba_empty = 5 * (rand() % 21);
-    generate_maze_level(settings);
-    printf("Labyrinthe(%d, %d, %d, %d)\n", settings->width, settings->height, settings->proba_destr_wall, settings->proba_empty);
+    settings.width = (rand() % 60) + 5;
+    settings.height = (rand() % 44) + 5;
+    settings.proba_destr_wall = 5 * (rand() % 21);
+    settings.proba_empty = 5 * (rand() % 21);
+    generate_maze_level(&settings);
+    printf("Labyrinthe(%d, %d, %d, %d)\n", settings.width, settings.height, settings.proba_destr_wall, settings.proba_empty);
   }
   printf("10000 mazes have been randomly generated. Considering generation is OK\n");
 }

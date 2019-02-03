@@ -29,7 +29,7 @@
 void init_menu(t_display *display) {
   t_text_display **text_menu = NULL;
 
-  text_menu = malloc(sizeof(t_text_display *) * 9);
+  text_menu = malloc(sizeof(t_text_display *) * 11);
 
   text_menu[TEXT_MENU_MONOPLAYER] = create_text_display(display, "Monojoueur");
   text_menu[TEXT_MENU_MULTIPLAYER] = create_text_display(display, "Multijoueur");
@@ -40,6 +40,8 @@ void init_menu(t_display *display) {
   text_menu[TEXT_MENU_TILE_EMPTY_STR] = create_text_display(display, "% de cases libres libre : ");
   text_menu[TEXT_MENU_MAP_WIDTH_STR] = create_text_display(display, "Largeur map : ");
   text_menu[TEXT_MENU_MAP_HEIGHT_STR] = create_text_display(display, "Hauteur map : ");
+  text_menu[TEXT_MENU_NUMBER_PLAYERS] = create_text_display(display, "Nombre de joueurs (ordinateur)");
+  text_menu[TEXT_MENU_BACK] = create_text_display(display, "Retour");
 
   display->theme->text_menu = text_menu;
 }
@@ -208,15 +210,37 @@ t_game_settings *random_settings() {
   return game_settings;
 }
 
-
-
-
-
 void go_to_selected(t_display *display, int selected) {
   if (selected == MENU_MONOPLAYER) {
     launch_settings_menu(display);
   }
 }
+
+// void release_memory_display(t_display *display) {
+//   SDL_Texture *texture;
+//   int recommended_w;
+//   int recommended_h;
+// } t_text_display;
+//
+// typedef struct s_theme_display {
+//   struct s_text_display **text_menu;
+//   struct s_text_display **text_terrain;
+//   struct s_text_display **text_bomb;
+//   struct s_text_display **text_character;
+//   struct s_text_display **text_misc;
+//   // struct s_text_display **text_blizzard;
+//   // struct s_text_display **text_red;
+//
+// } t_theme_display;
+//
+// typedef struct s_display {
+//   SDL_Window *window;
+//   SDL_Renderer *renderer;
+//   TTF_Font *font;
+//   int offset_x;
+//   int offset_y;
+//   struct s_theme_display *theme;
+// }
 
 int main() {
 

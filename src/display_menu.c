@@ -58,7 +58,7 @@ void display_settings_menu(t_display *display, t_game_settings *settings, int se
   SDL_Rect location;
   t_text_display *cur_text_display = NULL;
 
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 5; i++) {
     cur_text_display = display->theme->text_menu[TEXT_MENU_MAP_WIDTH_STR + i];
 
     location.x = (STANDARD_WIN_WIDTH / 2) - (cur_text_display->recommended_w / 2);
@@ -67,17 +67,18 @@ void display_settings_menu(t_display *display, t_game_settings *settings, int se
     location.h = cur_text_display->recommended_h;
     SDL_RenderCopy(display->renderer, cur_text_display->texture, NULL, &location);
 
-    cur_text_display = values[i];
-
-    location.x = (STANDARD_WIN_WIDTH / 2) + 300;
-    location.y = (STANDARD_WIN_HEIGHT / 2) - ((nb_menu * cur_text_display->recommended_h) / 2) + (i * cur_text_display->recommended_h);
-    location.w = cur_text_display->recommended_w;
-    location.h = cur_text_display->recommended_h;
-    SDL_RenderCopy(display->renderer, cur_text_display->texture, NULL, &location); /* Blit du texte */
+    // cur_text_display = values[i];
+    //
+    // location.x = (STANDARD_WIN_WIDTH / 2) + 300;
+    // location.y = (STANDARD_WIN_HEIGHT / 2) - ((nb_menu * cur_text_display->recommended_h) / 2) + (i * cur_text_display->recommended_h);
+    // location.w = cur_text_display->recommended_w;
+    // location.h = cur_text_display->recommended_h;
+    // SDL_RenderCopy(display->renderer, cur_text_display->texture, NULL, &location);
 
     // SDL_DestroyTexture(text_values[i]);
     // SDL_FreeSurface(surface_values[i]);
   }
+
 
   cur_text_display = display->theme->text_menu[TEXT_MENU_SELECTOR_LEFT];
 

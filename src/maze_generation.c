@@ -90,7 +90,7 @@ void shuffle(int *elts, int nb_elts) {
 
 int *list_walls(int width, int height) {
   int size = count_walls(width, height);
-  int *walls = malloc(sizeof(int) * size);
+  int *walls = malloc(sizeof(int) * size); //Free done
 
   int begin_x;
   int end_x;
@@ -118,7 +118,9 @@ int *list_walls(int width, int height) {
 
 int *list_cells(int width, int height) {
   int size = count_cells(width, height);
-  int *cells = malloc(sizeof(int) * size);
+  int *cells = NULL;
+
+  cells = malloc(sizeof(int) * size); // Free done
 
   int begin_x;
   int end_x;
@@ -543,6 +545,34 @@ t_set *set_from_value(t_set *sets, int value, int width, int height) {
   return  NULL;
 }
 
+void release_memory_elt(t_element *elt) {
+  t_element *cur_elt = NULL;
+  t_element *cur_head = NULL;
+
+  cur_elt = elt;
+  while (cur_elt != NULL) {
+    cur_head = cur_elt;
+    cur_elt = cur_elt->next_elt;
+    free(cur_head);
+  }
+}
+
+void release_memory_sets(t_set *sets) {
+  // t_set *cur_set = NULL;
+  // t_set *cur_head = NULL;
+  //
+  // cur_set = sets;
+  // while (cur_set != NULL) {
+  //   printf("\nOK");
+  //   cur_head = cur_set;
+  //   cur_set = cur_set->next_set;
+  //   release_memory_elt(cur_head->first);
+  //   free(cur_head);
+  // }
+
+    release_memory_elt(sets->first);
+    free(sets);
+}
 
 void dig_walls(char **maze, int *cells, int *walls, t_game_settings *settings) {
 
@@ -550,27 +580,23 @@ void dig_walls(char **maze, int *cells, int *walls, t_game_settings *settings) {
   int width;
   int height;
   t_set *sets = NULL;
+  int is_cur_row_even;
+  int wall_index;
+  t_set *set1 = NULL;
+  t_set *set2 = NULL;
+  int cell_side_A;
+  int cell_side_B;
 
   width = settings->width;
   height = settings->height;
-
-
   nb_walls = count_walls(width, height);
   sets = init_sets(cells, width, height);
 
-  int is_cur_row_even;
-  int wall_index;
   shuffle(walls, nb_walls);
-
 
   for (int i = 0; i < nb_walls; i++) {
     wall_index = walls[i];
     is_cur_row_even = ((wall_index / width) % 2) == 1 ? NO : YES;
-    t_set *set1 = NULL;
-    t_set *set2 = NULL;
-
-    int cell_side_A;
-    int cell_side_B;
 
     if (is_cur_row_even == YES) {
       cell_side_A = wall_index - width;
@@ -584,7 +610,6 @@ void dig_walls(char **maze, int *cells, int *walls, t_game_settings *settings) {
     set2 = set_from_value(sets, cell_side_B, width, height);
 
     if (set1 != NULL && set2 != NULL) {
-
       if (is_same_set(set1, set2) == NO) {
         remove_wall(maze, wall_index, settings);
         merge_sets(set1, set2);
@@ -593,9 +618,11 @@ void dig_walls(char **maze, int *cells, int *walls, t_game_settings *settings) {
         set_wall_content(maze, wall_index, settings);
       }
     }
-    else {
-    }
   }
+
+  release_memory_sets(sets);
+
+
 }
 
 char **generate_maze_layer(t_game_settings *settings) {
@@ -610,6 +637,9 @@ char **generate_maze_layer(t_game_settings *settings) {
   maze = generate_empty_layer(width, height);
   fill_maze_default(maze, cells, width, height);
   dig_walls(maze, cells, walls, settings);
+
+  free(cells);
+  free(walls);
 
   return maze;
 }
@@ -659,7 +689,7 @@ t_level *generate_maze_level(t_game_settings *settings) {
   level->bonus = generate_bonus_layer(settings);
   level->first_bomb = NULL;
 
-  level->number_characters = 4;
+  level->number_characters = settings->number_ai;
   level->characters = get_level_characters(level);
 
   return level;

@@ -76,11 +76,9 @@ void put_bomb(t_level *level, t_character *character) {
     t_bomb *new_bomb;
 
     new_bomb = NULL;
-    new_bomb = malloc(sizeof(t_bomb));
+    //new_bomb = malloc(sizeof(t_bomb)); // free done
 
-    if (new_bomb == NULL) {
-      return;
-    }
+
 
     level->bomb[position_x][position_y] = '@';
 

@@ -109,6 +109,7 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
   // SDL_RenderClear(display->renderer);
 
   // display_outside(display);
+  unsigned int time_refresh = get_time();
 
   while (is_running)
   {
@@ -139,18 +140,18 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
       }
     }
     game_data->elapsed_time = get_time() - time_start;
-    check_bombs_timer(level);
     move_char(level, character);
     motion_char(level, character);
-    refresh(game_data, display);
+
+    if (get_time() - time_refresh > 20) {
+      check_bombs_timer(level);
+      refresh(game_data, display);
+      time_refresh = get_time();
+    }
   }
 
-  //free_game_memory(game_data);
-  free(game_data);
+  free(game_data); //TODO Ensure each component of game_data is freed...
   launch_main_menu(display);
 
-// SDL_DestroyRenderer(display->renderer);
-//   SDL_DestroyWindow(display->window);
-  // SDL_Quit();
   return 0;
 }
