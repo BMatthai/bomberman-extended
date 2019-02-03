@@ -359,17 +359,24 @@ void fill_maze_default(char **maze, int *cells, int width, int height) {
     maze[col][row] = ' ';
   }
 
-  // if (width % 2 == EVEN) (
-  //   for (int i = 0; i < width; i++) {
-  //     if (i % 2 == ODD) {
-  //
-  //     }
+  // if (width % 2 == EVEN) {
+  //   for (int i = 0; i < height; i++) {
+  //       if (maze[width - 3][i] == ' ' && rand() % 10 >= 4) {
+  //           maze[width - 2][i] = ' ';
+  //       }
   //   }
-  // )
+  // }
   //
-  // if (height % 2 == EVEN) (
+  // if (height % 2 == EVEN) {
+  //   for (int j = 0; j < width; j++) {
+  //       if (maze[j][height - 3] == ' ' && rand() % 10 >= 4) {
+  //           maze[j][height - 2] = ' ';
+  //       }
+  //   }
   //
-  // )
+  // }
+
+
 
 
 }
