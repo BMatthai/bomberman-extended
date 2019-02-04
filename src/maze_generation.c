@@ -651,16 +651,38 @@ char **generate_bomb_layer(t_game_settings *settings) {
 }
 
 char **generate_bonus_layer(t_game_settings *settings) {
-  char **maze = NULL;
+  char **bonus = NULL;
   int width;
   int height;
 
   width = settings->width;
   height = settings->height;
 
-  maze = generate_empty_layer(width, height);
+  bonus = generate_empty_layer(width, height);
+  int rand_number;
+  for (int i = 0; i < width; i++) {
+    for (int j = 0; j < height; j++) {
+      rand_number = (rand() % (101));
 
-  return maze;
+      if (rand_number == 0) {
+        bonus[i][j] = '0';
+      }
+      else if (rand_number == 1) {
+        bonus[i][j] = '1';
+      }
+      else if (rand_number == 2) {
+        bonus[i][j] = '2';
+      }
+      else if (rand_number == 3) {
+        bonus[i][j] = '3';
+      }
+      else if (rand_number == 4) {
+        bonus[i][j] = '4';
+      }
+    }
+  }
+
+  return bonus;
 }
 
 t_level *generate_maze_level(t_game_settings *settings) {

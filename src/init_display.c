@@ -120,11 +120,24 @@ void init_characters(t_display *display) {
   display->theme->text_character = text_character;
 }
 
+void init_bonus(t_display *display) {
+  t_text_display **text_bonus = NULL;
+
+  text_bonus = malloc(sizeof(t_text_display *) * 5);
+
+  text_bonus[TEXT_BONUS_EXTRA_BOMB] = create_graphic_display(display, "./resources/bonus/extra_bomb.bmp");
+  text_bonus[TEXT_BONUS_DAMAGE] = create_graphic_display(display, "./resources/bonus/damage.bmp");
+  text_bonus[TEXT_BONUS_BOOTS] = create_graphic_display(display, "./resources/bonus/boots.bmp");
+  text_bonus[TEXT_BONUS_RANGE] = create_graphic_display(display, "./resources/bonus/range.bmp");
+  text_bonus[TEXT_BONUS_HEAL] = create_graphic_display(display, "./resources/bonus/heal.bmp");
+
+  display->theme->text_bonus = text_bonus;
+}
+
 void init_bombs(t_display *display) {
   t_text_display **text_bomb = NULL;
 
-  // 11 ?? Pourquoi pas 4 ?
-  text_bomb = malloc(sizeof(t_text_display *) * 11);
+  text_bomb = malloc(sizeof(t_text_display *) * 4);
 
   text_bomb[TEXT_BOMB_PLANTED] = create_graphic_display(display, "./resources/bomb_planted.bmp");
   text_bomb[TEXT_BOMB_UNSTABLE] = create_graphic_display(display, "./resources/bomb_unstable.bmp");
@@ -156,6 +169,7 @@ void init_default_theme(t_display *display) {
   init_terrain(display);
   init_characters(display);
   init_bombs(display);
+  init_bonus(display);
   init_misc(display);
 
 }

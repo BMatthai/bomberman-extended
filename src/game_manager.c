@@ -68,7 +68,7 @@ void refresh(t_game_data *game_data, t_display *display) {
   SDL_RenderClear(display->renderer);
 
   display_map(level, display);
-
+  display_bonus(level, display);
   display_characters(level, display);
   display_bombs(level, display);
   display_hud(game_data, display);
