@@ -24,29 +24,29 @@ void update_values(t_game_settings *settings, int selected, int variation) {
   switch (selected)
   {
     case 0:
-      if ((settings->width >= 0 && variation < 0) || (settings->width < 64 && variation > 0))
+      if ((settings->width > 4 && variation < 0) || (settings->width < 64 && variation > 0))
           settings->width += variation;
       break;
     case 1:
-      if ((settings->height >= 0 && variation < 0) || (settings->height < 48 && variation > 0))
+      if ((settings->height > 4 && variation < 0) || (settings->height < 48 && variation > 0))
         settings->height += variation;
       break;
     case 2:
-      if ((settings->proba_destr_wall >= 5 && variation < 0) || (settings->proba_destr_wall < 100  && variation > 0))
+      if ((settings->proba_destr_wall > 0 && variation < 0) || (settings->proba_destr_wall < 100  && variation > 0))
         settings->proba_destr_wall += (5 * variation);
         if (settings->proba_empty + settings->proba_destr_wall > 100) {
           settings->proba_empty -=5;
         }
       break;
     case 3:
-      if ((settings->proba_empty >= 5 && variation < 0) || (settings->proba_empty < 100 && variation > 0))
+      if ((settings->proba_empty > 0 && variation < 0) || (settings->proba_empty < 100 && variation > 0))
         settings->proba_empty += (5 * variation);
         if (settings->proba_empty + settings->proba_destr_wall > 100) {
           settings->proba_destr_wall -=5;
         }
       break;
     case 4:
-      if ((settings->number_ai >= 1 && variation < 0) || (settings->number_ai < 16 && variation > 0))
+      if ((settings->number_ai > 1 && variation < 0) || (settings->number_ai < 16 && variation > 0))
         settings->number_ai += variation;
       break;
     }

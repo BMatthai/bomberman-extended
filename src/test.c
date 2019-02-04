@@ -6,6 +6,20 @@
 #include "../include/test.h"
 #include "../include/struct_game_settings.h"
 #include "../include/maze_generation.h"
+#include "../include/struct_display.h"
+#include "../include/menu_manager.h"
+#include "../include/textures_repertory.h"
+
+#include "../include/game_constants.h"
+#include "../include/game_manager.h"
+
+
+#include "../include/display_menu.h"
+#include  "../include/init_display.h"
+#include "../include/test.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -99,11 +113,24 @@ void test_list_cells() {
   printf("test cells OK\n");
 }
 
+void test_launch_menu() {
+  for (int i = 0; i < 2; i ++) {
+    t_display *display = NULL;
+    display = init_window();
+
+    launch_main_menu(display);
+    SDL_DestroyWindow(display->window);
+    SDL_Quit();
+  }
+
+}
+
 void test_procedure() {
   test_count_wall();
   test_count_cells();
   test_list_walls();
   test_list_cells();
+  //test_launch_menu();
   // test_generate_mazes();
   // test_generate_mazes_exhaustive();
 }

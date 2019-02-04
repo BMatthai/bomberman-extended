@@ -356,31 +356,24 @@ void fill_maze_default(char **maze, int *cells, int width, int height) {
     row = line / width;
     col = line % width;
 
-    printf("(%d;%d)\n", row, col);
-
     maze[col][row] = ' ';
   }
 
-  // if (width % 2 == EVEN) {
-  //   for (int i = 0; i < height; i++) {
-  //       if (maze[width - 3][i] == ' ' && rand() % 10 >= 4) {
-  //           maze[width - 2][i] = ' ';
-  //       }
-  //   }
-  // }
-  //
-  // if (height % 2 == EVEN) {
-  //   for (int j = 0; j < width; j++) {
-  //       if (maze[j][height - 3] == ' ' && rand() % 10 >= 4) {
-  //           maze[j][height - 2] = ' ';
-  //       }
-  //   }
-  //
-  // }
+  if (width % 2 == EVEN) {
+    for (int i = 0; i < height; i++) {
+        if (maze[width - 3][i] == ' ' && rand() % 2 >= 1) {
+            maze[width - 2][i] = ' ';
+        }
+    }
+  }
 
-
-
-
+  if (height % 2 == EVEN) {
+    for (int j = 0; j < width; j++) {
+        if (maze[j][height - 3] == ' ' && rand() % 2 >=0) {
+            maze[j][height - 2] = ' ';
+        }
+    }
+  }
 }
 
 int is_wall_separator(int wall_index, int width, int height) {

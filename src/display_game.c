@@ -79,7 +79,7 @@ void display_characters(t_level *level, t_display *display) {
 
   t_character character;
 
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < level->number_characters; i++) {
     character = level->characters[i];
 
     if (character.state != CHARACTER_DEAD) {
