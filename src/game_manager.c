@@ -76,6 +76,12 @@ void refresh(t_game_data *game_data, t_display *display) {
   SDL_RenderPresent(display->renderer);
 }
 
+// void pick_bonus_char(t_level *level) {
+//   for (int i = 0; i < level->number_characters; i++) {
+//     pick_item(t_level *level, t_character *character)
+//   }
+// }
+
 int launch_game(t_display *display, t_game_settings *game_settings) {
 
   SDL_Event event;

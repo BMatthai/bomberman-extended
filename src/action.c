@@ -26,7 +26,7 @@ void move(t_level *level, t_character *character, int direction) {
   float new_position_y = character->position_y;
 
   if (direction == ACTION_UP) {
-    new_position_y = character->position_y - MOVE_DISTANCE;
+    new_position_y = character->position_y - (MOVE_DISTANCE * character->movement_speed);
     if (is_tile_free(level, new_position_x, new_position_y) == YES) {
       character->position_y = new_position_y;
     }
@@ -35,7 +35,7 @@ void move(t_level *level, t_character *character, int direction) {
     }
   }
   else if (direction == ACTION_DOWN) {
-    new_position_y = character->position_y + MOVE_DISTANCE;
+    new_position_y = character->position_y + (MOVE_DISTANCE * character->movement_speed);
     if (is_tile_free(level, new_position_x, new_position_y + 1) == YES) {
       character->position_y = new_position_y;
     }
@@ -44,7 +44,7 @@ void move(t_level *level, t_character *character, int direction) {
     }
   }
   else if (direction == ACTION_LEFT) {
-    new_position_x = character->position_x - MOVE_DISTANCE;
+    new_position_x = character->position_x - (MOVE_DISTANCE * character->movement_speed);
     if (is_tile_free(level, new_position_x, new_position_y) == YES) {
       character->position_x = new_position_x;
     }
@@ -53,7 +53,7 @@ void move(t_level *level, t_character *character, int direction) {
     }
   }
   else if (direction == ACTION_RIGHT) {
-    new_position_x = character->position_x + MOVE_DISTANCE;
+    new_position_x = character->position_x + (MOVE_DISTANCE * character->movement_speed);
     if (is_tile_free(level, new_position_x + 1, new_position_y) == YES) {
       character->position_x = new_position_x;
     }
@@ -71,6 +71,9 @@ void put_bomb(t_level *level, t_character *character) {
   position_x = character->position_x;
   position_y = character->position_y;
 
+  if (character->number_bomb_planted >= character->stock_bomb) {
+    return;
+  }
 
   if (level->terrain[position_x][position_y] != TILE_WITH_BOMB) {
     t_bomb *new_bomb;
@@ -78,9 +81,8 @@ void put_bomb(t_level *level, t_character *character) {
     new_bomb = NULL;
     //new_bomb = malloc(sizeof(t_bomb)); // free done
 
-
-
     level->bomb[position_x][position_y] = '@';
+    character->number_bomb_planted += 1;
 
     new_bomb = create_bomb(level, character);
 

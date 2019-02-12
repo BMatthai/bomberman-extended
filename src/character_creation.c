@@ -36,9 +36,12 @@ t_character create_character(char symbol, int x, int y) {
   character.state = CHARACTER_ALIVE;
   character.heal_points = CHARACTER_HEAL_POINT;
   character.bomb_range = CHARACTER_BOMB_RANGE;
-  character.number_bomb = CHARACTER_NUMBER_BOMB;
+  character.stock_bomb = CHARACTER_NUMBER_BOMB;
+  character.number_bomb_planted = 0;
   character.movement_speed = CHARACTER_MOVEMENT_SPEED;
   character.time_to_bomb_explode_millis = CHARACTER_TIME_TO_BOMB_EXPLODE;
+  character.bomb_damage = CHARACTER_BOMB_DAMAGE;
+
   character.velocity_x = 0;
   character.velocity_y = 0;
 
@@ -64,12 +67,24 @@ void pick_item(t_level *level, t_character *character) {
   position_x = character->position_x;
   position_y = character->position_y;
 
-  if (level->bonus[position_x][position_y] == '+'){
+  if (level->bonus[position_x][position_y] == BONUS_BOMB_RANGE){
     level->bonus[position_x][position_y] = ' ';
-    character->bomb_range += 1;
+    character->bomb_range += VALUE_BONUS_BOMB_RANGE;
   }
-  else if (level->bonus[position_x][position_y] == '#'){
+  else if (level->bonus[position_x][position_y] == BONUS_HEAL){
     level->bonus[position_x][position_y] = ' ';
-    character->heal_points += 1;
+    character->heal_points += VALUE_BONUS_HEAL;
+  }
+  else if (level->bonus[position_x][position_y] == BONUS_MOVE_SEED){
+    level->bonus[position_x][position_y] = ' ';
+    character->movement_speed += VALUE_BONUS_MOVE_SEED;
+  }
+  else if (level->bonus[position_x][position_y] == BONUS_EXTRA_BOMB){
+    level->bonus[position_x][position_y] = ' ';
+    character->stock_bomb += VALUE_BONUS_EXTRA_BOMB;
+  }
+  else if (level->bonus[position_x][position_y] == BONUS_BOMB_DAMAGE){
+    level->bonus[position_x][position_y] = ' ';
+    character->bomb_damage += VALUE_BONUS_BOMB_DAMAGE;
   }
 }

@@ -238,19 +238,19 @@ void display_bonus(t_level *level, t_display *display) {
         location.y = STANDARD_TILE_HEIGHT * i + display->offset_y;
 
         if (terrain[j][i] == ' ') {
-          if (bonus[j][i] == '0'){
+          if (bonus[j][i] == BONUS_EXTRA_BOMB){
               SDL_RenderCopy(display->renderer, display->theme->text_bonus[TEXT_BONUS_EXTRA_BOMB]->texture, NULL, &location);
           }
-          else if (bonus[j][i] == '1'){
+          else if (bonus[j][i] == BONUS_BOMB_DAMAGE){
               SDL_RenderCopy(display->renderer, display->theme->text_bonus[TEXT_BONUS_DAMAGE]->texture, NULL, &location);
           }
-          else if (bonus[j][i] == '2'){
+          else if (bonus[j][i] == BONUS_MOVE_SEED){
               SDL_RenderCopy(display->renderer, display->theme->text_bonus[TEXT_BONUS_BOOTS]->texture, NULL, &location);
           }
-          else if (bonus[j][i] == '3'){
+          else if (bonus[j][i] == BONUS_BOMB_RANGE){
               SDL_RenderCopy(display->renderer, display->theme->text_bonus[TEXT_BONUS_RANGE]->texture, NULL, &location);
           }
-          else if (bonus[j][i] == '4'){
+          else if (bonus[j][i] == BONUS_HEAL){
               SDL_RenderCopy(display->renderer, display->theme->text_bonus[TEXT_BONUS_HEAL]->texture, NULL, &location);
           }
         }

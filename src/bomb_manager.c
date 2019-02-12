@@ -57,9 +57,11 @@ t_bomb *create_bomb(t_level *level, t_character *character) {
 
   level->bomb[position_x][position_y] = '@';
 
+  bomb->character_origin = character;
   bomb->state = BOMB_IS_PLACED_ON_GROUND;
   bomb->position_x = position_x;
   bomb->position_y = position_y;
+  bomb->damage = character->bomb_damage;
   bomb->time_state_has_changed = get_time();
   bomb->time_to_explode_millis = character->time_to_bomb_explode_millis;
   bomb->range = character->bomb_range;
@@ -67,7 +69,6 @@ t_bomb *create_bomb(t_level *level, t_character *character) {
 
   return bomb;
 }
-
 
 void set_bomb_unstable(t_bomb *bomb) {
     bomb->state = BOMB_IS_UNSTABLE;
@@ -155,7 +156,7 @@ void explode_bomb(t_level *level, t_bomb *bomb) {
   int bomb_position_y = bomb->position_y;
 
   level->bomb[bomb_position_x][bomb_position_y] = 'O';
-  //damage_tile(level, bomb_position_x, bomb_position_y);
+  damage_tile(level, bomb, bomb_position_x, bomb_position_y);
 
   int i;
   int last_hitted_is_free;
@@ -164,31 +165,31 @@ void explode_bomb(t_level *level, t_bomb *bomb) {
     level->bomb[bomb_position_x][bomb_position_y - i] = '^';
   }
   if (last_hitted_is_free == NO)
-    damage_tile(level, bomb_position_x, bomb_position_y - i);
+    damage_tile(level, bomb, bomb_position_x, bomb_position_y - i);
   else
-    damage_tile(level, bomb_position_x, bomb_position_y - i + 1);
+    damage_tile(level, bomb, bomb_position_x, bomb_position_y - i + 1);
 
   for (i = 1; i <= bomb->range && (last_hitted_is_free = is_tile_free_bomb_blast(level, bomb_position_x, bomb_position_y + i)); i++) {
     level->bomb[bomb_position_x][bomb_position_y + i] = 'v';
   }
   if (last_hitted_is_free == NO)
-    damage_tile(level, bomb_position_x, bomb_position_y + i);
+    damage_tile(level, bomb, bomb_position_x, bomb_position_y + i);
   else
-    damage_tile(level, bomb_position_x, bomb_position_y + i - 1);
+    damage_tile(level, bomb, bomb_position_x, bomb_position_y + i - 1);
   for (i = 1; i <= bomb->range && (last_hitted_is_free = is_tile_free_bomb_blast(level, bomb_position_x - i, bomb_position_y)); i++) {
     level->bomb[bomb_position_x - i][bomb_position_y] = '<';
   }
   if (last_hitted_is_free == NO)
-    damage_tile(level, bomb_position_x - i, bomb_position_y);
+    damage_tile(level, bomb, bomb_position_x - i, bomb_position_y);
   else
-    damage_tile(level, bomb_position_x - i + 1, bomb_position_y);
+    damage_tile(level, bomb, bomb_position_x - i + 1, bomb_position_y);
   for (i = 1; i <= bomb->range && (last_hitted_is_free = is_tile_free_bomb_blast(level, bomb_position_x + i, bomb_position_y)); i++) {
     level->bomb[bomb_position_x + i][bomb_position_y] = '>';
   }
   if (last_hitted_is_free == NO)
-    damage_tile(level, bomb_position_x + i, bomb_position_y);
+    damage_tile(level, bomb, bomb_position_x + i, bomb_position_y);
   else
-    damage_tile(level, bomb_position_x + i - 1, bomb_position_y);
+    damage_tile(level, bomb, bomb_position_x + i - 1, bomb_position_y);
 }
 
 void bomb_has_exploded(t_level *level, t_bomb *bomb) {
@@ -215,10 +216,11 @@ void bomb_has_exploded(t_level *level, t_bomb *bomb) {
   for (i = 1; is_tile_defined(level, bomb_position_x + i, bomb_position_y) && i <= bomb->range; i++) {
     level->bomb[bomb_position_x + i][bomb_position_y] = ' ';
   }
+  bomb->character_origin->number_bomb_planted -= 1;
   remove_bomb_from_list(level, bomb);
 }
 
-void damage_tile(t_level *level, int position_x, int position_y) {
+void damage_tile(t_level *level, t_bomb *origin_bomb, int position_x, int position_y) {
   if (level->terrain[position_x][position_y] > WALL_SQUISHY && level->terrain[position_x][position_y] <= WALL_STRONG) {
     level->terrain[position_x][position_y]--;
   }
@@ -227,7 +229,7 @@ void damage_tile(t_level *level, int position_x, int position_y) {
   }
   for(int i = 0; i < level->number_characters; i++) {
     if(level->characters[i].position_x == position_x && level->characters[i].position_y == position_y) {
-      level->characters[i].heal_points -= CHARACTER_BOMB_DAMAGE;
+      level->characters[i].heal_points -= origin_bomb->damage;;
       level->characters[i].state = CHARACTER_HITTED;
       level->characters[i].time_state_has_changed = get_time();
       if (level->characters[i].heal_points <= 0) {
@@ -236,6 +238,7 @@ void damage_tile(t_level *level, int position_x, int position_y) {
       }
     }
   }
+
   t_bomb *bomb = bomb_at_pos(level, position_x, position_y);
   if (bomb != NULL) {
     if (bomb->state == BOMB_IS_PLACED_ON_GROUND) {

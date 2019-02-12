@@ -662,22 +662,22 @@ char **generate_bonus_layer(t_game_settings *settings) {
   int rand_number;
   for (int i = 0; i < width; i++) {
     for (int j = 0; j < height; j++) {
-      rand_number = (rand() % (101));
+      rand_number = (rand() % (50));
 
       if (rand_number == 0) {
-        bonus[i][j] = '0';
+        bonus[i][j] = BONUS_MOVE_SEED;
       }
       else if (rand_number == 1) {
-        bonus[i][j] = '1';
+        bonus[i][j] = BONUS_BOMB_DAMAGE;
       }
       else if (rand_number == 2) {
-        bonus[i][j] = '2';
+        bonus[i][j] = BONUS_EXTRA_BOMB;
       }
       else if (rand_number == 3) {
-        bonus[i][j] = '3';
+        bonus[i][j] = BONUS_HEAL;
       }
       else if (rand_number == 4) {
-        bonus[i][j] = '4';
+        bonus[i][j] = BONUS_BOMB_RANGE;
       }
     }
   }
