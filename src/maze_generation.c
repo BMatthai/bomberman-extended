@@ -108,7 +108,6 @@ int *list_walls(int width, int height) {
     for (int j = begin_x; j < end_x; j++) {
         if ((i % 2 == 1 && j % 2 == 0) || (i % 2 == 0 && j % 2 == 1)) {
             walls[k] = i * width + j;
-            // printf("Index wall : %d\n", walls[k]);
             k++;
         }
       }
@@ -146,7 +145,6 @@ int *list_cells(int width, int height) {
 
   return cells;
 }
-
 
 t_character *get_level_characters(t_level *level) {
 
@@ -462,20 +460,20 @@ void remove_wall(char **maze, int wall_index, t_game_settings *settings) {
   int cur_row;
   int cur_col;
   int width = settings->width;
-  int proba_destr_wall;
-  int proba_empty;
-  int rand_number;
+  // int proba_destr_wall;
+  // int proba_empty;
+  // int rand_number;
 
   cur_row = wall_index / width;
   cur_col = wall_index % width;
-  proba_destr_wall = settings->proba_destr_wall;
-  proba_empty = settings->proba_empty;
-  rand_number = (rand() % (101));
+  // proba_destr_wall = settings->proba_destr_wall;
+  // proba_empty = settings->proba_empty;
+  // rand_number = (rand() % (101));
 
-  if (rand_number <= proba_destr_wall)
-    maze[cur_col][cur_row] = '1';
-  else
-    maze[cur_col][cur_row] = ' ';
+  // if (rand_number <= proba_destr_wall)
+  //   maze[cur_col][cur_row] = '1';
+  // else
+  maze[cur_col][cur_row] = ' ';
 }
 
 void set_wall_content(char **maze, int wall_index, t_game_settings *settings) {
@@ -492,9 +490,9 @@ void set_wall_content(char **maze, int wall_index, t_game_settings *settings) {
   proba_empty = settings->proba_empty;
   rand_number = (rand() % (101));
 
-  if (rand_number <= proba_destr_wall)
+  if (rand_number < proba_destr_wall)
     maze[cur_col][cur_row] = '1';
-  else if (rand_number <= proba_empty + proba_destr_wall)
+  else if (rand_number < proba_empty + proba_destr_wall)
     maze[cur_col][cur_row] = ' ';
 }
 

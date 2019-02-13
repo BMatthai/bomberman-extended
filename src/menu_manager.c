@@ -117,6 +117,23 @@ void launch_main_menu(t_display *display) {
     }
 }
 
+void set_random_settings(t_game_settings *settings) {
+  settings->width = 5 + (rand() % (60));
+  settings->height = 5 + (rand() % (44));
+  settings->proba_destr_wall = (rand() % (21)) * 5;
+  settings->proba_empty = (rand() % (21)) * 5;
+  settings->number_ai = 2 + (rand() % (15));
+}
+
+
+void set_settings(t_game_settings *settings, int width, int height, int proba_destr_wall, int proba_empty, int number_ai) {
+  settings->width = width;
+  settings->height = height;
+  settings->proba_destr_wall = proba_destr_wall;
+  settings->proba_empty = proba_empty;
+  settings->number_ai = number_ai;
+}
+
 void launch_settings_menu(t_display *display) {
 
   t_game_settings settings;
@@ -157,6 +174,16 @@ void launch_settings_menu(t_display *display) {
                   }
                   break;
                 }
+                case SDLK_1: set_settings(&settings, 15, 13, 0, 100, 4); break;
+                case SDLK_2: set_settings(&settings, 15, 13, 0, 0, 4); break;
+                case SDLK_3: set_settings(&settings, 15, 13, 100, 0, 4); break;
+                case SDLK_4: set_settings(&settings, 15, 13, 50, 50, 4); break;
+                case SDLK_5: set_settings(&settings, 40, 40, 25, 75, 10); break;
+                case SDLK_6: set_settings(&settings, 40, 40, 100, 0, 10); break;
+                case SDLK_7: set_settings(&settings, 64, 48, 0, 100, 10); break;
+                case SDLK_8: set_settings(&settings, 64, 48, 100, 0, 16); break;
+                case SDLK_9: set_settings(&settings, 64, 48, 0, 0, 16); break;
+                case SDLK_0: set_random_settings(&settings); break;
             }
 
             selected = (selected % 6 + 6) % 6;
