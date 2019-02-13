@@ -131,13 +131,13 @@ int is_tile_free_for_bomb(t_level *level, int x, int y) {
 }
 
 int is_tile_free_bomb_blast(t_level *level, int x, int y) {
+  if (is_tile_undefined(level, x, y))
+    return NO;
   if (is_tile_character(level, x, y))
     return NO;
   if (is_tile_wall(level, x, y))
     return NO;
   if (is_tile_bomb_planted(level, x, y))
-    return NO;
-  if (is_tile_defined(level, x, y) == NO)
     return NO;
   return YES;
 }
@@ -161,14 +161,12 @@ int tile_content(t_level *level, int x, int y) {
   return level->terrain[x][y];
 }
 
+int is_tile_undefined(t_level *level, int x, int y) {
+  return !is_tile_defined(level, x, y);
+}
+
 int is_tile_defined(t_level *level, int x, int y) {
-  if (x < 0)
-    return NO;
-  if (y < 0)
-    return NO;
-  if (x >= level->width)
-    return NO;
-  if (y >= level->height)
-    return NO;
-  return YES;
+  if (x >= 0 && x < level->width && y >= 0 && y < level->height)
+    return YES;
+  return NO;
 }

@@ -244,7 +244,7 @@ void display_bonus(t_level *level, t_display *display) {
           else if (bonus[j][i] == BONUS_BOMB_DAMAGE){
               SDL_RenderCopy(display->renderer, display->theme->text_bonus[TEXT_BONUS_DAMAGE]->texture, NULL, &location);
           }
-          else if (bonus[j][i] == BONUS_MOVE_SEED){
+          else if (bonus[j][i] == BONUS_MOVE_SPEED){
               SDL_RenderCopy(display->renderer, display->theme->text_bonus[TEXT_BONUS_BOOTS]->texture, NULL, &location);
           }
           else if (bonus[j][i] == BONUS_BOMB_RANGE){

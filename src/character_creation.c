@@ -75,9 +75,9 @@ void pick_item(t_level *level, t_character *character) {
     level->bonus[position_x][position_y] = ' ';
     character->heal_points += VALUE_BONUS_HEAL;
   }
-  else if (level->bonus[position_x][position_y] == BONUS_MOVE_SEED){
+  else if (level->bonus[position_x][position_y] == BONUS_MOVE_SPEED){
     level->bonus[position_x][position_y] = ' ';
-    character->movement_speed += VALUE_BONUS_MOVE_SEED;
+    character->movement_speed += VALUE_BONUS_MOVE_SPEED;
   }
   else if (level->bonus[position_x][position_y] == BONUS_EXTRA_BOMB){
     level->bonus[position_x][position_y] = ' ';

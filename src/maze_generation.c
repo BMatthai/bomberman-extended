@@ -665,7 +665,7 @@ char **generate_bonus_layer(t_game_settings *settings) {
       rand_number = (rand() % (50));
 
       if (rand_number == 0) {
-        bonus[i][j] = BONUS_MOVE_SEED;
+        bonus[i][j] = BONUS_MOVE_SPEED;
       }
       else if (rand_number == 1) {
         bonus[i][j] = BONUS_BOMB_DAMAGE;

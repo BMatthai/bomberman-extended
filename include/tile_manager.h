@@ -11,4 +11,5 @@ int is_tile_bomb_blast(t_level *level, int x, int y);
 int tile_content(t_level *level, int x, int y);
 int is_tile_free_for_bomb(t_level *level, int x, int y);
 int is_tile_free_bomb_blast(t_level *level, int x, int y);
+int is_tile_undefined(t_level *level, int x, int y);
 int is_tile_defined(t_level *level, int x, int y);
