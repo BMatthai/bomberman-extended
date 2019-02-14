@@ -191,7 +191,6 @@ void bomb_has_exploded(t_level *level, t_bomb *bomb) {
   level->bomb[bomb_pos_x][bomb_pos_y] = ' ';
   int i;
 
-
   for (i = 1; i <= bomb->range && is_tile_free_bomb_blast(level, bomb_pos_x, bomb_pos_y - i)
 ; i++) {
     level->bomb[bomb_pos_x][bomb_pos_y - i] = ' ';
@@ -207,19 +206,6 @@ void bomb_has_exploded(t_level *level, t_bomb *bomb) {
   for (i = 1; i <= bomb->range && is_tile_free_bomb_blast(level, bomb_pos_x + i, bomb_pos_y); i++) {
     level->bomb[bomb_pos_x + i][bomb_pos_y] = ' ';
   }
-
-  // for (i = 1; is_tile_defined(level, bomb_position_x, bomb_position_y - i) && i <= bomb->range; i++) {
-  //   level->bomb[bomb_position_x][bomb_position_y - i] = ' ';
-  // }
-  // for (i = 1; is_tile_defined(level, bomb_position_x, bomb_position_y + i) && i <= bomb->range; i++) {
-  //   level->bomb[bomb_position_x][bomb_position_y + i] = ' ';
-  // }
-  // for (i = 1; is_tile_defined(level, bomb_position_x - i, bomb_position_y) && i <= bomb->range; i++) {
-  //   level->bomb[bomb_position_x - i][bomb_position_y] = ' ';
-  // }
-  // for (i = 1; is_tile_defined(level, bomb_position_x + i, bomb_position_y) && i <= bomb->range; i++) {
-  //   level->bomb[bomb_position_x + i][bomb_position_y] = ' ';
-  // }
 
   bomb->character_origin->number_bomb_planted -= 1;
   remove_bomb_from_list(level, bomb);
