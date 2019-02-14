@@ -130,23 +130,27 @@ int is_tile_free_for_bomb(t_level *level, int x, int y) {
   return YES;
 }
 
-int is_tile_free_bomb_blast(t_level *level, int x, int y) {
-    if (is_tile_undefined(level, x, y))
-      return NO;
-    return YES;
-}
-
 // int is_tile_free_bomb_blast(t_level *level, int x, int y) {
-//   if (is_tile_undefined(level, x, y))
-//     return NO;
-//   // if (is_tile_character(level, x, y))
-//   //   return NO;
-//   if (is_tile_wall(level, x, y))
-//     return NO;
-//   if (is_tile_bomb_planted(level, x, y))
-//     return NO;
-//   return YES;
+//     if (is_tile_undefined(level, x, y))
+//       return NO;
+//     return YES;
 // }
+
+int is_tile_free_bomb_blast(t_level *level, int x, int y) {
+  // if (is_tile_undefined(level, x, y))
+  //   return NO;
+  // // if (is_tile_character(level, x, y))
+  // //   return NO;
+  if (is_tile_wall(level, x, y)) {
+    // printf("Pas un wall\n");
+    return NO;
+  }
+  if (is_tile_bomb_planted(level, x, y)) {
+    // printf("Pas une bomb planted\n");
+    return NO;
+  }
+  return YES;
+}
 
 int tile_content(t_level *level, int x, int y) {
   if (is_tile_bomb_planted(level, x, y))
@@ -168,21 +172,21 @@ int tile_content(t_level *level, int x, int y) {
 }
 
 int is_tile_undefined(t_level *level, int x, int y) {
-  printf("On essaye d'exploser : (%d;%d) dans une map de (%d;%d)\n", x, y, level->width, level->height);
+  // printf("On essaye d'exploser : (%d;%d) dans une map de (%d;%d)\n", x, y, level->width, level->height);
   if (x >= 0 && x < level->width && y >= 0 && y < level->height) {
-    printf("Defined\n");
+    // printf("Defined\n");
     return NO;
   }
-  printf("Undefined\n");
+  // printf("Undefined\n");
   return YES;
 }
 
 int is_tile_defined(t_level *level, int x, int y) {
-  printf("On essaye d'exploser : (%d;%d) dans une map de (%d;%d)\n", x, y, level->width, level->height);
+  // printf("On essaye d'exploser : (%d;%d) dans une map de (%d;%d)\n", x, y, level->width, level->height);
   if (x >= 0 && x < level->width && y >= 0 && y < level->height) {
-    printf("Defined\n");
+    // printf("Defined\n");
     return YES;
   }
-  printf("Undefined\n");
+  // printf("Undefined\n");
   return NO;
 }

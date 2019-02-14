@@ -59,36 +59,3 @@ void reset_character_state(t_character *character) {
     }
   }
 }
-
-void pick_item(t_level *level, t_character *character) {
-  int position_x;
-  int position_y;
-
-  position_x = character->position_x;
-  position_y = character->position_y;
-
-  if (level->bonus[position_x][position_y] == BONUS_BOMB_RANGE){
-    level->bonus[position_x][position_y] = ' ';
-    character->bomb_range += VALUE_BONUS_BOMB_RANGE;
-  }
-  else if (level->bonus[position_x][position_y] == BONUS_HEAL){
-    level->bonus[position_x][position_y] = ' ';
-    if (character->heal_points <= 100)
-      character->heal_points += VALUE_BONUS_HEAL;
-  }
-  else if (level->bonus[position_x][position_y] == BONUS_MOVE_SPEED){
-    level->bonus[position_x][position_y] = ' ';
-    if (character->movement_speed <= 20)
-      character->movement_speed += VALUE_BONUS_MOVE_SPEED;
-  }
-  else if (level->bonus[position_x][position_y] == BONUS_EXTRA_BOMB){
-    level->bonus[position_x][position_y] = ' ';
-    if (character->stock_bomb <= 5)
-      character->stock_bomb += VALUE_BONUS_EXTRA_BOMB;
-  }
-  else if (level->bonus[position_x][position_y] == BONUS_BOMB_DAMAGE){
-    level->bonus[position_x][position_y] = ' ';
-    if (character->bomb_damage <= 350)
-      character->bomb_damage += VALUE_BONUS_BOMB_DAMAGE;
-  }
-}
