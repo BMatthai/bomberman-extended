@@ -16,9 +16,9 @@ Projet de bomberman en ASCII !!! C'était plutôt stylé même si l'interface pa
 - [ ] Faire en sorte que ça compile avec SDL sous Linux et Windows
 - [ ] Créer une boucle de jeu qui ne dépend pas du CPU
 
-- [ ] Faire un audit de performance CPU et/ou RAM, et optimiser (Bastien)
-- [ ] Analyse Portabilité : voir comment rendre le jeu compatible Windows sans enlever la compatibilité OSX (David)
-- [ ] Analyse Distribution : voir comment faire la distribution (Yassine)
+- [ ] Faire un audit de performance CPU et/ou RAM, et optimiser
+- [ ] Analyse Portabilité : voir comment rendre le jeu compatible Windows sans enlever la compatibilité OSX
+- [ ] Analyse Distribution : voir comment faire la distribution
 
 - [ ] ~~Implémenter réseau~~ __(Pas prio)__
 - [ ] ~~Vérifier le retours des mallocs et gérer les erreurs~~ __(Pas prio)__
