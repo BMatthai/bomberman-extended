@@ -1,20 +1,17 @@
 **Backlog :**
-- [x] Rendre le jeu existant plus stable
-- [x] Explosion en chaîne des bombes
-- [x] Ajouter création de map aléatoires en se basant sur l'algorithme de Kruskal.
-- [x] Implémenter un nouvel affichage en utilisant SDL (A améliorer)
-- [x] Séparer les fichiers .o .h et .c dans des dossiers build, include et src.
-- [x] Créer le menu de jeu (A améliorer)
-- [ ] Factoriser Makefile.
-- [ ] Faire en sorte que ça compile avec SDL sous Linux et Windows
-- [ ] Créer une boucle de jeu qui ne dépend pas du CPU
+- [x] Make the game more stable
+- [x] Chain explosions
+- [x] Add random map generartion
+- [x] Implement new display using SDL Lib
+- [x] Separate .o/.h/.c file folders
+- [x] Create game menu.
+- [ ] Factorize Makefile.
+- [ ] Make it buildable on Windows (and Mac OS)
+- [ ] Refactor game loop (don't use CPU time anymore)
+- [ ] CPU/Memory audit. Optimize algorithms.
 
-- [ ] Faire un audit de performance CPU et/ou RAM, et optimiser
-- [ ] Analyse Portabilité : voir comment rendre le jeu compatible Windows sans enlever la compatibilité OSX
-- [ ] Analyse Distribution : voir comment faire la distribution
-
-- [ ] ~~Implémenter réseau~~ __(Pas prio)__
-- [ ] ~~Vérifier le retours des mallocs et gérer les erreurs~~ __(Pas prio)__
-- [ ] ~~Tester le retours des fonctions en général et gérer les erreurs~~ __(Pas prio)__
-- [ ] ~~Gérer les fuites de mémoires.~~ __(Pas prio)__
-- [ ] ~~Améliorer IA / Refactoriser complêtement~~ __(Pas prio)__
+- [ ] ~~Implement playability~~ __(Not prio)__
+- [ ] ~~Verify malloc returns~~ __(Not prio)__
+- [ ] ~~Test function returns and better handle errors~~ __(Not prio)__
+- [ ] ~~Handle memory leaks~~ __(Not prio)__
+- [ ] ~~Rework "AI player" algorithm~~ __(Not prio)__
