@@ -6,3 +6,4 @@ void move_char(t_level *level, t_character *character);
 void adjust_char(t_character *character);
 void motion_char(t_level *level, t_character *character);
 void put_bomb(t_level *level, t_character *character);
+void pick_item(t_level *level, t_character *character);

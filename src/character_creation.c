@@ -36,9 +36,12 @@ t_character create_character(char symbol, int x, int y) {
   character.state = CHARACTER_ALIVE;
   character.heal_points = CHARACTER_HEAL_POINT;
   character.bomb_range = CHARACTER_BOMB_RANGE;
-  character.number_bomb = CHARACTER_NUMBER_BOMB;
+  character.stock_bomb = CHARACTER_NUMBER_BOMB;
+  character.number_bomb_planted = 0;
   character.movement_speed = CHARACTER_MOVEMENT_SPEED;
   character.time_to_bomb_explode_millis = CHARACTER_TIME_TO_BOMB_EXPLODE;
+  character.bomb_damage = CHARACTER_BOMB_DAMAGE;
+
   character.velocity_x = 0;
   character.velocity_y = 0;
 
@@ -54,22 +57,5 @@ void reset_character_state(t_character *character) {
       character->time_state_has_changed = get_time();
       character->state = CHARACTER_ALIVE;
     }
-  }
-}
-
-void pick_item(t_level *level, t_character *character) {
-  int position_x;
-  int position_y;
-
-  position_x = character->position_x;
-  position_y = character->position_y;
-
-  if (level->bonus[position_y][position_x] == '+'){
-    level->bonus[position_y][position_x] = ' ';
-    character->bomb_range += 1;
-  }
-  else if (level->bonus[position_y][position_x] == '#'){
-    level->bonus[position_y][position_x] = ' ';
-    character->heal_points += 1;
   }
 }

@@ -3,7 +3,10 @@
 #include "../include/struct_level.h"
 #endif
 
+#ifndef T_SETTINGS
+#define T_SETTINGS
 #include "../include/struct_game_settings.h"
+#endif
 
 #include "../include/character_creation.h"
 #include "../include/game_constants.h"
@@ -87,7 +90,7 @@ void shuffle(int *elts, int nb_elts) {
 
 int *list_walls(int width, int height) {
   int size = count_walls(width, height);
-  int *walls = malloc(sizeof(int) * size);
+  int *walls = malloc(sizeof(int) * size); //Free done
 
   int begin_x;
   int end_x;
@@ -105,7 +108,6 @@ int *list_walls(int width, int height) {
     for (int j = begin_x; j < end_x; j++) {
         if ((i % 2 == 1 && j % 2 == 0) || (i % 2 == 0 && j % 2 == 1)) {
             walls[k] = i * width + j;
-            // printf("Index wall : %d\n", walls[k]);
             k++;
         }
       }
@@ -115,7 +117,9 @@ int *list_walls(int width, int height) {
 
 int *list_cells(int width, int height) {
   int size = count_cells(width, height);
-  int *cells = malloc(sizeof(int) * size);
+  int *cells = NULL;
+
+  cells = malloc(sizeof(int) * size); // Free done
 
   int begin_x;
   int end_x;
@@ -126,7 +130,7 @@ int *list_cells(int width, int height) {
   begin_x = 1;
   end_x = width - 2 + (width % 2);
   begin_y = 1;
-  end_y = height - 2 + (width % 2);
+  end_y = height - 2 + (height % 2);
   k = 0;
 
   for (int i = begin_y; i < end_y; i++) {
@@ -141,7 +145,6 @@ int *list_cells(int width, int height) {
 
   return cells;
 }
-
 
 t_character *get_level_characters(t_level *level) {
 
@@ -334,50 +337,41 @@ void merge_sets(t_set *set1, t_set *set2) {
 
 void fill_maze_default(char **maze, int *cells, int width, int height) {
   int size = count_cells(width, height);
-  int cur_row;
-  int cur_col;
+  int row;
+  int col;
 
   for (int i = 0; i < height; i++) {
     for (int j = 0; j < width; j++) {
-      // printf("(%d;%d)\n", j, i);
-
       maze[j][i] = '0';
-      // if (i == 0 || i == height - 1 || j == 0 || j == width - 1) {
-      //   maze[j][i] = '0';
-      // }
-      // if ((i % 2) == 1 && (j % 2) == 1) {
-      //   maze[j][i] = ' ';
-      // }
-      // else {
-      //   maze[j][i] = '0';
-      // }
     }
   }
+
 
   int line;
   for(int k = 0; k < size; k++) {
-    // printf("%d\n", k);
     line = cells[k];
 
-    cur_row = line / width;
-    cur_col = line % width;
+    row = line / width;
+    col = line % width;
 
-    maze[cur_col][cur_row] = ' ';
+    maze[col][row] = ' ';
   }
 
-  if (width % 2 == EVEN) (
-    for (int i = 0; i < width; i++) {
-      if (i % 2 == ODD) {
-        
-      }
+  if (width % 2 == EVEN) {
+    for (int i = 0; i < height; i++) {
+        if (maze[width - 3][i] == ' ' && rand() % 2 >= 1) {
+            maze[width - 2][i] = ' ';
+        }
     }
-  )
+  }
 
-  if (height % 2 == EVEN) (
-
-  )
-
-
+  if (height % 2 == EVEN) {
+    for (int j = 0; j < width; j++) {
+        if (maze[j][height - 3] == ' ' && rand() % 2 >=0) {
+            maze[j][height - 2] = ' ';
+        }
+    }
+  }
 }
 
 int is_wall_separator(int wall_index, int width, int height) {
@@ -466,20 +460,20 @@ void remove_wall(char **maze, int wall_index, t_game_settings *settings) {
   int cur_row;
   int cur_col;
   int width = settings->width;
-  int proba_destr_wall;
-  int proba_empty;
-  int rand_number;
+  // int proba_destr_wall;
+  // int proba_empty;
+  // int rand_number;
 
   cur_row = wall_index / width;
   cur_col = wall_index % width;
-  proba_destr_wall = settings->proba_destr_wall;
-  proba_empty = settings->proba_empty;
-  rand_number = (rand() % (101));
+  // proba_destr_wall = settings->proba_destr_wall;
+  // proba_empty = settings->proba_empty;
+  // rand_number = (rand() % (101));
 
-  if (rand_number <= proba_destr_wall)
-    maze[cur_col][cur_row] = '1';
-  else
-    maze[cur_col][cur_row] = ' ';
+  // if (rand_number <= proba_destr_wall)
+  //   maze[cur_col][cur_row] = '1';
+  // else
+  maze[cur_col][cur_row] = ' ';
 }
 
 void set_wall_content(char **maze, int wall_index, t_game_settings *settings) {
@@ -496,9 +490,9 @@ void set_wall_content(char **maze, int wall_index, t_game_settings *settings) {
   proba_empty = settings->proba_empty;
   rand_number = (rand() % (101));
 
-  if (rand_number <= proba_destr_wall)
+  if (rand_number < proba_destr_wall)
     maze[cur_col][cur_row] = '1';
-  else if (rand_number <= proba_empty + proba_destr_wall)
+  else if (rand_number < proba_empty + proba_destr_wall)
     maze[cur_col][cur_row] = ' ';
 }
 
@@ -542,6 +536,34 @@ t_set *set_from_value(t_set *sets, int value, int width, int height) {
   return  NULL;
 }
 
+void release_memory_elt(t_element *elt) {
+  t_element *cur_elt = NULL;
+  t_element *cur_head = NULL;
+
+  cur_elt = elt;
+  while (cur_elt != NULL) {
+    cur_head = cur_elt;
+    cur_elt = cur_elt->next_elt;
+    free(cur_head);
+  }
+}
+
+void release_memory_sets(t_set *sets) {
+  // t_set *cur_set = NULL;
+  // t_set *cur_head = NULL;
+  //
+  // cur_set = sets;
+  // while (cur_set != NULL) {
+  //   printf("\nOK");
+  //   cur_head = cur_set;
+  //   cur_set = cur_set->next_set;
+  //   release_memory_elt(cur_head->first);
+  //   free(cur_head);
+  // }
+
+    release_memory_elt(sets->first);
+    free(sets);
+}
 
 void dig_walls(char **maze, int *cells, int *walls, t_game_settings *settings) {
 
@@ -549,27 +571,23 @@ void dig_walls(char **maze, int *cells, int *walls, t_game_settings *settings) {
   int width;
   int height;
   t_set *sets = NULL;
+  int is_cur_row_even;
+  int wall_index;
+  t_set *set1 = NULL;
+  t_set *set2 = NULL;
+  int cell_side_A;
+  int cell_side_B;
 
   width = settings->width;
   height = settings->height;
-
-
   nb_walls = count_walls(width, height);
   sets = init_sets(cells, width, height);
 
-  int is_cur_row_even;
-  int wall_index;
   shuffle(walls, nb_walls);
-
 
   for (int i = 0; i < nb_walls; i++) {
     wall_index = walls[i];
     is_cur_row_even = ((wall_index / width) % 2) == 1 ? NO : YES;
-    t_set *set1 = NULL;
-    t_set *set2 = NULL;
-
-    int cell_side_A;
-    int cell_side_B;
 
     if (is_cur_row_even == YES) {
       cell_side_A = wall_index - width;
@@ -583,7 +601,6 @@ void dig_walls(char **maze, int *cells, int *walls, t_game_settings *settings) {
     set2 = set_from_value(sets, cell_side_B, width, height);
 
     if (set1 != NULL && set2 != NULL) {
-
       if (is_same_set(set1, set2) == NO) {
         remove_wall(maze, wall_index, settings);
         merge_sets(set1, set2);
@@ -592,9 +609,11 @@ void dig_walls(char **maze, int *cells, int *walls, t_game_settings *settings) {
         set_wall_content(maze, wall_index, settings);
       }
     }
-    else {
-    }
   }
+
+  release_memory_sets(sets);
+
+
 }
 
 char **generate_maze_layer(t_game_settings *settings) {
@@ -609,6 +628,9 @@ char **generate_maze_layer(t_game_settings *settings) {
   maze = generate_empty_layer(width, height);
   fill_maze_default(maze, cells, width, height);
   dig_walls(maze, cells, walls, settings);
+
+  free(cells);
+  free(walls);
 
   return maze;
 }
@@ -627,16 +649,38 @@ char **generate_bomb_layer(t_game_settings *settings) {
 }
 
 char **generate_bonus_layer(t_game_settings *settings) {
-  char **maze = NULL;
+  char **bonus = NULL;
   int width;
   int height;
 
   width = settings->width;
   height = settings->height;
 
-  maze = generate_empty_layer(width, height);
+  bonus = generate_empty_layer(width, height);
+  int rand_number;
+  for (int i = 0; i < width; i++) {
+    for (int j = 0; j < height; j++) {
+      rand_number = (rand() % (50));
 
-  return maze;
+      if (rand_number == 0) {
+        bonus[i][j] = BONUS_MOVE_SPEED;
+      }
+      else if (rand_number == 1) {
+        bonus[i][j] = BONUS_BOMB_DAMAGE;
+      }
+      else if (rand_number == 2) {
+        bonus[i][j] = BONUS_EXTRA_BOMB;
+      }
+      else if (rand_number == 3) {
+        bonus[i][j] = BONUS_HEAL;
+      }
+      else if (rand_number == 4) {
+        bonus[i][j] = BONUS_BOMB_RANGE;
+      }
+    }
+  }
+
+  return bonus;
 }
 
 t_level *generate_maze_level(t_game_settings *settings) {
@@ -658,7 +702,7 @@ t_level *generate_maze_level(t_game_settings *settings) {
   level->bonus = generate_bonus_layer(settings);
   level->first_bomb = NULL;
 
-  level->number_characters = 4;
+  level->number_characters = settings->number_ai;
   level->characters = get_level_characters(level);
 
   return level;

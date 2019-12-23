@@ -26,7 +26,7 @@ void move(t_level *level, t_character *character, int direction) {
   float new_position_y = character->position_y;
 
   if (direction == ACTION_UP) {
-    new_position_y = character->position_y - MOVE_DISTANCE;
+    new_position_y = character->position_y - (MOVE_DISTANCE * character->movement_speed);
     if (is_tile_free(level, new_position_x, new_position_y) == YES) {
       character->position_y = new_position_y;
     }
@@ -35,7 +35,7 @@ void move(t_level *level, t_character *character, int direction) {
     }
   }
   else if (direction == ACTION_DOWN) {
-    new_position_y = character->position_y + MOVE_DISTANCE;
+    new_position_y = character->position_y + (MOVE_DISTANCE * character->movement_speed);
     if (is_tile_free(level, new_position_x, new_position_y + 1) == YES) {
       character->position_y = new_position_y;
     }
@@ -44,7 +44,7 @@ void move(t_level *level, t_character *character, int direction) {
     }
   }
   else if (direction == ACTION_LEFT) {
-    new_position_x = character->position_x - MOVE_DISTANCE;
+    new_position_x = character->position_x - (MOVE_DISTANCE * character->movement_speed);
     if (is_tile_free(level, new_position_x, new_position_y) == YES) {
       character->position_x = new_position_x;
     }
@@ -53,7 +53,7 @@ void move(t_level *level, t_character *character, int direction) {
     }
   }
   else if (direction == ACTION_RIGHT) {
-    new_position_x = character->position_x + MOVE_DISTANCE;
+    new_position_x = character->position_x + (MOVE_DISTANCE * character->movement_speed);
     if (is_tile_free(level, new_position_x + 1, new_position_y) == YES) {
       character->position_x = new_position_x;
     }
@@ -71,18 +71,18 @@ void put_bomb(t_level *level, t_character *character) {
   position_x = character->position_x;
   position_y = character->position_y;
 
+  if (character->number_bomb_planted >= character->stock_bomb) {
+    return;
+  }
 
-  if (level->terrain[position_y][position_x] != TILE_WITH_BOMB) {
+  if (level->terrain[position_x][position_y] != TILE_WITH_BOMB) {
     t_bomb *new_bomb;
 
     new_bomb = NULL;
-    new_bomb = malloc(sizeof(t_bomb));
+    //new_bomb = malloc(sizeof(t_bomb)); // free done
 
-    if (new_bomb == NULL) {
-      return;
-    }
-
-    level->bomb[position_y][position_x] = '@';
+    level->bomb[position_x][position_y] = '@';
+    character->number_bomb_planted += 1;
 
     new_bomb = create_bomb(level, character);
 
@@ -168,4 +168,37 @@ void move_char(t_level *level, t_character *character) {
     move(level, character, ACTION_LEFT);
   else if(character->velocity_x == 1)
     move(level, character, ACTION_RIGHT);
+}
+
+void pick_item(t_level *level, t_character *character) {
+  int position_x;
+  int position_y;
+
+  position_x = character->position_x;
+  position_y = character->position_y;
+
+  if (level->bonus[position_x][position_y] == BONUS_BOMB_RANGE){
+    level->bonus[position_x][position_y] = ' ';
+    character->bomb_range += VALUE_BONUS_BOMB_RANGE;
+  }
+  else if (level->bonus[position_x][position_y] == BONUS_HEAL){
+    level->bonus[position_x][position_y] = ' ';
+    if (character->heal_points <= 100)
+      character->heal_points += VALUE_BONUS_HEAL;
+  }
+  else if (level->bonus[position_x][position_y] == BONUS_MOVE_SPEED){
+    level->bonus[position_x][position_y] = ' ';
+    if (character->movement_speed <= 20)
+      character->movement_speed += VALUE_BONUS_MOVE_SPEED;
+  }
+  else if (level->bonus[position_x][position_y] == BONUS_EXTRA_BOMB){
+    level->bonus[position_x][position_y] = ' ';
+    if (character->stock_bomb <= 5)
+      character->stock_bomb += VALUE_BONUS_EXTRA_BOMB;
+  }
+  else if (level->bonus[position_x][position_y] == BONUS_BOMB_DAMAGE){
+    level->bonus[position_x][position_y] = ' ';
+    if (character->bomb_damage <= 350)
+      character->bomb_damage += VALUE_BONUS_BOMB_DAMAGE;
+  }
 }

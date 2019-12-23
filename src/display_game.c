@@ -79,7 +79,7 @@ void display_characters(t_level *level, t_display *display) {
 
   t_character character;
 
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < level->number_characters; i++) {
     character = level->characters[i];
 
     if (character.state != CHARACTER_DEAD) {
@@ -218,5 +218,42 @@ void display_bombs(t_level *level, t_display *display) {
       }
     }
     cur_bomb = cur_bomb->next_bomb;
+  }
+}
+
+void display_bonus(t_level *level, t_display *display) {
+  SDL_Rect location;
+  char **bonus = NULL;
+  char **terrain = NULL;
+
+  bonus = level->bonus;
+  terrain = level->terrain;
+
+  for (int i = 0; i < level->height; i++) {
+    for (int j = 0; j < level->width; j++) {
+
+        location.h = STANDARD_TILE_HEIGHT;
+        location.w = STANDARD_TILE_WIDTH;
+        location.x = STANDARD_TILE_WIDTH * j + display->offset_x;
+        location.y = STANDARD_TILE_HEIGHT * i + display->offset_y;
+
+        if (terrain[j][i] == ' ') {
+          if (bonus[j][i] == BONUS_EXTRA_BOMB){
+              SDL_RenderCopy(display->renderer, display->theme->text_bonus[TEXT_BONUS_EXTRA_BOMB]->texture, NULL, &location);
+          }
+          else if (bonus[j][i] == BONUS_BOMB_DAMAGE){
+              SDL_RenderCopy(display->renderer, display->theme->text_bonus[TEXT_BONUS_DAMAGE]->texture, NULL, &location);
+          }
+          else if (bonus[j][i] == BONUS_MOVE_SPEED){
+              SDL_RenderCopy(display->renderer, display->theme->text_bonus[TEXT_BONUS_BOOTS]->texture, NULL, &location);
+          }
+          else if (bonus[j][i] == BONUS_BOMB_RANGE){
+              SDL_RenderCopy(display->renderer, display->theme->text_bonus[TEXT_BONUS_RANGE]->texture, NULL, &location);
+          }
+          else if (bonus[j][i] == BONUS_HEAL){
+              SDL_RenderCopy(display->renderer, display->theme->text_bonus[TEXT_BONUS_HEAL]->texture, NULL, &location);
+          }
+        }
+    }
   }
 }

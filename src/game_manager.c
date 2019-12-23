@@ -13,7 +13,11 @@
 #include "../include/struct_game_data.h"
 #endif
 
+#ifndef T_SETTINGS
+#define T_SETTINGS
 #include "../include/struct_game_settings.h"
+#endif
+
 
 #include "../include/game_constants.h"
 #include "../include/game_manager.h"
@@ -29,6 +33,7 @@
 #include "../include/log_manager.h"
 #include "../include/maze_generation.h"
 #include "../include/display_game.h"
+#include "../include/menu_manager.h"
 
 #include <poll.h>
 #include <stdio.h>
@@ -48,6 +53,14 @@ int game_state(t_game_data *game_data) {
   return GAME_IS_RUNNING;
 }
 
+// void free_game_memory(t_game_data *game_data) {
+//   free(game_data->playable_character);
+//   free(ga)
+//   t_level *level;
+//   Uint32 elapsed_time;
+//
+// }
+
 void refresh(t_game_data *game_data, t_display *display) {
  t_level *level = game_data->level;
 
@@ -55,13 +68,19 @@ void refresh(t_game_data *game_data, t_display *display) {
   SDL_RenderClear(display->renderer);
 
   display_map(level, display);
-
+  display_bonus(level, display);
   display_characters(level, display);
   display_bombs(level, display);
   display_hud(game_data, display);
   // display_misc(game_data, display);
   SDL_RenderPresent(display->renderer);
 }
+
+// void pick_bonus_char(t_level *level) {
+//   for (int i = 0; i < level->number_characters; i++) {
+//     pick_item(t_level *level, t_character *character)
+//   }
+// }
 
 int launch_game(t_display *display, t_game_settings *game_settings) {
 
@@ -72,6 +91,7 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
   if (game_data == NULL) {
    return -1;
   }
+
   int width = game_settings->width;
   int height = game_settings->height;
 
@@ -95,6 +115,7 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
   // SDL_RenderClear(display->renderer);
 
   // display_outside(display);
+  unsigned int time_refresh = get_time();
 
   while (is_running)
   {
@@ -125,15 +146,18 @@ int launch_game(t_display *display, t_game_settings *game_settings) {
       }
     }
     game_data->elapsed_time = get_time() - time_start;
-    check_bombs_timer(level);
     move_char(level, character);
     motion_char(level, character);
-    refresh(game_data, display);
+
+    if (get_time() - time_refresh > 20) {
+      check_bombs_timer(level);
+      refresh(game_data, display);
+      time_refresh = get_time();
+    }
   }
-  // SDL_DestroyTexture(display->text_terrain[0]);
-  // SDL_DestroyTexture(display->text_terrain[1]);
-  SDL_DestroyRenderer(display->renderer);
-  SDL_DestroyWindow(display->window);
-  SDL_Quit();
+
+  free(game_data); //TODO Ensure each component of game_data is freed...
+  launch_main_menu(display);
+
   return 0;
 }
