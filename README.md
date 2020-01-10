@@ -11,7 +11,7 @@ Currently the game can be build in Linux using *make*.
 **Backlog :**
 - [x] Make the game more stable
 - [x] Chain explosions
-- [x] Add random map generartion
+- [x] Add random map generation
 - [x] Implement new display using SDL Lib
 - [x] Separate .o/.h/.c file folders
 - [x] Create game menu.
