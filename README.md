@@ -6,7 +6,7 @@ This is a Bomberman-like game created in educational purpose. The game has not b
 
 ## Usage
 
-Currently the game can be build in Linux using *make*.
+Currently the game can be built in Linux using *make*.
 
 **Backlog :**
 - [x] Make the game more stable
